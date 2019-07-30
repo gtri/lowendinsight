@@ -5,5 +5,5 @@ pipelines:
     - step:
         script:
           - mix local.hex --force
-          - mix deps
+          - mix deps.get
           - mix test
