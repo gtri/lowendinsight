@@ -4,5 +4,6 @@ pipelines:
   default:
     - step:
         script:
+          - mix local.hex --force
           - mix deps
           - mix test
