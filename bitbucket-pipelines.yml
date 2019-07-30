@@ -1,0 +1,8 @@
+image: elixir:1.9.0
+
+pipelines:
+  default:
+    - step:
+        script:
+          - mix deps
+          - mix test
