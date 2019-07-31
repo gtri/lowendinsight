@@ -30,4 +30,8 @@ defmodule GithubModuleTest do
     assert GithubModule.get_contributors_count("kitplummer/ovmtb2") == {:ok, 2}
   end
 
+  test "get last commit delta" do
+    assert GithubModule.get_last_commit_delta("kitplummer/xmpp4rails") == {:ok, 3000}
+  end
+
 end
