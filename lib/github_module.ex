@@ -45,11 +45,11 @@ defmodule GithubModule do
   get_last_commit_delta: returns the number of days since the last commit
 
   """
-  def get_last_commit_delta(slug) do
+  def get_last_commit_date(slug) do
     {:ok, org, repo} = split_slug(slug)
     c = Tentacat.Client.new(%{access_token: Application.fetch_env!(:lowendinsight, :access_token)})
     commits = Tentacat.Commits.list(c, org, repo)
     commit = elem(commits,1) |> List.first()
-    IO.puts commit["commit"]["committer"]["date"]
+    DateTime.from_iso8601(commit["commit"]["committer"]["date"])
   end
 end

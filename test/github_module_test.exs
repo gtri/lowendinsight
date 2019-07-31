@@ -3,7 +3,7 @@ defmodule GithubModuleTest do
   doctest GithubModule
 
   setup_all do
-    c = Tentacat.Client.new(%{access_token: "2985bf2c1ff4b41863aef325b2ed527a120b6bc0"})
+    c = Tentacat.Client.new(%{access_token: Application.fetch_env!(:lowendinsight, :access_token)})
     {:ok, client: c}
   end
 
@@ -30,8 +30,8 @@ defmodule GithubModuleTest do
     assert GithubModule.get_contributors_count("kitplummer/ovmtb2") == {:ok, 2}
   end
 
-  test "get last commit delta" do
-    assert GithubModule.get_last_commit_delta("kitplummer/xmpp4rails") == {:ok, 3000}
+  test "get last commit date" do
+    assert GithubModule.get_last_commit_date("kitplummer/xmpp4rails") == {:ok, ~U[2009-01-07 03:23:20Z], 0}
   end
 
 end
