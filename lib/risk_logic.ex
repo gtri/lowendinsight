@@ -15,4 +15,17 @@ defmodule RiskLogic do
       contributor_count >= Application.fetch_env!(:lowendinsight, :medium_contributor_par_level) -> {:ok, "low"}
     end
   end
+
+  @doc """
+  commit_currency_risk: returns text enumeration for commit currency risk
+  """
+  def commit_currency_risk(delta_in_weeks) do
+    cond do
+      delta_in_weeks < Application.fetch_env!(:lowendinsight, :medium_currency_par_level) -> {:ok, "low"}
+      delta_in_weeks < Application.fetch_env!(:lowendinsight, :high_currency_par_level) -> {:ok, "medium"}
+      delta_in_weeks < Application.fetch_env!(:lowendinsight, :critical_currency_par_level) -> {:ok, "high"}
+      delta_in_weeks >= Application.fetch_env!(:lowendinsight, :critical_currency_par_level) -> {:ok, "critical"}
+    end
+  end
+
 end

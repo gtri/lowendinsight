@@ -18,4 +18,14 @@ defmodule TimeHelper do
   def sec_to_weeks(sec) do
     {:ok, Kernel.trunc(sec / @week)}
   end
+
+  def get_commit_delta(last_commit_date) do
+    case DateTime.from_iso8601(last_commit_date) do
+      {:error, error} ->
+        {:error, error}
+      {:ok, last_commit_date, _something} ->
+        seconds = DateTime.diff(DateTime.utc_now(), last_commit_date)
+        {:ok, seconds}
+    end
+  end
 end
