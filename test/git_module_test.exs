@@ -21,4 +21,12 @@ defmodule GitModuleTest do
     assert 3 == count
   end
 
+  test "get contributor list bad repo" do
+    count = GitModule.get_contributor_count "https://github.com/kitplummer/blah"
+    assert {:error, "Repository not found"} == count
+  end
+
+
+
+
 end

@@ -13,11 +13,16 @@ defmodule GitModule do
     # Get run some commands to clone the repo
     # Then get the count of contributors
 
-    {:ok, repo} = Git.clone url
-    list = Git.shortlog!(repo, ["-s", "-n", "HEAD"])
-    list = String.trim(list)
-    list = String.split(list, ~r{\s\s+})
-    Enum.count(list)
+    response = Git.clone url
+    case response do
+      {:ok, repo} ->
+        Git.shortlog!(repo, ["-s", "-n", "HEAD"])
+          |> String.trim()
+          |> String.split(~r{\s\s+})
+          |> Enum.count()
+      {:error, _error} ->
+        {:error, "Repository not found"}
+    end
   end
 
 end
