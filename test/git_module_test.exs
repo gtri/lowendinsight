@@ -1,27 +1,24 @@
 defmodule GitModuleTest do
-
   use ExUnit.Case
   doctest GitModule
 
-
-  defp teardown do
-    File.rm "xmpp4rails"
-    #assert {:ok} == delete
-  end
-
   setup do
-    on_exit(teardown())
+    on_exit(
+      fn ->
+        File.rm_rf "xmpp4rails"
+        File.rm_rf "lita-cron"
+      end
+    )
   end
 
-  setup_all do
-    dir = File.cd "xmpp4rails"
-    assert {:error, :enoent} == dir
-    :ok
+  test "get contributor list 1" do
+    count = GitModule.get_contributor_count "https://github.com/kitplummer/xmpp4rails"
+    assert 1 == count
   end
 
-  test "clone a repo" do
-    response = Git.clone "https://github.com/kitplummer/xmpp4rails"
-    assert {:ok} == response
+  test "get contributor list 3" do
+    count = GitModule.get_contributor_count "https://github.com/kitplummer/lita-cron"
+    assert 3 == count
   end
 
 end

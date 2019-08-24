@@ -12,8 +12,12 @@ defmodule GitModule do
   def get_contributor_count(url) do
     # Get run some commands to clone the repo
     # Then get the count of contributors
-    
-    {:ok, 0}
+
+    {:ok, repo} = Git.clone url
+    list = Git.shortlog!(repo, ["-s", "-n", "HEAD"])
+    list = String.trim(list)
+    list = String.split(list, ~r{\s\s+})
+    Enum.count(list)
   end
 
 end
