@@ -13,12 +13,12 @@ defmodule GitModuleTest do
 
   test "get contributor list 1" do
     count = GitModule.get_contributor_count "https://github.com/kitplummer/xmpp4rails"
-    assert 1 == count
+    assert {:ok, 1} == count
   end
 
   test "get contributor list 3" do
     count = GitModule.get_contributor_count "https://github.com/kitplummer/lita-cron"
-    assert 3 == count
+    assert {:ok, 3} == count
   end
 
   test "get contributor list bad repo" do
@@ -26,7 +26,17 @@ defmodule GitModuleTest do
     assert {:error, "Repository not found"} == count
   end
 
+  test "get last commit date" do
+    date = GitModule.get_last_commit_date "https://github.com/kitplummer/xmpp4rails"
+    assert {:ok, "2009-01-06T20:23:20-07:00"} == date
+  end
 
+  test "convert to delta" do
+    {:ok, date} = GitModule.get_last_commit_date "https://github.com/kitplummer/xmpp4rails"
+    {:ok, seconds} = TimeHelper.get_commit_delta(date)
+    {:ok, weeks} = TimeHelper.sec_to_weeks(seconds)
+    assert 553 <= weeks
 
+  end
 
 end
