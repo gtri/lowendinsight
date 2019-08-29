@@ -5,18 +5,22 @@ defmodule Analyzer do
   """
 
   def analyse(url) do
-    {:ok, slug} = Helpers.get_slug(url)
+    {:ok, repo} = Git.clone url
 
-    {:ok, contributor_count} = GithubModule.get_contributors_count(slug)
-    {:ok, last_commit_date} = GithubModule.get_last_commit_date(slug)
-    {:ok, delta_in_weeks} = TimeHelper.get_commit_delta(last_commit_date)
+    # Get unique contributors count
+    {:ok, count} = GitModule.get_contributor_count(repo)
+    # Get risk rating for count
 
-    {:ok, contributor_risk} = RiskLogic.contributor_risk(contributor_count)
-    {:ok, currency_risk} = RiskLogic.commit_currency_risk(delta_in_weeks)
+    # Get last commit in weeks
 
-    %{"contributor_count" => contributor_count,
-      "delta_in_weeks" => delta_in_weeks,
-      "contributor_risk" => contributor_risk,
-      "currency_risk" => currency_risk}
+    # Get risk rating for last commit
+
+    # Generate report
+
+    # Delete repo source
+
+    # Return summary report as JSON
+    report = {}
+    {:ok, report}
   end
 end

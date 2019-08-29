@@ -39,7 +39,7 @@ defmodule GitModule do
     end
   end
 
-  defp delete_repo(repo) do
+  def delete_repo(repo) do
     {:ok, slug} = Helpers.get_slug(repo.path)
     {:ok, _org, proj} = Helpers.split_slug(slug)
     File.rm_rf proj

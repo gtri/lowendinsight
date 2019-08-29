@@ -11,6 +11,11 @@ defmodule GitModuleTest do
     )
   end
 
+  # test "get clone" do
+  #   res = GitModule.clone_repo "https://github.com/kitplummer/xmpp4rails"
+  #   assert = {:ok, "", "xmpp4rails"}
+  # end
+
   test "get contributor list 1" do
     count = GitModule.get_contributor_count "https://github.com/kitplummer/xmpp4rails"
     assert {:ok, 1} == count
