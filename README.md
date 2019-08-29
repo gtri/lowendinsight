@@ -19,3 +19,8 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/lowendinsight](https://hexdocs.pm/lowendinsight).
 
+## TODO(ing)
+
+* Refactoring to use Git and work off of repo, versus APIs
+* Refactoring to work thru Analyze, and Report
+* Maintain access to other functions
