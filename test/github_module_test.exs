@@ -3,18 +3,28 @@ defmodule GithubModuleTest do
   doctest GithubModule
 
   setup_all do
-    c = Tentacat.Client.new(%{access_token: "2985bf2c1ff4b41863aef325b2ed527a120b6bc0"})
+    c = Tentacat.Client.new(%{access_token: Application.fetch_env!(:lowendinsight, :access_token)})
     {:ok, client: c}
   end
 
+  test "get a slug" do
+    {:ok, slug} = Helpers.get_slug("https://github.com/kitplummer/xmpprails")
+    assert slug == "kitplummer/xmpprails"
+  end
+
+  test "get a slug from a bad url" do
+    {:error, val} = Helpers.get_slug("https://github.com")
+    assert val == "invalid source URL"
+  end
+
   test "split a slug" do
-    {:ok, org, repo} = GithubModule.split_slug("kitplummer/xmpp4rails")
+    {:ok, org, repo} = Helpers.split_slug("kitplummer/xmpp4rails")
     assert org == "kitplummer"
     assert repo == "xmpp4rails"
   end
 
   test "try to split a bad slug" do
-    {:error, val} = GithubModule.split_slug("kitplummerxmpp4rails")
+    {:error, val} = Helpers.split_slug("kitplummerxmpp4rails")
     assert val == "bad_slug"
   end
 
@@ -28,6 +38,10 @@ defmodule GithubModuleTest do
 
   test "get contributors count when not 0" do
     assert GithubModule.get_contributors_count("kitplummer/ovmtb2") == {:ok, 2}
+  end
+
+  test "get last commit date" do
+    assert GithubModule.get_last_commit_date("kitplummer/xmpp4rails") == {:ok, ~U[2009-01-07 03:23:20Z]}
   end
 
 end
