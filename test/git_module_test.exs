@@ -9,6 +9,8 @@ defmodule GitModuleTest do
         File.rm_rf "lita-cron"
       end
     )
+    File.rm_rf "xmpp4rails"
+    File.rm_rf "lita-cron"
     {:ok, repo} = GitModule.clone_repo "https://github.com/kitplummer/xmpp4rails"
     [repo: repo]
   end

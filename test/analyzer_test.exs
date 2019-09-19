@@ -8,6 +8,7 @@ defmodule AnalyzerTest do
         File.rm_rf "xmpp4rails"
       end
     )
+    File.rm_rf "xmpp4rails"
 
     {:ok, repo} = GitModule.clone_repo "https://github.com/kitplummer/xmpp4rails"
     {:ok, date} = GitModule.get_last_commit_date repo
