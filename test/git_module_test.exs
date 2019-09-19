@@ -36,8 +36,8 @@ defmodule GitModuleTest do
 
   test "convert to delta", context do
     {:ok, date} = GitModule.get_last_commit_date context[:repo]
-    {:ok, seconds} = TimeHelper.get_commit_delta(date)
-    {:ok, weeks} = TimeHelper.sec_to_weeks(seconds)
+    seconds = TimeHelper.get_commit_delta(date)
+    weeks = TimeHelper.sec_to_weeks(seconds)
     assert 553 <= weeks
 
   end
