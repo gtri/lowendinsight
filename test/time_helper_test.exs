@@ -1,6 +1,11 @@
 defmodule TimeHelperTest do
   use ExUnit.Case
 
+  test "convert seconds to string" do
+    string = TimeHelper.sec_to_str(11223344)
+    assert "18 wk, 3 d, 21 hr, 35 min, 44 sec" == string
+  end
+
   test "get weeks from seconds" do
     assert TimeHelper.sec_to_weeks(333282014) == 551
   end
