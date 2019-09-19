@@ -2,44 +2,44 @@ defmodule GitModuleTest do
   use ExUnit.Case
   doctest GitModule
 
-  setup do
+  setup_all do
     on_exit(
       fn ->
         File.rm_rf "xmpp4rails"
         File.rm_rf "lita-cron"
       end
     )
+    File.rm_rf "xmpp4rails"
+    File.rm_rf "lita-cron"
+    {:ok, repo} = GitModule.clone_repo "https://github.com/kitplummer/xmpp4rails"
+    [repo: repo]
   end
 
-  # test "get clone" do
-  #   res = GitModule.clone_repo "https://github.com/kitplummer/xmpp4rails"
-  #   assert = {:ok, "", "xmpp4rails"}
-  # end
+  setup do
+    # yeah, this is empty, just here for posterity.  this would run before each
+    :ok
+  end
 
-  test "get contributor list 1" do
-    count = GitModule.get_contributor_count "https://github.com/kitplummer/xmpp4rails"
+  test "get contributor list 1", %{repo: repo} do
+    count = GitModule.get_contributor_count repo
     assert {:ok, 1} == count
   end
 
   test "get contributor list 3" do
-    count = GitModule.get_contributor_count "https://github.com/kitplummer/lita-cron"
+    {:ok, lc_repo} = GitModule.clone_repo "https://github.com/kitplummer/lita-cron"
+    count = GitModule.get_contributor_count lc_repo
     assert {:ok, 3} == count
   end
 
-  test "get contributor list bad repo" do
-    count = GitModule.get_contributor_count "https://github.com/kitplummer/blah"
-    assert {:error, "Repository not found"} == count
-  end
-
-  test "get last commit date" do
-    date = GitModule.get_last_commit_date "https://github.com/kitplummer/xmpp4rails"
+  test "get last commit date", context do
+    date = GitModule.get_last_commit_date context[:repo]
     assert {:ok, "2009-01-06T20:23:20-07:00"} == date
   end
 
-  test "convert to delta" do
-    {:ok, date} = GitModule.get_last_commit_date "https://github.com/kitplummer/xmpp4rails"
-    {:ok, seconds} = TimeHelper.get_commit_delta(date)
-    {:ok, weeks} = TimeHelper.sec_to_weeks(seconds)
+  test "convert to delta", context do
+    {:ok, date} = GitModule.get_last_commit_date context[:repo]
+    seconds = TimeHelper.get_commit_delta(date)
+    weeks = TimeHelper.sec_to_weeks(seconds)
     assert 553 <= weeks
 
   end
