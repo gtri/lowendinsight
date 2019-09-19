@@ -20,6 +20,22 @@ end
 You either need to have Elixir and Erlang installed locally or possibly
 a container to run stuff in.
 
+### REPL
+
+```
+iex -S mix
+```
+
+This will get you the `iex` prompt:
+
+```
+Erlang/OTP 22 [erts-10.4.4] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [hipe] [dtrace]
+
+Interactive Elixir (1.9.0) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails"
+"{\"repo\":\"https://github.com/kitplummer/xmpp4rails\",\"contributor_count\":1,\"contributor_risk\":\"critical\",\"commit_currency_weeks\":558,\"commit_currency_risk\":\"critical\"}"
+```
+
 Possibly a tip:
 
 ```
