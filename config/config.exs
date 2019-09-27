@@ -7,4 +7,7 @@ config :lowendinsight,
   medium_contributor_par_level: 5,
   critical_currency_par_level: 104,  # in weeks
   high_currency_par_level: 52,
-  medium_currency_par_level: 26
+  medium_currency_par_level: 26,
+  high_large_commit_risk: 0.30,
+  medium_large_commit_risk: 0.15,
+  low_large_commit_risk: 0.05

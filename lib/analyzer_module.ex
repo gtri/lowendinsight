@@ -20,6 +20,12 @@ defmodule AnalyzerModule do
     # Get risk rating for last commit
     {:ok, delta_risk} = RiskLogic.commit_currency_risk(weeks)
 
+    # Get risk rating for size of last commit
+
+    {:ok, lines_percent, file_percent} = GitModule.get_recent_changes(repo)
+    {:ok, changes_risk} = RiskLogic.commit_change_size_risk(lines_percent)
+
+
     # Generate report
 
     # Delete repo source
@@ -30,7 +36,8 @@ defmodule AnalyzerModule do
               contributor_count: count,
               contributor_risk: count_risk,
               commit_currency_weeks: weeks,
-              commit_currency_risk: delta_risk
+              commit_currency_risk: delta_risk,
+              recent_commit_size_risk: changes_risk
     ]
 
     elem(JSON.encode(report), 1)

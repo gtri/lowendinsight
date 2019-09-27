@@ -4,6 +4,7 @@ defmodule GitHelper do
         parse_diff/1: returns the relevant information contained in the last array positino of a diff array 
     """
     def parse_diff(list) do
+        IO.inspect(list)
         last = List.last(list)
         last_trimmed = String.trim(last)
         commit_info = String.split(last_trimmed, ", ")

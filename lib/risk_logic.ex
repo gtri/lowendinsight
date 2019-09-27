@@ -27,4 +27,16 @@ defmodule RiskLogic do
       delta_in_weeks >= Application.fetch_env!(:lowendinsight, :critical_currency_par_level) -> {:ok, "critical"}
     end
   end
+
+  @doc """
+  last_commit_size_risk: returns a text enumeration for the risk based on the size of the last commit
+  """
+  def commit_change_size_risk(change_percent) do
+    cond do
+      change_percent < Application.fetch_env!(:lowendinsight, :low_large_commit_risk) -> {:ok, "low"}
+      change_percent < Application.fetch_env!(:lowendinsight, :medium_large_commit_risk) -> {:ok, "medium"}
+      change_percent < Application.fetch_env!(:lowendinsight, :high_large_commit_risk) -> {:ok, "high"}
+      change_percent >= Application.fetch_env!(:lowendinsight, :high_large_commit_risk) -> {:ok, "critical"}
+    end
+  end
 end
