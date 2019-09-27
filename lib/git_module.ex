@@ -14,6 +14,7 @@ defmodule GitModule do
       {:ok, repo} ->
         {:ok, repo}
       {:error, _error} ->
+        # This error message is not always appropriate
         {:error, "Repository not found"}
     end
   end
@@ -44,4 +45,80 @@ defmodule GitModule do
     File.rm_rf! repo.path
   end
 
+  @doc """
+  get_commit_dates/1: returns a list of unix timestamps representing commit times
+  """
+  def get_commit_dates(repo) do
+    dates = Git.log!(repo, ["--pretty=format:%ct"])
+      |> String.split("\n")
+    dates_int = Enum.map(dates, fn x -> String.to_integer(x, 10) end)
+    {:ok, dates_int}
+  end
+
+  @doc """
+  get_tag_and_commit_dates/1: returns a list of lists of unix timestamps 
+  representing commit times with each lsit belonging to a different tag
+  """
+  def get_tag_and_commit_dates(repo) do
+    tag_and_date = Git.log!(repo, ["--pretty=format:%d$%ct"])
+     |> String.split("\n")
+     |> Enum.map(fn element -> String.split(element, "$") end)
+     |> Enum.map(fn [head | tail] -> 
+        if head == "" do
+          ["" | String.to_integer(Enum.at(tail, 0), 10)]
+        else
+          [String.trim(String.trim(String.trim(head), "("), ")") | String.to_integer(Enum.at(tail, 0), 10)]
+        end 
+      end)
+    GitHelper.split_commits_by_tag(tag_and_date)
+  end
+
+
+  @doc """
+  get_last_n_commits/1: returns a list of the short hashes of the last n commits 
+  """
+  def get_last_n_commits(repo, n) do
+    output = Git.log!(repo, ["--pretty=format:%h", "-#{n}"])
+    {:ok, String.split(output, "\n")}
+  end
+
+  @doc """
+  get_last_n_commits/2: returns a list of lines generated from the diff of two commits 
+  """
+  def get_diff_2_commits(repo, [commit1 | [commit2 | []]]) do
+    {:ok, diff} = Git.diff(repo, ["--stat", commit1, commit2])
+    {:ok, String.split(String.trim_trailing(diff, "\n"), "\n")}
+  end
+
+  @doc """
+  get_total_lines/1: returns the total lines and files contained in a repo as of the latest commit 
+  """
+  def get_total_lines(repo) do
+    {:ok, hash} = Git.hash_object(repo, ["-t", "tree", "/dev/null"])
+    {:ok, diff} = Git.diff(repo, ["--shortstat", String.replace_suffix(hash, "\n", "")])
+    [files_changed | [lines_changed | _tail]] = String.split(diff, ", ")
+    [file_num | _tail] = String.split(String.trim(files_changed), " ")
+    [line_num | _tail] = String.split(lines_changed, " ")
+    {:ok, String.to_integer(line_num), String.to_integer(file_num)}
+  end
+
+  @doc """
+  get_recent_changes/1: returns the fraction of changed lines in the last commit by the total lines in the repo
+  """
+  def get_recent_changes(repo) do
+    {:ok, total_lines, total_files_changed} = get_total_lines(repo)
+    {:ok, file_num, insertions, deletions} = get_last_2_delta(repo)
+    {:ok, (insertions + deletions) / total_lines, file_num / total_files_changed} 
+  end
+
+  @doc """
+  get_last_2_delta/1: returns the lines changed, files changed, additions and deletions in the last commit
+  """
+  def get_last_2_delta(repo) do
+    {:ok, commits} = get_last_n_commits(repo, 2)
+    {:ok, diffs} = get_diff_2_commits(repo, commits)
+    GitHelper.parse_diff(diffs)
+  end
+
+  
 end

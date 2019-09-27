@@ -9,7 +9,7 @@ defmodule RiskLogic do
   """
   def contributor_risk(contributor_count) do
     cond do
-      contributor_count < Application.fetch_env!(:lowendinsight, :critcial_contributor_par_level) -> {:ok, "critical"}
+      contributor_count < Application.fetch_env!(:lowendinsight, :critical_contributor_par_level) -> {:ok, "critical"}
       contributor_count < Application.fetch_env!(:lowendinsight, :high_contributor_par_level) -> {:ok, "high"}
       contributor_count < Application.fetch_env!(:lowendinsight, :medium_contributor_par_level) -> {:ok, "medium"}
       contributor_count >= Application.fetch_env!(:lowendinsight, :medium_contributor_par_level) -> {:ok, "low"}
@@ -27,5 +27,4 @@ defmodule RiskLogic do
       delta_in_weeks >= Application.fetch_env!(:lowendinsight, :critical_currency_par_level) -> {:ok, "critical"}
     end
   end
-
 end

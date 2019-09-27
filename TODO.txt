@@ -1,0 +1,11 @@
+1. Weight number of contributors by the actual number of their commits (contributor weight = contributions / (total contributions / number of reported contributors)
+    could also just count the number of contributors over a certain number of commits
+2. Differentiate between stale/vulnerable projects and stable/complete projects
+3. Flag commits that add a large amount of code in one recent commit (relative to code base)
+4. Look for documentation (we want documentatino proportinoal to the codebase size)
+6. Check existence of tags
+5. Look at commits between tags (lots of commits between tags helps to justify long times without a commit after stable versinos are released)
+6. Look at code amount to number of weighted contributors (less contributors on a large codebase is really bad, but not so bad on a small code base)
+7. Put less value on a large number of commits that are very small (or empty)
+
+Should try to look at metrics that can't be gamed, or account for gaming of metrics

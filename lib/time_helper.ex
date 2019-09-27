@@ -28,4 +28,19 @@ defmodule TimeHelper do
         #{:ok, seconds}
     end
   end
+
+  def sum_ts_diff([_head | []], accumulator) do
+    {:ok, accumulator}
+  end
+
+  def sum_ts_diff([head_1 | tail], accumulator) do
+    [head_2 | _next_tail] = tail
+    [_ | timestamp_1] = head_1
+    [_ | timestamp_2] = head_2
+    sum_ts_diff(tail, (timestamp_2 - timestamp_1) + accumulator)
+  end
+
+  def sum_ts_diff(list) do
+    sum_ts_diff(list, 0)
+  end
 end
