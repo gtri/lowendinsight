@@ -18,8 +18,18 @@ defmodule AnalyzerTest do
   end
 
   test "get report", context do
-    report = AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails"
-    assert "{\"repo\":\"https://github.com/kitplummer/xmpp4rails\",\"contributor_count\":1,\"contributor_risk\":\"critical\",\"commit_currency_weeks\":#{context[:weeks]},\"commit_currency_risk\":\"critical\"}" == report
+    report = AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "test"
+    data = JSON.decode!(report)
+    expected_data = %{
+              "commit_currency_risk" => "critical",
+              "commit_currency_weeks" => context[:weeks],
+              "contributor_count" => 1,
+              "contributor_risk" => "critical",
+              "repo" => "https://github.com/kitplummer/xmpp4rails"
+    }
+
+    assert "test" == data["header"]["source_client"]
+    assert expected_data == data["data"]
   end
 
 end

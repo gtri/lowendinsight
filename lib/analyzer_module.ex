@@ -4,7 +4,9 @@ defmodule AnalyzerModule do
   returning a simple JSON report.
   """
 
-  def analyze(url) do
+  def analyze(url, source) do
+    start_time = DateTime.utc_now()
+
     {:ok, repo} = Git.clone url
 
     # Get unique contributors count
@@ -25,12 +27,23 @@ defmodule AnalyzerModule do
     # Delete repo source
     GitModule.delete_repo(repo)
 
+    end_time = DateTime.utc_now()
+    duration = DateTime.diff(end_time, start_time)
     # Return summary report as JSON
-    report = [repo: url,
-              contributor_count: count,
-              contributor_risk: count_risk,
-              commit_currency_weeks: weeks,
-              commit_currency_risk: delta_risk
+    report = [header: [
+                start_time: DateTime.to_string(start_time),
+                end_time: DateTime.to_string(end_time),
+                duration: duration,
+                uuid: UUID.uuid1(),
+                source_client: source
+              ],
+              data: [
+                repo: url,
+                contributor_count: count,
+                contributor_risk: count_risk,
+                commit_currency_weeks: weeks,
+                commit_currency_risk: delta_risk
+              ]
     ]
 
     elem(JSON.encode(report), 1)
