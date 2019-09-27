@@ -4,17 +4,31 @@ defmodule GitHelper do
         parse_diff/1: returns the relevant information contained in the last array positino of a diff array 
     """
     def parse_diff(list) do
-        IO.inspect(list)
         last = List.last(list)
         last_trimmed = String.trim(last)
         commit_info = String.split(last_trimmed, ", ")
         file_string = Enum.at(commit_info, 0)
-        insertion_string = Enum.at(commit_info, 1)
-        deletion_string = Enum.at(commit_info, 2)
-        [file_num | _tail] = String.split(file_string, " ")
-        [insertion_num | _tail] = String.split(insertion_string, " ")
-        [deletion_num | _tail] = String.split(deletion_string, " ")
-        {:ok, String.to_integer(file_num), String.to_integer(insertion_num), String.to_integer(deletion_num)}
+        if file_string == nil do
+            {:ok, 0, 0, 0}
+        else
+            insertion_string = Enum.at(commit_info, 1)
+            if insertion_string == nil do
+                [file_num | _tail] = String.split(file_string, " ")
+                {:ok, String.to_integer(file_num), 0, 0}
+            else
+                deletion_string = Enum.at(commit_info, 2)
+                if deletion_string == nil do
+                    [file_num | _tail] = String.split(file_string, " ")
+                    [insertion_num | _tail] = String.split(insertion_string, " ")
+                    {:ok, String.to_integer(file_num), String.to_integer(insertion_num), 0}
+                else
+                    [file_num | _tail] = String.split(file_string, " ")
+                    [insertion_num | _tail] = String.split(insertion_string, " ")
+                    [deletion_num | _tail] = String.split(deletion_string, " ")
+                    {:ok, String.to_integer(file_num), String.to_integer(insertion_num), String.to_integer(deletion_num)}
+                end
+            end
+        end
     end
 
     @doc """
