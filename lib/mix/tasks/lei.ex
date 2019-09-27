@@ -15,7 +15,7 @@ defmodule Mix.Tasks.Analyze do
   ```
   """
   def run(url) do
-    report = AnalyzerModule.analyze(url)
+    report = AnalyzerModule.analyze(url, "mix task")
     IO.puts report
   end
 end
