@@ -1,4 +1,4 @@
-# GithubModule
+#e GithubModule
 
 **TODO: Add description**
 
@@ -44,6 +44,13 @@ docker run -i --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp elixir iex -S mix
 
 From iex you can access to the library functions.
 
+There is also a `mix` task that you can use to access the
+`AnalyzeModule.analyze(url)` function.
+
+```
+mix analyze https://github.com/kitplummer/xmpp4rails
+```
+
 ## Docs?
 
 This is really a TODO note for me: Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
@@ -55,4 +62,3 @@ be found at [https://hexdocs.pm/lowendinsight](https://hexdocs.pm/lowendinsight)
 * Refactoring to use Git and work off of repo, versus APIs
 * Refactoring to work thru Analyze, and Report
 * Maintain access to other functions
-
