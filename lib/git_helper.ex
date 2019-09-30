@@ -60,8 +60,11 @@ defmodule GitHelper do
     end
 
     def get_filtered_contributor_count(map, total) do
-        filter = Application.fetch_env!(:lowendinsight, :functional_contributors_filter_percent)
-        filtered_list = Enum.filter(map, fn {_key, value} -> (value / total) >= filter end)
+        filtered_list = Enum.filter(map,
+            fn {_key, value} ->
+                (value / total) >= (1 / Kernel.map_size(map)) 
+            end
+        )
         length = Kernel.length(filtered_list)
         {:ok, length, filtered_list}
     end

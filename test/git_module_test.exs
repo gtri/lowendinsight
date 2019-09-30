@@ -134,10 +134,10 @@ defmodule GitModuleTest do
     assert number == 1
 
     {:ok, number, _contributor_names} = GitModule.get_functional_contributors(context[:tag_repo])
-    assert number == 2
+    assert number == 3
 
     {:ok, number, _contributor_names} = GitModule.get_functional_contributors(context[:gitlab_repo])
-    assert number == 2
+    assert number == 15
 
     {:ok, number, _contributor_names} = GitModule.get_functional_contributors(context[:bitbucket_repo])
     assert number == 1

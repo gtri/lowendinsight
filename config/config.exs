@@ -13,5 +13,4 @@ config :lowendinsight,
   low_large_commit_risk: 0.05,
   high_functional_contributors_risk: 2,
   medium_functional_contributors_risk: 4,
-  low_functional_contributors_risk: 5,
-  functional_contributors_filter_percent: 0.10
+  low_functional_contributors_risk: 5
