@@ -78,7 +78,7 @@ defmodule GitModule do
   get_last_n_commits/1: returns a list of the short hashes of the last n commits 
   """
   def get_last_n_commits(repo, n) do
-    output = Git.log!(repo, ["--pretty=format:%h", "-#{n}"])
+    output = Git.log!(repo, ["--pretty=format:%h", "--no-merges", "-#{n}"])
     {:ok, String.split(output, "\n")}
   end
 
