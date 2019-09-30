@@ -66,8 +66,8 @@ defmodule GitModuleTest do
     {:ok, commits} = GitModule.get_last_n_commits(context[:tag_repo], 2)
     {:ok, diffs} = GitModule.get_diff_2_commits(context[:tag_repo], commits)
     {:ok, files_changed, insertions, deletions} = GitHelper.parse_diff(diffs)
-    assert files_changed == 1
-    assert (insertions + deletions) == 23
+    assert files_changed == 3
+    assert (insertions + deletions) == 27
 
     {:ok, total_lines, total_files_changed} = GitModule.get_total_lines(context[:repo])
     assert total_lines == 543
@@ -83,7 +83,7 @@ defmodule GitModuleTest do
   end
 
   test "get the number of contributors over a certain percentage", context do
-    {:ok, number} = GitModule.get_num_filtered_contributors(context[:repo])
+    {:ok, number, _contributor_names} = GitModule.get_functional_contributors(context[:repo])
     assert number == 1
   end
 end

@@ -128,8 +128,9 @@ defmodule GitModule do
     {:ok, counts, total_contributions}
   end
 
-  def get_num_filtered_contributors(repo) do
+  def get_functional_contributors(repo) do
     {:ok, counts, total} = get_contributor_distribution(repo)
-    GitHelper.get_filtered_contributor_count(Map.values(counts), total)
+    {:ok, length, filtered_list} = GitHelper.get_filtered_contributor_count(counts, total)
+    {:ok, length, Enum.map(filtered_list, fn {name, _value} -> name end)}
   end
 end

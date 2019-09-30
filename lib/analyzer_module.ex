@@ -29,7 +29,7 @@ defmodule AnalyzerModule do
 
     # get risk rating for number of contributors with over a certain percentage of commits 
 
-    {:ok, num_filtered_contributors} = GitModule.get_num_filtered_contributors(repo)
+    {:ok, num_filtered_contributors, functional_contributors} = GitModule.get_functional_contributors(repo)
     {:ok, filtered_contributors_risk} = RiskLogic.functional_contributors_risk(num_filtered_contributors)
 
 
@@ -57,7 +57,8 @@ defmodule AnalyzerModule do
                 large_recent_commit_risk: changes_risk,
                 recent_commit_size_in_percent_of_codebase: lines_percent, 
                 functional_contributors_risk: filtered_contributors_risk,
-                functional_contributors: num_filtered_contributors
+                functional_contributors: num_filtered_contributors,
+                functional_contributor_names: functional_contributors
               ]
     ]
 
