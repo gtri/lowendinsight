@@ -60,7 +60,7 @@ be found at [https://hexdocs.pm/lowendinsight](https://hexdocs.pm/lowendinsight)
 
 ### A Note about the metrics used
 * Recent commit size: This is a measure of how large the most recent commit is in relatino to the size of the codebase. The idea being that a large recent commit is much more likely to be bug filled than a relatively small commit.
-* Functional Contributors: A functional contributor is one that contributes above a certain percentage of commits (defaults to 10% and can be changed in the config file). A high number of functional contributors indiciates that the project has many eyes looking over it, and thus seems to be more trustworthy.
+* Functional Contributors: A functional contributor is one that contributes above a certain percentage of commits equal to or greater than their "fair" share. Simply put, a contributor is counted as a functional contributor if the proportion of their commits to the total commits is greater than or equal to 1 / the total number of committers.  If everyone committed the same amount, everyone would be a functional contributor.
 
 ## TODO(ing)
 
