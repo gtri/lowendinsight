@@ -55,7 +55,9 @@ defmodule AnalyzerModule do
                 commit_currency_weeks: weeks,
                 commit_currency_risk: delta_risk,
                 large_recent_commit_risk: changes_risk,
-                functional_contributors_risk: filtered_contributors_risk
+                recent_commit_size_in_percent_of_codebase: lines_percent, 
+                functional_contributors_risk: filtered_contributors_risk,
+                functional_contributors: num_filtered_contributors
               ]
     ]
 
