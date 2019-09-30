@@ -43,7 +43,34 @@ defmodule RiskLogicTest do
   end
 
   test "confirm currency low" do
-    assert RiskLogic.contributor_risk(25) == {:ok, "low"}
+    assert RiskLogic.commit_currency_risk(25) == {:ok, "low"}
+  end
+
+  test "confirm large commit low" do
+    assert RiskLogic.commit_change_size_risk(0.04) == {:ok, "low"}
+  end
+  test "confirm large commit medium" do
+    assert RiskLogic.commit_change_size_risk(0.10) == {:ok, "medium"}
+  end
+  test "confirm large commit high" do
+    assert RiskLogic.commit_change_size_risk(0.16) == {:ok, "high"}
+  end
+  test "confirm large commit critical" do
+    assert RiskLogic.commit_change_size_risk(0.35) == {:ok, "critical"}
+  end
+
+
+  test "confirm functional commiters low" do
+    assert RiskLogic.functional_contributors_risk(6) == {:ok, "low"}
+  end
+  test "confirm functional commiters medium" do
+    assert RiskLogic.functional_contributors_risk(4) == {:ok, "medium"}
+  end
+  test "confirm functional commiters high" do
+    assert RiskLogic.functional_contributors_risk(2) == {:ok, "high"}
+  end
+  test "confirm functional commiters critical" do
+    assert RiskLogic.functional_contributors_risk(1) == {:ok, "critical"}
   end
 
 end

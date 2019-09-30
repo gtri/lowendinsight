@@ -22,6 +22,17 @@ defmodule AnalyzerModule do
     # Get risk rating for last commit
     {:ok, delta_risk} = RiskLogic.commit_currency_risk(weeks)
 
+    # Get risk rating for size of last commit
+
+    {:ok, lines_percent, _file_percent} = GitModule.get_recent_changes(repo)
+    {:ok, changes_risk} = RiskLogic.commit_change_size_risk(lines_percent)
+
+    # get risk rating for number of contributors with over a certain percentage of commits 
+
+    {:ok, num_filtered_contributors} = GitModule.get_num_filtered_contributors(repo)
+    {:ok, filtered_contributors_risk} = RiskLogic.functional_contributors_risk(num_filtered_contributors)
+
+
     # Generate report
 
     # Delete repo source
@@ -42,7 +53,9 @@ defmodule AnalyzerModule do
                 contributor_count: count,
                 contributor_risk: count_risk,
                 commit_currency_weeks: weeks,
-                commit_currency_risk: delta_risk
+                commit_currency_risk: delta_risk,
+                large_recent_commit_risk: changes_risk,
+                functional_contributors_risk: filtered_contributors_risk
               ]
     ]
 

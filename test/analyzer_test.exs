@@ -25,7 +25,9 @@ defmodule AnalyzerTest do
               "commit_currency_weeks" => context[:weeks],
               "contributor_count" => 1,
               "contributor_risk" => "critical",
-              "repo" => "https://github.com/kitplummer/xmpp4rails"
+              "repo" => "https://github.com/kitplummer/xmpp4rails",
+              "large_recent_commit_risk" => "low",
+              "functional_contributors_risk" => "critical"
     }
 
     assert "test" == data["header"]["source_client"]
