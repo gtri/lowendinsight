@@ -57,6 +57,11 @@ This is really a TODO note for me: Documentation can be generated with [ExDoc](h
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/lowendinsight](https://hexdocs.pm/lowendinsight).
 
+
+### A Note about the metrics used
+* Recent commit size: This is a measure of how large the most recent commit is in relatino to the size of the codebase. The idea being that a large recent commit is much more likely to be bug filled than a relatively small commit.
+* Functional Contributors: A functional contributor is one that contributes above a certain percentage of commits (defaults to 10% and can be changed in the config file). A high number of functional contributors indiciates that the project has many eyes looking over it, and thus seems to be more trustworthy.
+
 ## TODO(ing)
 
 * Refactoring to work thru Analyze, and Report

@@ -26,8 +26,13 @@ defmodule AnalyzerTest do
               "contributor_count" => 1,
               "contributor_risk" => "critical",
               "repo" => "https://github.com/kitplummer/xmpp4rails",
+              "functional_contributor_names" => ["Kit Plummer"],
+              "functional_contributors" => 1,
+              "functional_contributors_risk" => "critical",
               "large_recent_commit_risk" => "low",
-              "functional_contributors_risk" => "critical"
+              "recent_commit_size_in_percent_of_codebase" => 0.0036832412523020264
+              
+
     }
 
     assert "test" == data["header"]["source_client"]

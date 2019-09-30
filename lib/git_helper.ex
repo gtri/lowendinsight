@@ -59,11 +59,11 @@ defmodule GitHelper do
         get_contributor_counts(list, %{})
     end
 
-    def get_filtered_contributor_count(list, total) do
+    def get_filtered_contributor_count(map, total) do
         filter = Application.fetch_env!(:lowendinsight, :functional_contributors_filter_percent)
-        filtered_list = Enum.filter(list, fn x -> (x / total) >= filter end)
+        filtered_list = Enum.filter(map, fn {_key, value} -> (value / total) >= filter end)
         length = Kernel.length(filtered_list)
-        {:ok, length}
+        {:ok, length, filtered_list}
     end
 
     defp split_commits_by_tag([], current) do
