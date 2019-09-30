@@ -120,5 +120,16 @@ defmodule GitModule do
     GitHelper.parse_diff(diffs)
   end
 
-  
+  def get_contributor_distribution(repo) do
+    contributors = Git.log!(repo, ["--pretty=format:%an"])
+    contributors_list = String.split(contributors, "\n")
+    total_contributions = Kernel.length(contributors_list)
+    {:ok, counts} = GitHelper.get_contributor_counts(contributors_list)
+    {:ok, counts, total_contributions}
+  end
+
+  def get_num_filtered_contributors(repo) do
+    {:ok, counts, total} = get_contributor_distribution(repo)
+    GitHelper.get_filtered_contributor_count(Map.values(counts), total)
+  end
 end

@@ -19,7 +19,7 @@ defmodule AnalyzerTest do
 
   test "get report", context do
     report = AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails"
-    assert "{\"repo\":\"https://github.com/kitplummer/xmpp4rails\",\"contributor_count\":1,\"contributor_risk\":\"critical\",\"commit_currency_weeks\":#{context[:weeks]},\"commit_currency_risk\":\"critical\",\"recent_commit_size_risk\":\"low\"}" == report
+    assert "{\"repo\":\"https://github.com/kitplummer/xmpp4rails\",\"contributor_count\":1,\"contributor_risk\":\"critical\",\"commit_currency_weeks\":#{context[:weeks]},\"commit_currency_risk\":\"critical\",\"recent_commit_size_risk\":\"low\",\"functional_contributors\":\"critical\"}" == report
   end
 
 end

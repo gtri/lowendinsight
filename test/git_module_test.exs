@@ -73,4 +73,17 @@ defmodule GitModuleTest do
     assert total_lines == 543
     assert total_files_changed == 10
   end
+
+  test "get contributor counts", context do
+    {:ok, contributor_distribution, total} = GitModule.get_contributor_distribution(context[:repo])
+    values = Map.values(contributor_distribution)
+    assert total == 7
+    assert Enum.at(values, 0) == 7
+    assert Map.fetch(contributor_distribution, "Kit Plummer") == {:ok, 7}
+  end
+
+  test "get the number of contributors over a certain percentage", context do
+    {:ok, number} = GitModule.get_num_filtered_contributors(context[:repo])
+    assert number == 1
+  end
 end

@@ -22,8 +22,11 @@ defmodule AnalyzerModule do
 
     # Get risk rating for size of last commit
 
-    {:ok, lines_percent, file_percent} = GitModule.get_recent_changes(repo)
+    {:ok, lines_percent, _file_percent} = GitModule.get_recent_changes(repo)
     {:ok, changes_risk} = RiskLogic.commit_change_size_risk(lines_percent)
+
+    {:ok, num_filtered_contributors} = GitModule.get_num_filtered_contributors(repo)
+    {:ok, filtered_contributors_risk} = RiskLogic.functional_contributors_risk(num_filtered_contributors)
 
 
     # Generate report
@@ -37,7 +40,8 @@ defmodule AnalyzerModule do
               contributor_risk: count_risk,
               commit_currency_weeks: weeks,
               commit_currency_risk: delta_risk,
-              recent_commit_size_risk: changes_risk
+              recent_commit_size_risk: changes_risk,
+              functional_contributors: filtered_contributors_risk
     ]
 
     elem(JSON.encode(report), 1)

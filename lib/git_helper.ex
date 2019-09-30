@@ -52,6 +52,20 @@ defmodule GitHelper do
         split_commits_by_tag(list, [])
     end
 
+    @doc """
+        get_contributor_counts/1: Gets the number of contributions belonging to each author and return a map of %{name => number}
+    """
+    def get_contributor_counts(list) do
+        get_contributor_counts(list, %{})
+    end
+
+    def get_filtered_contributor_count(list, total) do
+        filter = Application.fetch_env!(:lowendinsight, :functional_contributors_filter_percent)
+        filtered_list = Enum.filter(list, fn x -> (x / total) >= filter end)
+        length = Kernel.length(filtered_list)
+        {:ok, length}
+    end
+
     defp split_commits_by_tag([], current) do
         {:ok, current}
     end
@@ -89,6 +103,20 @@ defmodule GitHelper do
     end
 
     defp get_avg_tag_commit_time_diff([], accumulator) do
+        {:ok, accumulator}
+    end
+
+    defp get_contributor_counts([head | tail], accumulator) do
+        if head == "" do
+            get_contributor_counts(tail, accumulator)
+        else
+            maybe_new_key = Map.put_new(accumulator, String.trim(head), 0)
+            {_num, new_value} = Map.get_and_update(maybe_new_key, head, fn current_value -> {current_value, current_value + 1} end)
+            get_contributor_counts(tail, new_value)
+        end
+    end
+
+    defp get_contributor_counts([], accumulator) do
         {:ok, accumulator}
     end
 end

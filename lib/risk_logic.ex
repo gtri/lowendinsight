@@ -39,4 +39,14 @@ defmodule RiskLogic do
       change_percent >= Application.fetch_env!(:lowendinsight, :high_large_commit_risk) -> {:ok, "critical"}
     end
   end
+
+
+  def functional_contributors_risk(contributors) do
+    cond do
+      contributors >= Application.fetch_env!(:lowendinsight, :low_functional_contributors_risk) -> {:ok, "low"}
+      contributors >= Application.fetch_env!(:lowendinsight, :medium_functional_contributors_risk) -> {:ok, "medium"}
+      contributors >= Application.fetch_env!(:lowendinsight, :high_functional_contributors_risk) -> {:ok, "high"}
+      contributors < Application.fetch_env!(:lowendinsight, :high_functional_contributors_risk) -> {:ok, "critical"}
+    end
+  end
 end

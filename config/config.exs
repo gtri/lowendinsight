@@ -10,4 +10,8 @@ config :lowendinsight,
   medium_currency_par_level: 26,
   high_large_commit_risk: 0.30,
   medium_large_commit_risk: 0.15,
-  low_large_commit_risk: 0.05
+  low_large_commit_risk: 0.05,
+  high_functional_contributors_risk: 2,
+  medium_functional_contributors_risk: 4,
+  low_functional_contributors_risk: 5,
+  functional_contributors_filter_percent: 0.10

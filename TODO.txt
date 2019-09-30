@@ -8,5 +8,7 @@
 6. Look at code amount to number of weighted contributors (less contributors on a large codebase is really bad, but not so bad on a small code base)
 7. Put less value on a large number of commits that are very small (or empty)
 8. Detect large recent commit (Done)
+9. Detect a large codebase with very few contributors
+10. Detect a single very actve contributor
 
 Should try to look at metrics that can't be gamed, or account for gaming of metrics
