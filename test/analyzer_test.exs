@@ -31,7 +31,7 @@ defmodule AnalyzerTest do
               "functional_contributors_risk" => "critical",
               "large_recent_commit_risk" => "low",
               "recent_commit_size_in_percent_of_codebase" => 0.0036832412523020264
-              
+
 
     }
 
@@ -39,4 +39,12 @@ defmodule AnalyzerTest do
     assert expected_data == data["data"]
   end
 
+  test "get report fail" do
+    report = AnalyzerModule.analyze "https://github.com/kitplummer/blah", "test"
+    data = JSON.decode!(report)
+    expected_data = %{"error" => "Repo error!"}
+
+    assert "test" == data["header"]["source_client"]
+    assert expected_data == data["data"]
+  end
 end
