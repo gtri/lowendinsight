@@ -42,9 +42,8 @@ defmodule AnalyzerTest do
   test "get report fail" do
     report = AnalyzerModule.analyze "https://github.com/kitplummer/blah", "test"
     data = JSON.decode!(report)
-    expected_data = %{"error" => "Repo error!"}
+    expected_data = "this is a POSTful service, JSON body with valid git url param required and content-type set to application/json."
 
-    assert "test" == data["header"]["source_client"]
-    assert expected_data == data["data"]
+    assert expected_data == data["error"]
   end
 end

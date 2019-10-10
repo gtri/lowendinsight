@@ -65,18 +65,11 @@ defmodule AnalyzerModule do
 
     rescue
 
-      MatchError -> resp = [header: [
-                  uuid: UUID.uuid1(),
-                  source_client: source
-                ],
-                data: [
-                  error: "Repo error!"
-                ]
-      ]
+      MatchError -> resp = [error: "this is a POSTful service, JSON body with valid git url param required and content-type set to application/json."]
 
       elem(JSON.encode(resp), 1)
       #e in MatchError -> IO.puts("Repo error! " <> e[:term])
-    
+
     end
 
   end
