@@ -30,8 +30,8 @@ defmodule AnalyzerTest do
               "functional_contributors" => 1,
               "functional_contributors_risk" => "critical",
               "large_recent_commit_risk" => "low",
-              "recent_commit_size_in_percent_of_codebase" => 0.0036832412523020264
-
+              "recent_commit_size_in_percent_of_codebase" => 0.0036832412523020264,
+              "risk" => "critical"
 
     }
 

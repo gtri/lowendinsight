@@ -40,14 +40,14 @@ defmodule AnalyzerModule do
       end_time = DateTime.utc_now()
       duration = DateTime.diff(end_time, start_time)
       # Return summary report as JSON
-      report = [header: [
+      report = %{header: %{
                   start_time: DateTime.to_string(start_time),
                   end_time: DateTime.to_string(end_time),
                   duration: duration,
                   uuid: UUID.uuid1(),
                   source_client: source
-                ],
-                data: [
+                },
+                data: %{
                   repo: url,
                   contributor_count: count,
                   contributor_risk: count_risk,
@@ -58,8 +58,10 @@ defmodule AnalyzerModule do
                   functional_contributors_risk: filtered_contributors_risk,
                   functional_contributors: num_filtered_contributors,
                   functional_contributor_names: functional_contributors
-                ]
-      ]
+                }
+      }
+
+      report = determine_toplevel_risk(report)
 
       elem(JSON.encode(report), 1)
 
@@ -73,4 +75,18 @@ defmodule AnalyzerModule do
     end
 
   end
+
+  defp determine_toplevel_risk(report) do
+    values = Map.values(report[:data])
+    risk = cond do
+      Enum.member?(values, "critical") -> "critical"
+      Enum.member?(values, "high") -> "high"
+      Enum.member?(values, "medium") -> "medium"
+      true -> "low"
+    end
+    data = report[:data]
+    data = Map.put_new(data, :risk, risk)
+    report |> Map.put(:header, report[:header]) |> Map.put(:data, data)
+  end
+
 end
