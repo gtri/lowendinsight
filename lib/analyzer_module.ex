@@ -61,7 +61,7 @@ defmodule AnalyzerModule do
                 }
       }
 
-      #report = determine_toplevel_risk(report)
+      report = determine_toplevel_risk(report)
 
       elem(JSON.encode(report), 1)
 
@@ -77,7 +77,16 @@ defmodule AnalyzerModule do
   end
 
   defp determine_toplevel_risk(report) do
-    report[:data[risk: "critical"]]
+    values = Map.values(report[:data])
+    risk = cond do
+      Enum.member?(values, "critical") -> "critical"
+      Enum.member?(values, "high") -> "high"
+      Enum.member?(values, "medium") -> "medium"
+      true -> "low"
+    end
+    data = report[:data]
+    data = Map.put_new(data, :risk, risk)
+    report |> Map.put(:header, report[:header]) |> Map.put(:data, data)
   end
 
 end
