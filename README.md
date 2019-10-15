@@ -61,8 +61,10 @@ be found at [https://hexdocs.pm/lowendinsight](https://hexdocs.pm/lowendinsight)
 ### A Note about the metrics used
 * Recent commit size: This is a measure of how large the most recent commit is in relatino to the size of the codebase. The idea being that a large recent commit is much more likely to be bug filled than a relatively small commit.
 * Functional Contributors: A functional contributor is one that contributes above a certain percentage of commits equal to or greater than their "fair" share. Simply put, a contributor is counted as a functional contributor if the proportion of their commits to the total commits is greater than or equal to 1 / the total number of committers.  If everyone committed the same amount, everyone would be a functional contributor.
+* `risk` is a top-level key that contains the "rolled up" risk, the
+  highest value pulled from any of the discrete analysis items.
+
 
 ## TODO(ing)
 
-* Refactoring to work thru Analyze, and Report
 * Maintain access to other functions
