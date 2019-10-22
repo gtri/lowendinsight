@@ -65,6 +65,6 @@ be found at [https://hexdocs.pm/lowendinsight](https://hexdocs.pm/lowendinsight)
   highest value pulled from any of the discrete analysis items.
 
 
-## TODO(ing)
+## License
 
-* Maintain access to other functions
+BSD 3-Clause.  See https://opensource.org/licenses/BSD-3-Clause or LICENSE file for details.
