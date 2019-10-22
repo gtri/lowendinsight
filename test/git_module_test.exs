@@ -21,7 +21,7 @@ defmodule GitModuleTest do
     File.rm_rf("clikan")
     File.rm_rf("infrastructure")
     {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails")
-    {:ok, tag_repo} = GitModule.clone_repo("https://github.com/martinh/libconfuse")
+    {:ok, tag_repo} = GitModule.clone_repo("https://github.com/kitplummer/libconfuse")
     {:ok, bitbucket_repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan")
 
     {:ok, gitlab_repo} =
@@ -136,8 +136,8 @@ defmodule GitModuleTest do
     {:ok, gl_diffs} = GitModule.get_diff_2_commits(context[:gitlab_repo], gl_commits)
     {:ok, gl_files_changed, gl_insertions, gl_deletions} = GitHelper.parse_diff(gl_diffs)
     assert gl_files_changed == 1
-    assert gl_insertions + gl_deletions == 21
-    assert GitModule.get_total_lines(context[:gitlab_repo]) == {:ok, 1226, 34}
+    assert gl_insertions + gl_deletions == 30
+    assert GitModule.get_total_lines(context[:gitlab_repo]) == {:ok, 1256, 35}
   end
 
   test "get contributor counts", context do
@@ -206,7 +206,7 @@ defmodule GitModuleTest do
              1,
              6,
              3,
-             9,
+             11,
              3,
              2,
              1,
@@ -239,10 +239,11 @@ defmodule GitModuleTest do
              2,
              3,
              1,
-             6
+             6,
+             2
            ]
 
-    assert gl_total == 273
+    assert gl_total == 277
   end
 
   test "get the number of contributors over a certain percentage", context do
