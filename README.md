@@ -1,6 +1,8 @@
-#e GithubModule
+# LowEndInsight
 
-**TODO: Add description**
+LowEndInsight is a simple "bus-factor" risk analysis library for Open
+Source Software which is managed within a Git repository.  Provide the
+git URL and the library will respond with a basic JSON object report.
 
 ## Installation
 
@@ -53,10 +55,7 @@ mix analyze https://github.com/kitplummer/xmpp4rails, mix
 
 ## Docs?
 
-This is really a TODO note for me: Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/lowendinsight](https://hexdocs.pm/lowendinsight).
-
+Need help here?
 
 ### A Note about the metrics used
 * Recent commit size: This is a measure of how large the most recent commit is in relatino to the size of the codebase. The idea being that a large recent commit is much more likely to be bug filled than a relatively small commit.
@@ -64,6 +63,37 @@ be found at [https://hexdocs.pm/lowendinsight](https://hexdocs.pm/lowendinsight)
 * `risk` is a top-level key that contains the "rolled up" risk, the
   highest value pulled from any of the discrete analysis items.
 
+## Contributing
+
+Thanks for considering, we need your contributions to help this project come to fruition.
+
+Here are some important resources:
+
+  * Bugs? [Issues](https://bitbucket.org/kitplummer/lowendinsight/issues/new) is where to report them
+
+### Style
+
+The repo includes auto-formatting, please run `mix format` to format to
+the standard style prescribed by the Elixir project:
+
+https://hexdocs.pm/mix/Mix.Tasks.Format.html
+https://github.com/christopheradams/elixir_style_guide
+
+## Testing
+
+Required. Please write ExUnit test for new code you create.
+
+Use `mix test --cover` to verify that you're maintaining coverage.
+
+## Submitting changes
+
+Please send a [Pull Request](https://bitbucket.org/kitplummer/lowendinsight/pull-requests/) with a clear list of what you've done and why. Please follow Elixir coding conventions (below in Style) and make sure all of your commits are atomic (one feature per commit).
+
+Always write a clear log message for your commits. One-line messages are fine for small changes, but bigger changes should look like this:
+
+    $ git commit -m "A brief summary of the commit
+    >
+    > A paragraph describing what changed and its impact."
 
 ## License
 
