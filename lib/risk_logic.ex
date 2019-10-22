@@ -13,10 +13,17 @@ defmodule RiskLogic do
   """
   def contributor_risk(contributor_count) do
     cond do
-      contributor_count < Application.fetch_env!(:lowendinsight, :critical_contributor_par_level) -> {:ok, "critical"}
-      contributor_count < Application.fetch_env!(:lowendinsight, :high_contributor_par_level) -> {:ok, "high"}
-      contributor_count < Application.fetch_env!(:lowendinsight, :medium_contributor_par_level) -> {:ok, "medium"}
-      contributor_count >= Application.fetch_env!(:lowendinsight, :medium_contributor_par_level) -> {:ok, "low"}
+      contributor_count < Application.fetch_env!(:lowendinsight, :critical_contributor_par_level) ->
+        {:ok, "critical"}
+
+      contributor_count < Application.fetch_env!(:lowendinsight, :high_contributor_par_level) ->
+        {:ok, "high"}
+
+      contributor_count < Application.fetch_env!(:lowendinsight, :medium_contributor_par_level) ->
+        {:ok, "medium"}
+
+      contributor_count >= Application.fetch_env!(:lowendinsight, :medium_contributor_par_level) ->
+        {:ok, "low"}
     end
   end
 
@@ -25,10 +32,17 @@ defmodule RiskLogic do
   """
   def commit_currency_risk(delta_in_weeks) do
     cond do
-      delta_in_weeks < Application.fetch_env!(:lowendinsight, :medium_currency_par_level) -> {:ok, "low"}
-      delta_in_weeks < Application.fetch_env!(:lowendinsight, :high_currency_par_level) -> {:ok, "medium"}
-      delta_in_weeks < Application.fetch_env!(:lowendinsight, :critical_currency_par_level) -> {:ok, "high"}
-      delta_in_weeks >= Application.fetch_env!(:lowendinsight, :critical_currency_par_level) -> {:ok, "critical"}
+      delta_in_weeks < Application.fetch_env!(:lowendinsight, :medium_currency_par_level) ->
+        {:ok, "low"}
+
+      delta_in_weeks < Application.fetch_env!(:lowendinsight, :high_currency_par_level) ->
+        {:ok, "medium"}
+
+      delta_in_weeks < Application.fetch_env!(:lowendinsight, :critical_currency_par_level) ->
+        {:ok, "high"}
+
+      delta_in_weeks >= Application.fetch_env!(:lowendinsight, :critical_currency_par_level) ->
+        {:ok, "critical"}
     end
   end
 
@@ -37,20 +51,33 @@ defmodule RiskLogic do
   """
   def commit_change_size_risk(change_percent) do
     cond do
-      change_percent < Application.fetch_env!(:lowendinsight, :low_large_commit_risk) -> {:ok, "low"}
-      change_percent < Application.fetch_env!(:lowendinsight, :medium_large_commit_risk) -> {:ok, "medium"}
-      change_percent < Application.fetch_env!(:lowendinsight, :high_large_commit_risk) -> {:ok, "high"}
-      change_percent >= Application.fetch_env!(:lowendinsight, :high_large_commit_risk) -> {:ok, "critical"}
+      change_percent < Application.fetch_env!(:lowendinsight, :low_large_commit_risk) ->
+        {:ok, "low"}
+
+      change_percent < Application.fetch_env!(:lowendinsight, :medium_large_commit_risk) ->
+        {:ok, "medium"}
+
+      change_percent < Application.fetch_env!(:lowendinsight, :high_large_commit_risk) ->
+        {:ok, "high"}
+
+      change_percent >= Application.fetch_env!(:lowendinsight, :high_large_commit_risk) ->
+        {:ok, "critical"}
     end
   end
 
-
   def functional_contributors_risk(contributors) do
     cond do
-      contributors >= Application.fetch_env!(:lowendinsight, :low_functional_contributors_risk) -> {:ok, "low"}
-      contributors >= Application.fetch_env!(:lowendinsight, :medium_functional_contributors_risk) -> {:ok, "medium"}
-      contributors >= Application.fetch_env!(:lowendinsight, :high_functional_contributors_risk) -> {:ok, "high"}
-      contributors < Application.fetch_env!(:lowendinsight, :high_functional_contributors_risk) -> {:ok, "critical"}
+      contributors >= Application.fetch_env!(:lowendinsight, :low_functional_contributors_risk) ->
+        {:ok, "low"}
+
+      contributors >= Application.fetch_env!(:lowendinsight, :medium_functional_contributors_risk) ->
+        {:ok, "medium"}
+
+      contributors >= Application.fetch_env!(:lowendinsight, :high_functional_contributors_risk) ->
+        {:ok, "high"}
+
+      contributors < Application.fetch_env!(:lowendinsight, :high_functional_contributors_risk) ->
+        {:ok, "critical"}
     end
   end
 end

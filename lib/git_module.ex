@@ -3,7 +3,6 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule GitModule do
-
   @moduledoc """
   Documentation for the GitModule.
   """
@@ -13,10 +12,12 @@ defmodule GitModule do
   """
 
   def clone_repo(url) do
-    response = Git.clone url
+    response = Git.clone(url)
+
     case response do
       {:ok, repo} ->
         {:ok, repo}
+
       {:error, _error} ->
         # This error message is not always appropriate
         {:error, "Repository not found"}
@@ -29,10 +30,12 @@ defmodule GitModule do
   """
 
   def get_contributor_count(repo) do
-    count = Git.shortlog!(repo, ["-s", "-n", "HEAD"])
+    count =
+      Git.shortlog!(repo, ["-s", "-n", "HEAD"])
       |> String.trim()
       |> String.split(~r{\s\s+})
       |> Enum.count()
+
     {:ok, count}
   end
 
@@ -46,15 +49,17 @@ defmodule GitModule do
   end
 
   def delete_repo(repo) do
-    File.rm_rf! repo.path
+    File.rm_rf!(repo.path)
   end
 
   @doc """
   get_commit_dates/1: returns a list of unix timestamps representing commit times
   """
   def get_commit_dates(repo) do
-    dates = Git.log!(repo, ["--pretty=format:%ct"])
+    dates =
+      Git.log!(repo, ["--pretty=format:%ct"])
       |> String.split("\n")
+
     dates_int = Enum.map(dates, fn x -> String.to_integer(x, 10) end)
     {:ok, dates_int}
   end
@@ -64,19 +69,23 @@ defmodule GitModule do
   representing commit times with each lsit belonging to a different tag
   """
   def get_tag_and_commit_dates(repo) do
-    tag_and_date = Git.log!(repo, ["--pretty=format:%d$%ct"])
-     |> String.split("\n")
-     |> Enum.map(fn element -> String.split(element, "$") end)
-     |> Enum.map(fn [head | tail] -> 
+    tag_and_date =
+      Git.log!(repo, ["--pretty=format:%d$%ct"])
+      |> String.split("\n")
+      |> Enum.map(fn element -> String.split(element, "$") end)
+      |> Enum.map(fn [head | tail] ->
         if head == "" do
           ["" | String.to_integer(Enum.at(tail, 0), 10)]
         else
-          [String.trim(String.trim(String.trim(head), "("), ")") | String.to_integer(Enum.at(tail, 0), 10)]
-        end 
+          [
+            String.trim(String.trim(String.trim(head), "("), ")")
+            | String.to_integer(Enum.at(tail, 0), 10)
+          ]
+        end
       end)
+
     GitHelper.split_commits_by_tag(tag_and_date)
   end
-
 
   @doc """
   get_last_n_commits/1: returns a list of the short hashes of the last n commits 
@@ -112,7 +121,7 @@ defmodule GitModule do
   def get_recent_changes(repo) do
     {:ok, total_lines, total_files_changed} = get_total_lines(repo)
     {:ok, file_num, insertions, deletions} = get_last_2_delta(repo)
-    {:ok, (insertions + deletions) / total_lines, file_num / total_files_changed} 
+    {:ok, (insertions + deletions) / total_lines, file_num / total_files_changed}
   end
 
   @doc """

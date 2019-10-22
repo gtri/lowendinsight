@@ -3,7 +3,6 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule Helpers do
-
   @doc """
   get_slug: extracts the slug from the URI
 
@@ -15,9 +14,11 @@ defmodule Helpers do
   """
   def get_slug(url) do
     uri = URI.parse(url)
+
     case uri.path do
       nil ->
         {:error, "invalid source URL"}
+
       path ->
         path = String.slice(path, 1..-1)
         {:ok, path}
@@ -39,12 +40,10 @@ defmodule Helpers do
   """
   def split_slug(slug) do
     if String.contains?(slug, "/") do
-
       v = String.split(slug, "/")
       {:ok, Enum.at(v, 0), Enum.at(v, 1)}
     else
       {:error, "bad_slug"}
     end
   end
-
 end

@@ -7,7 +7,9 @@ defmodule GithubModuleTest do
   doctest GithubModule
 
   setup_all do
-    c = Tentacat.Client.new(%{access_token: Application.fetch_env!(:lowendinsight, :access_token)})
+    c =
+      Tentacat.Client.new(%{access_token: Application.fetch_env!(:lowendinsight, :access_token)})
+
     {:ok, client: c}
   end
 
@@ -45,7 +47,7 @@ defmodule GithubModuleTest do
   end
 
   test "get last commit date" do
-    assert GithubModule.get_last_commit_date("kitplummer/xmpp4rails") == {:ok, ~U[2009-01-07 03:23:20Z]}
+    assert GithubModule.get_last_commit_date("kitplummer/xmpp4rails") ==
+             {:ok, ~U[2009-01-07 03:23:20Z]}
   end
-
 end

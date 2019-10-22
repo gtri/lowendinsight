@@ -4,16 +4,17 @@
 
 defmodule TimeHelper do
   @minute 60
-  @hour   @minute*60
-  @day    @hour*24
-  @week   @day*7
+  @hour @minute * 60
+  @day @hour * 24
+  @week @day * 7
   @divisor [@week, @day, @hour, @minute, 1]
 
   def sec_to_str(sec) do
     {_, [s, m, h, d, w]} =
-        Enum.reduce(@divisor, {sec,[]}, fn divisor,{n,acc} ->
-          {rem(n,divisor), [div(n,divisor) | acc]}
-        end)
+      Enum.reduce(@divisor, {sec, []}, fn divisor, {n, acc} ->
+        {rem(n, divisor), [div(n, divisor) | acc]}
+      end)
+
     ["#{w} wk", "#{d} d", "#{h} hr", "#{m} min", "#{s} sec"]
     |> Enum.reject(fn str -> String.starts_with?(str, "0") end)
     |> Enum.join(", ")
@@ -27,9 +28,10 @@ defmodule TimeHelper do
     case DateTime.from_iso8601(last_commit_date) do
       {:error, error} ->
         {:error, error}
+
       {:ok, last_commit_date, _something} ->
         DateTime.diff(DateTime.utc_now(), last_commit_date)
-        #{:ok, seconds}
+        # {:ok, seconds}
     end
   end
 
@@ -41,7 +43,7 @@ defmodule TimeHelper do
     [head_2 | _next_tail] = tail
     [_ | timestamp_1] = head_1
     [_ | timestamp_2] = head_2
-    sum_ts_diff(tail, (timestamp_2 - timestamp_1) + accumulator)
+    sum_ts_diff(tail, timestamp_2 - timestamp_1 + accumulator)
   end
 
   def sum_ts_diff(list) do
