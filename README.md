@@ -35,7 +35,7 @@ Erlang/OTP 22 [erts-10.4.4] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threa
 
 Interactive Elixir (1.9.0) - press Ctrl+C to exit (type h() ENTER for help)
 iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "lib"
-"{\"repo\":\"https://github.com/kitplummer/xmpp4rails\",\"contributor_count\":1,\"contributor_risk\":\"critical\",\"commit_currency_weeks\":558,\"commit_currency_risk\":\"critical\"}"
+"{\"data\":{\"commit_currency_risk\":\"critical\",\"commit_currency_weeks\":563,\"contributor_count\":1,\"contributor_risk\":\"critical\",\"functional_contributor_names\":[\"Kit Plummer\"],\"functional_contributors\":1,\"functional_contributors_risk\":\"critical\",\"large_recent_commit_risk\":\"low\",\"recent_commit_size_in_percent_of_codebase\":0.003683241252302026,\"repo\":\"https://github.com/kitplummer/xmpp4rails\",\"risk\":\"critical\"},\"header\":{\"duration\":0,\"end_time\":\"2019-10-23 16:17:17.921286Z\",\"source_client\":\"iex\",\"start_time\":\"2019-10-23 16:17:17.482880Z\",\"uuid\":\"954bd1ac-f5b0-11e9-aa8e-88e9fe666193\"}}"
 ```
 
 Possibly a tip:
@@ -46,7 +46,7 @@ docker run -i --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp elixir iex -S mix
 
 From iex you can access to the library functions.
 
-There is also a `mix` task that you can use to access the
+There is also an Elixir `mix` task that you can use to access the
 `AnalyzeModule.analyze(url, client)` function.
 
 ```
@@ -55,7 +55,12 @@ mix analyze https://github.com/kitplummer/xmpp4rails, mix
 
 ## Docs?
 
-Need help here?
+This is the library piece of the puzzle.  There is a brew API/service
+interface that will expose this library to HTTP(S) POSTs.  Stay tuned.
+
+The library is written in Elixir.
+
+`mix docs` will generate static docs available within the project.
 
 ### A Note about the metrics used
 * Recent commit size: This is a measure of how large the most recent commit is in relatino to the size of the codebase. The idea being that a large recent commit is much more likely to be bug filled than a relatively small commit.
@@ -79,13 +84,13 @@ the standard style prescribed by the Elixir project:
 https://hexdocs.pm/mix/Mix.Tasks.Format.html
 https://github.com/christopheradams/elixir_style_guide
 
-## Testing
+### Testing
 
 Required. Please write ExUnit test for new code you create.
 
 Use `mix test --cover` to verify that you're maintaining coverage.
 
-## Submitting changes
+### Submitting changes
 
 Please send a [Pull Request](https://bitbucket.org/kitplummer/lowendinsight/pull-requests/) with a clear list of what you've done and why. Please follow Elixir coding conventions (below in Style) and make sure all of your commits are atomic (one feature per commit).
 
