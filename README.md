@@ -2,7 +2,7 @@
 
 LowEndInsight is a simple "bus-factor" risk analysis library for Open
 Source Software which is managed within a Git repository.  Provide the
-git URL and the library will respond with a basic JSON object report.
+git URL and the library will respond with a basic Elixir Map structure report.
 
 ## Installation
 
