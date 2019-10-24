@@ -9,7 +9,7 @@ defmodule AnalyzerModule do
   """
 
   @doc """
-  analyze: returns the LowEndInsight report as JSON
+  analyze/2: returns the LowEndInsight report as JSON
 
   Returns Map.
 

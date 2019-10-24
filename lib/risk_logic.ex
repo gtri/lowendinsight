@@ -9,7 +9,7 @@ defmodule RiskLogic do
   """
 
   @doc """
-  contributor_risk: returns text enumeration for count
+  contributor_risk/1: returns text enumeration for count
   """
   def contributor_risk(contributor_count) do
     cond do
@@ -28,7 +28,7 @@ defmodule RiskLogic do
   end
 
   @doc """
-  commit_currency_risk: returns text enumeration for commit currency risk
+  commit_currency_risk/1: returns text enumeration for commit currency risk
   """
   def commit_currency_risk(delta_in_weeks) do
     cond do
@@ -47,7 +47,7 @@ defmodule RiskLogic do
   end
 
   @doc """
-  last_commit_size_risk: returns a text enumeration for the risk based on the size of the last commit
+  last_commit_size_risk/1: returns a text enumeration for the risk based on the size of the last commit
   """
   def commit_change_size_risk(change_percent) do
     cond do
@@ -65,6 +65,9 @@ defmodule RiskLogic do
     end
   end
 
+  @doc """
+  functional_contributors_risk/1: returns the enumerated risk based on input contributors list
+  """
   def functional_contributors_risk(contributors) do
     cond do
       contributors >= Application.fetch_env!(:lowendinsight, :low_functional_contributors_risk) ->

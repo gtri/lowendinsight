@@ -4,7 +4,7 @@
 
 defmodule Helpers do
   @doc """
-  get_slug: extracts the slug from the URI
+  get_slug/1: extracts the slug from the provided URI argument and returns the path
 
   # Example
       iex(1)> {:ok, slug} = Helpers.get_slug("https://github.com/kitplummer/xmpprails")
@@ -26,7 +26,7 @@ defmodule Helpers do
   end
 
   @doc """
-  split_slug: splits apart the username and repo from a git slug.
+  split_slug/1: splits apart the username and repo from a git slug returning discrete stings.
 
   ## Examples
 

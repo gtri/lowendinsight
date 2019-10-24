@@ -9,6 +9,17 @@ defmodule TimeHelper do
   @week @day * 7
   @divisor [@week, @day, @hour, @minute, 1]
 
+  @doc """
+  sec_to_str/1: returns a string breakdown of total seconds into weeks, days,
+  hours, minutes and remaining seconds.
+
+  ## Examples
+    ```
+    iex> TimeHelper.sec_to_str(5211)
+    "1 hr, 26 min, 51 sec"
+    ```
+
+  """
   def sec_to_str(sec) do
     {_, [s, m, h, d, w]} =
       Enum.reduce(@divisor, {sec, []}, fn divisor, {n, acc} ->
@@ -20,10 +31,16 @@ defmodule TimeHelper do
     |> Enum.join(", ")
   end
 
+  @doc """
+  sec_to_str/1: returns a roll-up of weeks from a number of secs
+  """
   def sec_to_weeks(sec) do
     Kernel.trunc(sec / @week)
   end
 
+  @doc """
+  get_commit_delta/1: returns the time between now and the last commit in seconds
+  """
   def get_commit_delta(last_commit_date) do
     case DateTime.from_iso8601(last_commit_date) do
       {:error, error} ->
@@ -35,10 +52,16 @@ defmodule TimeHelper do
     end
   end
 
+  @doc """
+  sum_ts_diff/2
+  """
   def sum_ts_diff([_head | []], accumulator) do
     {:ok, accumulator}
   end
 
+  @doc """
+  sum_ts_diff/2
+  """
   def sum_ts_diff([head_1 | tail], accumulator) do
     [head_2 | _next_tail] = tail
     [_ | timestamp_1] = head_1
@@ -46,6 +69,9 @@ defmodule TimeHelper do
     sum_ts_diff(tail, timestamp_2 - timestamp_1 + accumulator)
   end
 
+  @doc """
+  sum_ts_diff/1
+  """
   def sum_ts_diff(list) do
     sum_ts_diff(list, 0)
   end

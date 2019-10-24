@@ -60,7 +60,7 @@ interface that will expose this library to HTTP(S) POSTs.  Stay tuned.
 
 The library is written in Elixir.
 
-`mix docs` will generate static docs available within the project.
+`mix docs` will generate static docs available within the project in the `docs/` subfolder.
 
 ### A Note about the metrics used
 * Recent commit size: This is a measure of how large the most recent commit is in relatino to the size of the codebase. The idea being that a large recent commit is much more likely to be bug filled than a relatively small commit.
@@ -83,6 +83,10 @@ the standard style prescribed by the Elixir project:
 
 https://hexdocs.pm/mix/Mix.Tasks.Format.html
 https://github.com/christopheradams/elixir_style_guide
+
+Code docs for functions are expected.  Examples are a bonus:
+
+https://hexdocs.pm/elixir/writing-documentation.html
 
 ### Testing
 

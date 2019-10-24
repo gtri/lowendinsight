@@ -13,9 +13,31 @@ defmodule Mix.Tasks.Analyze do
   ```
   mix analyze "https://github.com/kitplummer/xmpp4rails"
   ```
-  This will return a basic report in JSON format:
+  This will return a basic report as an Elixir Map.
   ```
-  {\"repo\":[\"https://github.com/kitplummer/xmpp4rails\"],\"contributor_count\":1,\"contributor_risk\":\"critical\",\"commit_currency_weeks\":559,\"commit_currency_risk\":\"critical\"}
+  {:ok,
+   %{
+     data: %{
+       commit_currency_risk: "critical",
+       commit_currency_weeks: 563,
+       contributor_count: 1,
+       contributor_risk: "critical",
+       functional_contributor_names: ["Kit Plummer"],
+       functional_contributors: 1,
+       functional_contributors_risk: "critical",
+       large_recent_commit_risk: "low",
+       recent_commit_size_in_percent_of_codebase: 0.003683241252302026,
+       repo: "https://github.com/kitplummer/xmpp4rails",
+       risk: "critical"
+     },
+     header: %{
+       duration: 0,
+       end_time: "2019-10-24 14:11:56.605288Z",
+       source_client: "iex",
+       start_time: "2019-10-24 14:11:56.035968Z",
+       uuid: "3ca83ec4-f668-11e9-90a1-88e9fe666193"
+     }
+   }}
   ```
   """
   def run(url) do

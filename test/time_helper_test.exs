@@ -4,6 +4,7 @@
 
 defmodule TimeHelperTest do
   use ExUnit.Case
+  doctest TimeHelper
 
   test "convert seconds to string" do
     string = TimeHelper.sec_to_str(11_223_344)

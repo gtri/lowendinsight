@@ -4,7 +4,7 @@
 
 defmodule GitHelper do
   @doc """
-      parse_diff/1: returns the relevant information contained in the last array positino of a diff array 
+      parse_diff/1: returns the relevant information contained in the last array positino of a diff array
   """
   def parse_diff(list) do
     last = List.last(list)
@@ -40,14 +40,14 @@ defmodule GitHelper do
   end
 
   @doc """
-      get_avg_tag_commit_tim_diff/1: return the average time between commits within each subarray representing a tag 
+      get_avg_tag_commit_tim_diff/1: return the average time between commits within each subarray representing a tag
   """
   def get_avg_tag_commit_time_diff(list) do
     get_avg_tag_commit_time_diff(list, [])
   end
 
   @doc """
-      get_total_tag_commit_time_diff/1: return the total time between commits within each subarray representing a tag 
+      get_total_tag_commit_time_diff/1: return the total time between commits within each subarray representing a tag
   """
   def get_total_tag_commit_time_diff(list) do
     get_total_tag_commit_time_diff(list, [])
@@ -67,6 +67,9 @@ defmodule GitHelper do
     get_contributor_counts(list, %{})
   end
 
+  @doc """
+      det_filtered_contributor_count/2: Gets the resolved list of contributers, return count and list
+  """
   def get_filtered_contributor_count(map, total) do
     filtered_list =
       Enum.filter(
