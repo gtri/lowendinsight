@@ -4,6 +4,46 @@ LowEndInsight is a simple "bus-factor" risk analysis library for Open
 Source Software which is managed within a Git repository.  Provide the
 git URL and the library will respond with a basic Elixir Map structure report.
 
+If you are at all concerned about risks associated with upstream
+dependency requirements LowEndInsight can provide valuable, and
+actionable information around the likelihood of critical issues being
+resolved, if ever reported.  For example, a repo with a single
+contributor isn't necessarily bad, but it should be considered with some
+level of risk.  Are you or your organization willing to assume ownership
+(fork) the repository to resolve issues yourself?  Or if there hasn't
+been a commit, action against the source repository, in some significant
+amount of time, can you assume that it is inactive, or just stable?
+
+```
+✗ mix analyze https://github.com/kitplummer/xmpp4rails | jq
+{
+  "data": {
+    "commit_currency_risk": "critical",
+    "commit_currency_weeks": 563,
+    "contributor_count": 1,
+    "contributor_risk": "critical",
+    "functional_contributor_names": [
+      "Kit Plummer"
+    ],
+    "functional_contributors": 1,
+    "functional_contributors_risk": "critical",
+    "large_recent_commit_risk": "low",
+    "recent_commit_size_in_percent_of_codebase": 0.003683241252302026,
+    "repo": [
+      "https://github.com/kitplummer/xmpp4rails"
+    ],
+    "risk": "critical"
+  },
+  "header": {
+    "duration": 1,
+    "end_time": "2019-10-24 20:32:41.113297Z",
+    "source_client": "mix task",
+    "start_time": "2019-10-24 20:32:40.492143Z",
+    "uuid": "6d0b2b6e-f69d-11e9-818d-88e9fe666193"
+  }
+}
+```
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
