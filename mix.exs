@@ -13,7 +13,7 @@ defmodule GithubModule.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       # Docs
-      name: "LowEndInsight",
+      name: "README",
       source_url: "https://bitbucket.org/kitplummer/lowendinsight",
       homepage_url: "http://YOUR_PROJECT_HOMEPAGE",
       docs: [
