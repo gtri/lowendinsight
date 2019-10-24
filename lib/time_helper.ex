@@ -3,6 +3,10 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule TimeHelper do
+  @moduledoc """
+  Collection of functions for handling time-based conversions.
+  """
+  
   @minute 60
   @hour @minute * 60
   @day @hour * 24

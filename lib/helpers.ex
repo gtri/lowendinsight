@@ -3,6 +3,10 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule Helpers do
+  @moduledoc """
+  Collection of generic helper functions.
+  """
+  
   @doc """
   get_slug/1: extracts the slug from the provided URI argument and returns the path
 

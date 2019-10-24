@@ -40,7 +40,8 @@ defmodule Mix.Tasks.Analyze do
       "start_time": "2019-10-24 16:21:55.692010Z",
       "uuid": "659b37a2-f67a-11e9-ab5d-88e9fe666193"
     }
-  }```
+  }
+  ```
   """
   def run(url) do
     report = AnalyzerModule.analyze(url, "mix task")

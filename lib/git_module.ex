@@ -4,7 +4,7 @@
 
 defmodule GitModule do
   @moduledoc """
-  Documentation for the GitModule.
+  Collections of functions for interacting with the `git` command to perform queries.
   """
 
   @doc """
@@ -65,7 +65,7 @@ defmodule GitModule do
   end
 
   @doc """
-  get_tag_and_commit_dates/1: returns a list of lists of unix timestamps 
+  get_tag_and_commit_dates/1: returns a list of lists of unix timestamps
   representing commit times with each lsit belonging to a different tag
   """
   def get_tag_and_commit_dates(repo) do
@@ -88,7 +88,7 @@ defmodule GitModule do
   end
 
   @doc """
-  get_last_n_commits/1: returns a list of the short hashes of the last n commits 
+  get_last_n_commits/1: returns a list of the short hashes of the last n commits
   """
   def get_last_n_commits(repo, n) do
     output = Git.log!(repo, ["--pretty=format:%h", "--no-merges", "-#{n}"])
@@ -96,7 +96,7 @@ defmodule GitModule do
   end
 
   @doc """
-  get_last_n_commits/2: returns a list of lines generated from the diff of two commits 
+  get_last_n_commits/2: returns a list of lines generated from the diff of two commits
   """
   def get_diff_2_commits(repo, [commit1 | [commit2 | []]]) do
     {:ok, diff} = Git.diff(repo, ["--stat", commit1, commit2])
@@ -104,7 +104,7 @@ defmodule GitModule do
   end
 
   @doc """
-  get_total_lines/1: returns the total lines and files contained in a repo as of the latest commit 
+  get_total_lines/1: returns the total lines and files contained in a repo as of the latest commit
   """
   def get_total_lines(repo) do
     {:ok, hash} = Git.hash_object(repo, ["-t", "tree", "/dev/null"])

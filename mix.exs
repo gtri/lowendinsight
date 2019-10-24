@@ -8,10 +8,17 @@ defmodule GithubModule.MixProject do
   def project do
     [
       app: :lowendinsight,
-      version: "0.1.0",
+      version: "0.2.0",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      # Docs
+      name: "LowEndInsight",
+      source_url: "https://bitbucket.org/kitplummer/lowendinsight",
+      homepage_url: "http://YOUR_PROJECT_HOMEPAGE",
+      docs: [
+        extras: ["README.md"]
+      ]
     ]
   end
 

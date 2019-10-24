@@ -3,6 +3,10 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule GitHelper do
+  @moduledoc """
+  Collection of lower-level functions for analyzing outputs from git command.
+  """
+  
   @doc """
       parse_diff/1: returns the relevant information contained in the last array positino of a diff array
   """
