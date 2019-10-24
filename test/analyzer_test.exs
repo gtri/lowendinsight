@@ -21,25 +21,23 @@ defmodule AnalyzerTest do
   end
 
   test "get report", context do
-    report = AnalyzerModule.analyze("https://github.com/kitplummer/xmpp4rails", "test")
-    data = JSON.decode!(report)
-
+    {:ok, report} = AnalyzerModule.analyze("https://github.com/kitplummer/xmpp4rails", "test")
     expected_data = %{
-      "commit_currency_risk" => "critical",
-      "commit_currency_weeks" => context[:weeks],
-      "contributor_count" => 1,
-      "contributor_risk" => "critical",
-      "repo" => "https://github.com/kitplummer/xmpp4rails",
-      "functional_contributor_names" => ["Kit Plummer"],
-      "functional_contributors" => 1,
-      "functional_contributors_risk" => "critical",
-      "large_recent_commit_risk" => "low",
-      "recent_commit_size_in_percent_of_codebase" => 0.0036832412523020264,
-      "risk" => "critical"
+      :commit_currency_risk => "critical",
+      :commit_currency_weeks => context[:weeks],
+      :contributor_count => 1,
+      :contributor_risk => "critical",
+      :repo => "https://github.com/kitplummer/xmpp4rails",
+      :functional_contributor_names => ["Kit Plummer"],
+      :functional_contributors => 1,
+      :functional_contributors_risk => "critical",
+      :large_recent_commit_risk => "low",
+      :recent_commit_size_in_percent_of_codebase => 0.003683241252302026,
+      :risk => "critical"
     }
 
-    assert "test" == data["header"]["source_client"]
-    assert expected_data == data["data"]
+    assert "test" == report[:header][:source_client]
+    assert expected_data == report[:data]
   end
 
   test "get report fail" do
