@@ -11,37 +11,39 @@ defmodule Mix.Tasks.Analyze do
 
   #Usage
   ```
-  mix analyze "https://github.com/kitplummer/xmpp4rails"
+  mix analyze "https://github.com/kitplummer/xmpp4rails" | jq
   ```
-  This will return a basic report as an Elixir Map.
+  This will return a basic report (prettied by jq) as an Elixir Map.
   ```
-  {:ok,
-   %{
-     data: %{
-       commit_currency_risk: "critical",
-       commit_currency_weeks: 563,
-       contributor_count: 1,
-       contributor_risk: "critical",
-       functional_contributor_names: ["Kit Plummer"],
-       functional_contributors: 1,
-       functional_contributors_risk: "critical",
-       large_recent_commit_risk: "low",
-       recent_commit_size_in_percent_of_codebase: 0.003683241252302026,
-       repo: "https://github.com/kitplummer/xmpp4rails",
-       risk: "critical"
-     },
-     header: %{
-       duration: 0,
-       end_time: "2019-10-24 14:11:56.605288Z",
-       source_client: "iex",
-       start_time: "2019-10-24 14:11:56.035968Z",
-       uuid: "3ca83ec4-f668-11e9-90a1-88e9fe666193"
-     }
-   }}
-  ```
+  {
+    "data": {
+      "commit_currency_risk": "critical",
+      "commit_currency_weeks": 563,
+      "contributor_count": 1,
+      "contributor_risk": "critical",
+      "functional_contributor_names": [
+        "Kit Plummer"
+      ],
+      "functional_contributors": 1,
+      "functional_contributors_risk": "critical",
+      "large_recent_commit_risk": "low",
+      "recent_commit_size_in_percent_of_codebase": 0.003683241252302026,
+      "repo": [
+        "https://github.com/kitplummer/xmpp4rails"
+      ],
+      "risk": "critical"
+    },
+    "header": {
+      "duration": 1,
+      "end_time": "2019-10-24 16:21:56.252768Z",
+      "source_client": "mix task",
+      "start_time": "2019-10-24 16:21:55.692010Z",
+      "uuid": "659b37a2-f67a-11e9-ab5d-88e9fe666193"
+    }
+  }```
   """
   def run(url) do
     report = AnalyzerModule.analyze(url, "mix task")
-    IO.puts(report)
+    IO.puts(elem(JSON.encode(elem(report,1)), 1))
   end
 end
