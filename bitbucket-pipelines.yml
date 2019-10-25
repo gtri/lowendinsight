@@ -9,3 +9,4 @@ pipelines:
           - mix local.rebar --force
           - mix deps.get
           - mix test --color --cover
+          - mix docs

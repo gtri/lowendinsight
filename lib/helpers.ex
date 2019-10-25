@@ -1,7 +1,14 @@
-defmodule Helpers do
+# Copyright (C) 2018 by the Georgia Tech Research Institute (GTRI)
+# This software may be modified and distributed under the terms of
+# the BSD 3-Clause license. See the LICENSE file for details.
 
+defmodule Helpers do
+  @moduledoc """
+  Collection of generic helper functions.
+  """
+  
   @doc """
-  get_slug: extracts the slug from the URI
+  get_slug/1: extracts the slug from the provided URI argument and returns the path
 
   # Example
       iex(1)> {:ok, slug} = Helpers.get_slug("https://github.com/kitplummer/xmpprails")
@@ -11,9 +18,11 @@ defmodule Helpers do
   """
   def get_slug(url) do
     uri = URI.parse(url)
+
     case uri.path do
       nil ->
         {:error, "invalid source URL"}
+
       path ->
         path = String.slice(path, 1..-1)
         {:ok, path}
@@ -21,7 +30,7 @@ defmodule Helpers do
   end
 
   @doc """
-  split_slug: splits apart the username and repo from a git slug.
+  split_slug/1: splits apart the username and repo from a git slug returning discrete stings.
 
   ## Examples
 
@@ -35,12 +44,10 @@ defmodule Helpers do
   """
   def split_slug(slug) do
     if String.contains?(slug, "/") do
-
       v = String.split(slug, "/")
       {:ok, Enum.at(v, 0), Enum.at(v, 1)}
     else
       {:error, "bad_slug"}
     end
   end
-
 end
