@@ -6,9 +6,9 @@ defmodule GitHelper do
   @moduledoc """
   Collection of lower-level functions for analyzing outputs from git command.
   """
-  
+
   @doc """
-      parse_diff/1: returns the relevant information contained in the last array positino of a diff array
+      parse_diff/1: returns the relevant information contained in the last array position of a diff array
   """
   def parse_diff(list) do
     last = List.last(list)
