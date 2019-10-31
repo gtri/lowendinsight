@@ -82,17 +82,11 @@ defmodule AnalyzerModule do
       }
 
       {:ok, determine_toplevel_risk(report)}
-
-      #elem(JSON.encode(report), 1)
     rescue
       MatchError ->
-        resp = [
-          error:
-            "this is a POSTful service, JSON body with valid git url param required and content-type set to application/json."
-        ]
-
-        elem(JSON.encode(resp), 1)
-        # e in MatchError -> IO.puts("Repo error! " <> e[:term])
+        {
+          :error, "Unable to analyze the repo (#{url})."
+        }
     end
   end
 
