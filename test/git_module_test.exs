@@ -136,8 +136,8 @@ defmodule GitModuleTest do
     {:ok, gl_diffs} = GitModule.get_diff_2_commits(context[:gitlab_repo], gl_commits)
     {:ok, gl_files_changed, gl_insertions, gl_deletions} = GitHelper.parse_diff(gl_diffs)
     assert gl_files_changed == 1
-    assert gl_insertions + gl_deletions == 2
-    assert GitModule.get_total_lines(context[:gitlab_repo]) == {:ok, 1256, 35}
+    assert gl_insertions + gl_deletions == 3
+    assert GitModule.get_total_lines(context[:gitlab_repo]) == {:ok, 1260, 35}
   end
 
   test "get contributor counts", context do
@@ -221,7 +221,7 @@ defmodule GitModuleTest do
              1,
              14,
              4,
-             10,
+             11,
              1,
              5,
              1,
@@ -240,10 +240,10 @@ defmodule GitModuleTest do
              3,
              1,
              6,
-             3
+             5
            ]
 
-    assert gl_total == 278
+    assert gl_total == 281
   end
 
   test "get the number of contributors over a certain percentage", context do
