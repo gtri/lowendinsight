@@ -23,10 +23,7 @@ defmodule GitModuleTest do
     {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails")
     {:ok, tag_repo} = GitModule.clone_repo("https://github.com/kitplummer/libconfuse")
     {:ok, bitbucket_repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan")
-
-    {:ok, gitlab_repo} =
-      GitModule.clone_repo("https://gitlab.com/gitlab-com/gl-infra/infrastructure.git")
-
+    {:ok, gitlab_repo} = GitModule.clone_repo("https://gitlab.com/kitplummer/infrastructure")
     [
       repo: repo,
       tag_repo: tag_repo,
