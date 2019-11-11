@@ -95,8 +95,9 @@ mix analyze https://github.com/kitplummer/xmpp4rails, mix
 
 ## Docs?
 
-This is the library piece of the puzzle.  There is a brew API/service
-interface that will expose this library to HTTP(S) POSTs.  Stay tuned.
+This is the library piece of the puzzle.  There is a brewing API/service
+interface that will expose this library to HTTP(S) POSTs.  Stay tuned,
+it'll be open sourced shortly following this library.
 
 The library is written in Elixir.
 
