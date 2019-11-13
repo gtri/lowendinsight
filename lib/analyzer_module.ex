@@ -3,6 +3,7 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule AnalyzerModule do
+  
   @moduledoc """
   Analyzer takes in a repo url and coordinates the analysis,
   returning a simple JSON report.
@@ -20,7 +21,8 @@ defmodule AnalyzerModule do
     "critical"
     ```
   """
-  def analyze(url, source) do
+  @spec analyze(String.t() | list(), String.t()) :: tuple()
+  def analyze(url, source) when is_binary(url) do
     start_time = DateTime.utc_now()
 
     try do
@@ -88,6 +90,12 @@ defmodule AnalyzerModule do
           :error, "Unable to analyze the repo (#{url})."
         }
     end
+  end
+
+  def analyze(urls, source) when is_list(urls) do
+    IO.inspect urls
+    IO.inspect source
+    {:ok, %{header: %{source_client: "test_multi"}}}
   end
 
   defp determine_toplevel_risk(report) do

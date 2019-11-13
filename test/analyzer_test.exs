@@ -9,9 +9,11 @@ defmodule AnalyzerTest do
   setup_all do
     on_exit(fn ->
       File.rm_rf("xmpp4rails")
+      File.rm_rf("lita-cron")
     end)
 
     File.rm_rf("xmpp4rails")
+    File.rm_rf("lita-cron")
 
     {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails")
     {:ok, date} = GitModule.get_last_commit_date(repo)
@@ -38,6 +40,12 @@ defmodule AnalyzerTest do
 
     assert "test" == report[:header][:source_client]
     assert expected_data == report[:data]
+  end
+
+  test "get multi report", context do
+    {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails",
+                                             "https://github.com/kitplummer/lita-cron"], "test_multi")
+    assert "test_multi" == report[:header][:source_client]
   end
 
   test "get report fail" do
