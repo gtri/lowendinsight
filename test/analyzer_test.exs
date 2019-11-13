@@ -42,10 +42,20 @@ defmodule AnalyzerTest do
     assert expected_data == report[:data]
   end
 
-  test "get multi report", context do
+  test "get multi report" do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails",
-                                             "https://github.com/kitplummer/lita-cron"], "test_multi")
-    assert "test_multi" == report[:header][:source_client]
+                                             "https://github.com/kitplummer/lita-cron"], 
+                                           "test_multi")
+    
+    assert 2 == report[:metadata][:repo_count]
+    assert 0 == report[:metadata][:risk_counts][:high]
+    assert 0 == report[:metadata][:risk_counts][:medium]
+    assert 0 == report[:metadata][:risk_counts][:low]
+    assert 0 == report[:metadata][:risk_counts][:critical]
+    repos = report[:data][:repos]                                        
+    assert 2 == length(repos)
+    item_one = Enum.at(repos, 0)
+    assert "test_multi" == item_one[:header][:source_client]
   end
 
   test "get report fail" do

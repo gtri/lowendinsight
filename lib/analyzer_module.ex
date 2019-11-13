@@ -92,10 +92,34 @@ defmodule AnalyzerModule do
     end
   end
 
+  @doc """
+  analyze/2: returns the LowEndInsight report as JSON for multiple_repos
+
+  Returns Map.
+
+  ## Examples
+    ```
+    iex> {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails","https://github.com/kitplummer/lita-cron"], "iex")
+    iex> _count = report[:metadata][:repo_count]
+    2
+    ```
+  """
   def analyze(urls, source) when is_list(urls) do
-    IO.inspect urls
-    IO.inspect source
-    {:ok, %{header: %{source_client: "test_multi"}}}
+    ## Concurrency for parallelizing the analysis.  Turn the analyze/2 function into a worker.
+    l = urls 
+      |> Task.async_stream(__MODULE__, :analyze, [source], [timeout: :infinity, max_concurrency: 10])
+      |> Enum.map(fn {:ok, report} -> elem(report,1) end)
+    data = %{data: %{repos: l}, metadata: %{repo_count: length(l)}}
+    data = determine_risk_counts(data)
+    {:ok, data}
+  end
+
+  defp determine_risk_counts(report) do
+    repos = report[:data][:repos]
+    
+    metadata = report[:metadata]
+    metadata = Map.put_new(metadata, :risk_counts, %{critical: 0, high: 0, medium: 0, low: 0}) 
+    report |> Map.put(:metadata, metadata)
   end
 
   defp determine_toplevel_risk(report) do
