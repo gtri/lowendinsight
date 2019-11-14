@@ -18,33 +18,46 @@ amount of time, can you assume that it is inactive, or just stable?
 ✗ mix analyze https://github.com/kitplummer/xmpp4rails | jq
 {
   "data": {
-    "commit_currency_risk": "critical",
-    "commit_currency_weeks": 563,
-    "contributor_count": 1,
-    "contributor_risk": "critical",
-    "functional_contributor_names": [
-      "Kit Plummer"
-    ],
-    "functional_contributors": 1,
-    "functional_contributors_risk": "critical",
-    "large_recent_commit_risk": "low",
-    "recent_commit_size_in_percent_of_codebase": 0.003683241252302026,
-    "repo": [
-      "https://github.com/kitplummer/xmpp4rails"
-    ],
-    "risk": "critical"
+    "repos": [
+      {
+        "data": {
+          "commit_currency_risk": "critical",
+          "commit_currency_weeks": 566,
+          "contributor_count": 1,
+          "contributor_risk": "critical",
+          "functional_contributor_names": [
+            "Kit Plummer"
+          ],
+          "functional_contributors": 1,
+          "functional_contributors_risk": "critical",
+          "large_recent_commit_risk": "low",
+          "recent_commit_size_in_percent_of_codebase": 0.003683241252302026,
+          "repo": "https://github.com/kitplummer/xmpp4rails",
+          "risk": "critical"
+        },
+        "header": {
+          "duration": 0,
+          "end_time": "2019-11-14 13:28:48.543895Z",
+          "source_client": "mix task",
+          "start_time": "2019-11-14 13:28:48.081742Z",
+          "uuid": "b0b9921a-06e2-11ea-9a3c-784f434ce29a"
+        }
+      }
+    ]
   },
-  "header": {
-    "duration": 1,
-    "end_time": "2019-10-24 20:32:41.113297Z",
-    "source_client": "mix task",
-    "start_time": "2019-10-24 20:32:40.492143Z",
-    "uuid": "6d0b2b6e-f69d-11e9-818d-88e9fe666193"
+  "metadata": {
+    "repo_count": 1,
+    "risk_counts": {
+      "critical": 1
+    }
   }
 }
 ```
 
 ## Installation
+
+NOTE: the library is not currently deployed to Hex, while awaiting approvals to
+OSS.
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 by adding `lowendinsight` to your list of dependencies in `mix.exs`:
@@ -71,11 +84,31 @@ iex -S mix
 This will get you the `iex` prompt:
 
 ```
-Erlang/OTP 22 [erts-10.4.4] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [hipe] [dtrace]
-
-Interactive Elixir (1.9.0) - press Ctrl+C to exit (type h() ENTER for help)
+Interactive Elixir (1.9.1) - press Ctrl+C to exit (type h() ENTER for help)
 iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "lib"
-"{\"data\":{\"commit_currency_risk\":\"critical\",\"commit_currency_weeks\":563,\"contributor_count\":1,\"contributor_risk\":\"critical\",\"functional_contributor_names\":[\"Kit Plummer\"],\"functional_contributors\":1,\"functional_contributors_risk\":\"critical\",\"large_recent_commit_risk\":\"low\",\"recent_commit_size_in_percent_of_codebase\":0.003683241252302026,\"repo\":\"https://github.com/kitplummer/xmpp4rails\",\"risk\":\"critical\"},\"header\":{\"duration\":0,\"end_time\":\"2019-10-23 16:17:17.921286Z\",\"source_client\":\"iex\",\"start_time\":\"2019-10-23 16:17:17.482880Z\",\"uuid\":\"954bd1ac-f5b0-11e9-aa8e-88e9fe666193\"}}"
+{:ok,
+ %{
+   data: %{
+     commit_currency_risk: "critical",
+     commit_currency_weeks: 566,
+     contributor_count: 1,
+     contributor_risk: "critical",
+     functional_contributor_names: ["Kit Plummer"],
+     functional_contributors: 1,
+     functional_contributors_risk: "critical",
+     large_recent_commit_risk: "low",
+     recent_commit_size_in_percent_of_codebase: 0.003683241252302026,
+     repo: "https://github.com/kitplummer/xmpp4rails",
+     risk: "critical"
+   },
+   header: %{
+     duration: 1,
+     end_time: "2019-11-14 13:30:42.187082Z",
+     source_client: "lib",
+     start_time: "2019-11-14 13:30:41.076329Z",
+     uuid: "f4762608-06e2-11ea-ad1c-784f434ce29a"
+   }
+ }}
 ```
 
 Possibly a tip (if you're running Docker):

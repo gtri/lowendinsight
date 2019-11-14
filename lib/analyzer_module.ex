@@ -3,6 +3,7 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule AnalyzerModule do
+  
   @moduledoc """
   Analyzer takes in a repo url and coordinates the analysis,
   returning a simple JSON report.
@@ -20,7 +21,8 @@ defmodule AnalyzerModule do
     "critical"
     ```
   """
-  def analyze(url, source) do
+  @spec analyze(String.t() | list(), String.t()) :: tuple()
+  def analyze(url, source) when is_binary(url) do
     start_time = DateTime.utc_now()
 
     try do
@@ -84,10 +86,37 @@ defmodule AnalyzerModule do
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
-        {
-          :error, "Unable to analyze the repo (#{url})."
-        }
+        {:ok, %{data: %{error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?", risk: "critical"}}}
     end
+  end
+
+  @doc """
+  analyze/2: returns the LowEndInsight report as JSON for multiple_repos
+
+  Returns Map.
+
+  ## Examples
+    ```
+    iex> {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails","https://github.com/kitplummer/lita-cron"], "iex")
+    iex> _count = report[:metadata][:repo_count]
+    2
+    ```
+  """
+  def analyze(urls, source) when is_list(urls) do
+    ## Concurrency for parallelizing the analysis.  Turn the analyze/2 function into a worker.
+    l = urls 
+      |> Task.async_stream(__MODULE__, :analyze, [source], [timeout: :infinity, max_concurrency: 10])
+      |> Enum.map(fn {:ok, report} -> elem(report, 1) end)
+    report = %{data: %{repos: l}, metadata: %{repo_count: length(l)}}
+    {:ok, determine_risk_counts(report)}
+  end
+
+  defp determine_risk_counts(report) do
+    count_map = report[:data][:repos]
+        |> Enum.map(fn (repo) -> repo[:data][:risk] end)
+        |> Enum.reduce(%{}, fn x, acc -> Map.update(acc, x, 1, &(&1 + 1)) end)
+    metadata = Map.put_new(report[:metadata], :risk_counts, count_map) 
+    report |> Map.put(:metadata, metadata)
   end
 
   defp determine_toplevel_risk(report) do
