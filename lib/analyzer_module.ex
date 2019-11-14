@@ -86,9 +86,7 @@ defmodule AnalyzerModule do
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
-        {
-          :error, "Unable to analyze the repo (#{url})."
-        }
+        {:ok, %{data: %{error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?", risk: "critical"}}}
     end
   end
 
@@ -108,17 +106,16 @@ defmodule AnalyzerModule do
     ## Concurrency for parallelizing the analysis.  Turn the analyze/2 function into a worker.
     l = urls 
       |> Task.async_stream(__MODULE__, :analyze, [source], [timeout: :infinity, max_concurrency: 10])
-      |> Enum.map(fn {:ok, report} -> elem(report,1) end)
-    data = %{data: %{repos: l}, metadata: %{repo_count: length(l)}}
-    data = determine_risk_counts(data)
-    {:ok, data}
+      |> Enum.map(fn {:ok, report} -> elem(report, 1) end)
+    report = %{data: %{repos: l}, metadata: %{repo_count: length(l)}}
+    {:ok, determine_risk_counts(report)}
   end
 
   defp determine_risk_counts(report) do
-    repos = report[:data][:repos]
-    
-    metadata = report[:metadata]
-    metadata = Map.put_new(metadata, :risk_counts, %{critical: 0, high: 0, medium: 0, low: 0}) 
+    count_map = report[:data][:repos]
+        |> Enum.map(fn (repo) -> repo[:data][:risk] end)
+        |> Enum.reduce(%{}, fn x, acc -> Map.update(acc, x, 1, &(&1 + 1)) end)
+    metadata = Map.put_new(report[:metadata], :risk_counts, count_map) 
     report |> Map.put(:metadata, metadata)
   end
 
