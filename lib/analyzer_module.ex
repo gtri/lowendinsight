@@ -25,6 +25,8 @@ defmodule AnalyzerModule do
   def analyze(url, source) when is_binary(url) do
     start_time = DateTime.utc_now()
 
+    url = URI.decode(url)
+
     try do
       {:ok, repo} = GitModule.clone_repo(url)
 

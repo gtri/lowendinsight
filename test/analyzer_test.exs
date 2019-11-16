@@ -68,6 +68,12 @@ defmodule AnalyzerTest do
     assert 1 == report[:metadata][:risk_counts]["critical"]
   end
 
+  test "get multi report for dot named repo" do
+    {:ok, report} = AnalyzerModule.analyze("https%3A%2F%2Fgithub.com%2Fsatori%2Fgo.uuid", 
+                                           "test_dot")
+    assert "test_dot" == report[:header][:source_client]
+  end
+
   test "get multi report mixed risks and bad repo" do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails",
                                              "https://github.com/kitplummer/blah"], 

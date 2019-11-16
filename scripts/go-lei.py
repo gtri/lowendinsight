@@ -1,5 +1,3 @@
-# import subprocess
-# subprocess.run(["goda", "list", "./...:noroot"])
 import json
 import requests
 
@@ -13,18 +11,13 @@ output = [ x for x in output if "golang" not in x]
 output = [ x for x in output if "gopkg" not in x]
 output = ["https://" + x for x in output]
 
-#for line in output:
-#    print(line)
+j = json.dumps({"urls": output})
 
-input = { "urls": output }
-
-j = json.dumps(input)
-
-print(j)
+#print(j)
 
 API_ENDPOINT = "http://localhost:4000/v1/analyze"
 headers = {'Content-type': 'application/json'}
-r = requests.post(url = API_ENDPOINT, json=j, headers=headers)
+r = requests.post(url = API_ENDPOINT, data=j, headers=headers)
 
-print(r.text)
+print(r.text.encode('utf-8').strip())
 
