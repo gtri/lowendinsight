@@ -87,4 +87,11 @@ defmodule AnalyzerTest do
 
     assert expected_data == report
   end
+
+  test "get report fail when subdirectory" do
+    report = AnalyzerModule.analyze("https://github.com/kitplummer/xmpp4rails/blah", "test")
+    expected_data = {:ok, %{data: %{error: "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory", risk: "N/A"}}}
+
+    assert expected_data == report
+  end
 end
