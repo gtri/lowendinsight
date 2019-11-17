@@ -12,8 +12,10 @@ defmodule GitModule do
   """
 
   def clone_repo(url) do
-    response = Git.clone(url)
+    {:ok, slug} = url |> Helpers.get_slug
+    {:ok, _, repo_name} = Helpers.split_slug slug
 
+    response = Git.clone([url, repo_name])
     case response do
       {:ok, repo} ->
         {:ok, repo}

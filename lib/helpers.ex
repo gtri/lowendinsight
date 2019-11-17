@@ -50,4 +50,9 @@ defmodule Helpers do
       {:error, "bad_slug"}
     end
   end
+
+  def count_forward_slashes(url) do
+    url |> String.graphemes |> Enum.count(& &1 == "/")
+  end
+  
 end

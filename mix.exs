@@ -8,7 +8,7 @@ defmodule GithubModule.MixProject do
   def project do
     [
       app: :lowendinsight,
-      version: "0.2.0",
+      version: "0.2.1",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -32,12 +32,10 @@ defmodule GithubModule.MixProject do
   defp deps do
     [
       {:tentacat, "~> 1.0"},
-      {:git_cli, "~> 0.2"},
+      {:git_cli, "~> 0.3"},
       {:json, "~> 1.3"},
       {:uuid, "~> 1.1"},
       {:ex_doc, "~> 0.21"}
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]
   end
 end

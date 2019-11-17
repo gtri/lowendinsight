@@ -25,7 +25,14 @@ defmodule AnalyzerModule do
   def analyze(url, source) when is_binary(url) do
     start_time = DateTime.utc_now()
 
+    url = URI.decode(url)
+
     try do
+
+      if Helpers.count_forward_slashes(url) > 4 do
+        raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
+      end
+
       {:ok, repo} = GitModule.clone_repo(url)
 
       # Get unique contributors count
@@ -87,6 +94,8 @@ defmodule AnalyzerModule do
     rescue
       MatchError ->
         {:ok, %{data: %{error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?", risk: "critical"}}}
+      e in ArgumentError ->
+        {:ok, %{data: %{error: "Unable to analyze the repo (#{url}). #{e.message}", risk: "N/A"}}}
     end
   end
 
@@ -103,12 +112,20 @@ defmodule AnalyzerModule do
     ```
   """
   def analyze(urls, source) when is_list(urls) do
+    start_time = DateTime.utc_now()
     ## Concurrency for parallelizing the analysis.  Turn the analyze/2 function into a worker.
     l = urls 
       |> Task.async_stream(__MODULE__, :analyze, [source], [timeout: :infinity, max_concurrency: 10])
       |> Enum.map(fn {:ok, report} -> elem(report, 1) end)
-    report = %{data: %{repos: l}, metadata: %{repo_count: length(l)}}
-    {:ok, determine_risk_counts(report)}
+    report = %{data: %{uuid: UUID.uuid1(), repos: l}, metadata: %{repo_count: length(l)}}
+
+    report = determine_risk_counts(report)
+    end_time = DateTime.utc_now()
+    duration = DateTime.diff(end_time, start_time)
+    times = %{start_time: start_time, end_time: end_time, duration: duration}
+    metadata = Map.put_new(report[:metadata], :times, times) 
+    report = report |> Map.put(:metadata, metadata)
+    {:ok, report}
   end
 
   defp determine_risk_counts(report) do

@@ -36,7 +36,7 @@ defmodule GitModuleTest do
     # yeah, this is empty, just here for posterity.  this would run before each
     :ok
   end
-
+  
   test "get contributor list 1", %{repo: repo} do
     count = GitModule.get_contributor_count(repo)
     assert {:ok, 1} == count
