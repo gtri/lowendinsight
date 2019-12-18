@@ -8,11 +8,12 @@ defmodule GithubModule.MixProject do
   def project do
     [
       app: :lowendinsight,
+      description: description(),
       version: "0.2.1",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      # Docs
+      package: package(),
       name: "LowEndInsight",
       source_url: "https://bitbucket.org/kitplummer/lowendinsight",
       docs: [
@@ -36,6 +37,21 @@ defmodule GithubModule.MixProject do
       {:json, "~> 1.3"},
       {:uuid, "~> 1.1"},
       {:ex_doc, "~> 0.21"}
+    ]
+  end
+
+  defp links() do
+    %{"Bitbucket" => "https://bitbucket.org/kitplummer/lowendinsight"}
+  end
+
+  defp description() do
+    "LowEndInsight is a simple 'bus-factor' risk analysis library for Open Source Software which is managed within a Git repository. Provide the git URL and the library will respond with a basic Elixir Map structure report."
+  end
+
+  defp package() do
+    [
+      licenses: ["BSD-3"],
+      links: %{"GitHub" => "https://bitbucket.org/kitplummer/lowendinsight"}
     ]
   end
 end
