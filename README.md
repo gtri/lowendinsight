@@ -170,6 +170,12 @@ Required. Please write ExUnit test for new code you create.
 
 Use `mix test --cover` to verify that you're maintaining coverage.
 
+
+### Github Actions
+
+Just getting this built-out.  But the bitbucket-pipeline config is still
+here too.
+
 ### Submitting changes
 
 Please send a [Pull Request](https://bitbucket.org/kitplummer/lowendinsight/pull-requests/) with a clear list of what you've done and why. Please follow Elixir coding conventions (above in Style) and make sure all of your commits are atomic (one feature per commit).
