@@ -8,12 +8,13 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: elixir:1.9.1-slim
+      image: elixir:1.9.1-alpine
 
     steps:
     - uses: actions/checkout@v1
     - name: Install Dependencies
       run: |
+        apk add git
         mix local.rebar --force
         mix local.hex --force
         mix deps.get
