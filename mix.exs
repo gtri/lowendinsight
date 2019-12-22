@@ -51,7 +51,7 @@ defmodule GithubModule.MixProject do
   defp package() do
     [
       licenses: ["BSD-3"],
-      links: %{"GitHub" => "https://bitbucket.org/kitplummer/lowendinsight"}
+      links: links()
     ]
   end
 end

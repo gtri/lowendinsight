@@ -69,16 +69,18 @@ an ad-hoc reporting tool.
 NOTE: the library is not currently deployed to Hex, while awaiting approvals to
 OSS.
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
+[LowEndInsight available in Hex](https://hex.pm/packages/lowendinsight), the package can be installed
 by adding `lowendinsight` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:lowendinsight, "~> 0.1.0"}
+    {:lowendinsight, "~> 0.2.1"}
   ]
 end
 ```
+
+NOTE: check hex.pm for the latest version.
 
 ## Running
 
@@ -153,6 +155,44 @@ The library is written in Elixir.
 * Functional Contributors: A functional contributor is one that contributes above a certain percentage of commits equal to or greater than their "fair" share. Simply put, a contributor is counted as a functional contributor if the proportion of their commits to the total commits is greater than or equal to 1 / the total number of committers.  If everyone committed the same amount, everyone would be a functional contributor.
 * `risk` is a top-level key that contains the "rolled up" risk, the
   highest value pulled from any of the discrete analysis items.
+
+### Configuration
+
+LowEndInsight allows for customization of the risk levels, to determine "low", "medium", "high" and "critical" acceptance.  The library reads this configuration from config.exs here, or as providing in environment variables.
+
+```
+  ## Contributor in terms of discrete users
+  ## NOTE: this currently doesn't discern same user with different email
+  critical_contributor_par_level: String.to_integer(System.get_env("LEI_CRITICAL_CONTRIBUTOR_PAR_LEVEL") || "2"),
+  high_contributor_par_level: System.get_env("LEI_HIGH_CONTRIBUTOR_PAR_LEVEL") || 3,
+  medium_contributor_par_level: System.get_env("LEI_CRITICAL_CONTRIBUTOR_PAR_LEVEL") || 5,
+
+  ## Commit currency in weeks - is the project active.  This by itself
+  ## may not indicate anything other than the repo is stable. The reason
+  ## we're reporting it is relative to the likelihood vulnerabilities
+  ## getting fix in a timely manner
+  critical_currency_par_level: String.to_integer(System.get_env("LEI_CRITICAL_CURRENCY_PAR_LEVEL") || "104"),
+  high_currency_par_level: String.to_integer(System.get_env("LEI_HIGH_CURRENCY_PAR_LEVEL") || "52"),
+  medium_currency_par_level: String.to_integer(System.get_env("LEI_MEDIUM_CURRENCY_PAR_LEVEL") || "26"),
+
+  ## Percentage of changes to repo in recent commit - is the codebase
+  ## volatile in terms of quantity of source being changed
+  high_large_commit_risk: String.to_float(System.get_env("LEI_HIGH_LARGE_COMMIT_RISK") || "0.30"),
+  medium_large_commit_risk: String.to_float(System.get_env("LEI_MEDIUM_LARGE_COMMIT_RISK") || "0.15"),
+  low_large_commit_risk: String.to_float(System.get_env("LEI_LOW_LARGE_COMMIT_RISK") || "0.05"),
+
+  ## Bell curve contributions - if there are 30 contributors
+  ## but 90% of the contributions are from 2...
+  high_functional_contributors_risk: String.to_integer(System.get_env("LEI_HIGH_FUNCTIONAL_CONTRIBUTORS_RISK") || "2"),
+  medium_functional_contributors_risk: String.to_integer(System.get_env("LEI_MEDIUM_FUNCTIONAL_CONTRIBUTORS_RISK") || "4"),
+  low_functional_contributors_risk: String.to_integer(System.get_env("LEI_LOW_FUNCTIONAL_CONTRIBUTORS_RISK") || "5"
+```
+
+To override with an environment variable you just need to have it set:
+
+```
+LEI_CRITICAL_CURRENCY_PAR_LEVEL=60 mix analyze https://github.com/kitplummer/xmpp4rails
+```
 
 ## Contributing
 
