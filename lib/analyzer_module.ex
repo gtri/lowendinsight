@@ -77,6 +77,7 @@ defmodule AnalyzerModule do
           source_client: source
         },
         data: %{
+          config: Application.get_all_env(:lowendinsight),
           repo: url,
           contributor_count: count,
           contributor_risk: count_risk,
