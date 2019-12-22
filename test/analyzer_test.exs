@@ -35,7 +35,8 @@ defmodule AnalyzerTest do
       :functional_contributors_risk => "critical",
       :large_recent_commit_risk => "low",
       :recent_commit_size_in_percent_of_codebase => 0.003683241252302026,
-      :risk => "critical"
+      :risk => "critical",
+      :config => Application.get_all_env(:lowendinsight)
     }
 
     assert "test" == report[:header][:source_client]
