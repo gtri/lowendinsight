@@ -51,16 +51,16 @@ defmodule RiskLogic do
   """
   def commit_change_size_risk(change_percent) do
     cond do
-      change_percent < Application.fetch_env!(:lowendinsight, :low_large_commit_risk) ->
+      change_percent < Application.fetch_env!(:lowendinsight, :medium_large_commit_level) ->
         {:ok, "low"}
 
-      change_percent < Application.fetch_env!(:lowendinsight, :medium_large_commit_risk) ->
+      change_percent < Application.fetch_env!(:lowendinsight, :high_large_commit_level) ->
         {:ok, "medium"}
 
-      change_percent < Application.fetch_env!(:lowendinsight, :high_large_commit_risk) ->
+      change_percent < Application.fetch_env!(:lowendinsight, :critical_large_commit_level) ->
         {:ok, "high"}
 
-      change_percent >= Application.fetch_env!(:lowendinsight, :high_large_commit_risk) ->
+      change_percent >= Application.fetch_env!(:lowendinsight, :critical_large_commit_level) ->
         {:ok, "critical"}
     end
   end
