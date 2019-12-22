@@ -12,10 +12,18 @@ actionable information around the likelihood of critical issues being
 resolved, if ever reported.  For example, a repo with a single
 contributor isn't necessarily bad, but it should be considered with some
 level of risk.  Are you or your organization willing to assume ownership
-(fork) the repository to resolve issues yourself?  Or if there hasn't
-been a commit, action against the source repository, in some significant
+(fork) of the repository to resolve issues yourself?  Or if there hasn't
+been a commit against the source repository, in some significant
 amount of time, can you assume that it is inactive, or just stable?
 
+Again, the intent of LowEndInsight isn't to say that any upstream Open
+Source dependency is bad, just that the risks should be smartly weighed,
+and a deeper understanding of the implications should be gained during
+the decision to use.  LowEndInsight provides a simple mechanism for
+investigating and applying basic governance (based on your definition of
+the tolerance level) and responds with a useful report for integrating
+into your existing automation.  Or you can easily use LowEndInsight as
+an ad-hoc reporting tool.
 ```
 ✗ mix analyze https://github.com/kitplummer/xmpp4rails | jq
 {
