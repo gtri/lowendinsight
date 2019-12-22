@@ -14,6 +14,7 @@ defmodule AnalyzerTest do
 
     File.rm_rf("xmpp4rails")
     File.rm_rf("lita-cron")
+    File.rm_rf("go.uuid")
 
     {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails")
     {:ok, date} = GitModule.get_last_commit_date(repo)
@@ -70,9 +71,9 @@ defmodule AnalyzerTest do
   end
 
   test "get multi report for dot named repo" do
-    {:ok, report} = AnalyzerModule.analyze("https%3A%2F%2Fgithub.com%2Fsatori%2Fgo.uuid", 
+    {:ok, reportx} = AnalyzerModule.analyze("https%3A%2F%2Fgithub.com%2Fsatori%2Fgo.uuid", 
                                            "test_dot")
-    assert "test_dot" == report[:header][:source_client]
+    assert "test_dot" == reportx[:header][:source_client]
   end
 
   test "get multi report mixed risks and bad repo" do

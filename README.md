@@ -161,7 +161,7 @@ The library is written in Elixir.
 LowEndInsight allows for customization of the risk levels, to determine "low", "medium", "high" and "critical" acceptance.  The library reads this configuration from config.exs here, or as providing in environment variables.
 
 ```
-  ## Contributor in terms of discrete users
+## Contributor in terms of discrete users
   ## NOTE: this currently doesn't discern same user with different email
   critical_contributor_par_level: String.to_integer(System.get_env("LEI_CRITICAL_CONTRIBUTOR_PAR_LEVEL") || "2"),
   high_contributor_par_level: System.get_env("LEI_HIGH_CONTRIBUTOR_PAR_LEVEL") || 3,
@@ -177,15 +177,15 @@ LowEndInsight allows for customization of the risk levels, to determine "low", "
 
   ## Percentage of changes to repo in recent commit - is the codebase
   ## volatile in terms of quantity of source being changed
-  high_large_commit_risk: String.to_float(System.get_env("LEI_HIGH_LARGE_COMMIT_RISK") || "0.30"),
-  medium_large_commit_risk: String.to_float(System.get_env("LEI_MEDIUM_LARGE_COMMIT_RISK") || "0.15"),
-  low_large_commit_risk: String.to_float(System.get_env("LEI_LOW_LARGE_COMMIT_RISK") || "0.05"),
+  critical_large_commit_level: String.to_float(System.get_env("LEI_CRITICAL_LARGE_COMMIT_LEVEL") || "0.30"),
+  high_large_commit_level: String.to_float(System.get_env("LEI_HIGH_LARGE_COMMIT_LEVEL") || "0.15"),
+  medium_large_commit_level: String.to_float(System.get_env("LEI_MEDIUM_LARGE_COMMIT_LEVEL") || "0.05"),
 
   ## Bell curve contributions - if there are 30 contributors
   ## but 90% of the contributions are from 2...
-  high_functional_contributors_risk: String.to_integer(System.get_env("LEI_HIGH_FUNCTIONAL_CONTRIBUTORS_RISK") || "2"),
-  medium_functional_contributors_risk: String.to_integer(System.get_env("LEI_MEDIUM_FUNCTIONAL_CONTRIBUTORS_RISK") || "4"),
-  low_functional_contributors_risk: String.to_integer(System.get_env("LEI_LOW_FUNCTIONAL_CONTRIBUTORS_RISK") || "5"
+  critical_functional_contributors_level: String.to_integer(System.get_env("LEI_CRITICAL_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "2"),
+  high_functional_contributors_level: String.to_integer(System.get_env("LEI_HIGH_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "3"),
+  medium_functional_contributors_level: String.to_integer(System.get_env("LEI_MEDIUM_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "5")
 ```
 
 To override with an environment variable you just need to have it set:

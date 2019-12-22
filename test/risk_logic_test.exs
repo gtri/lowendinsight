@@ -68,10 +68,12 @@ defmodule RiskLogicTest do
 
   test "confirm functional commiters low" do
     assert RiskLogic.functional_contributors_risk(6) == {:ok, "low"}
+    assert RiskLogic.functional_contributors_risk(5) == {:ok, "low"}
   end
 
   test "confirm functional commiters medium" do
     assert RiskLogic.functional_contributors_risk(4) == {:ok, "medium"}
+    assert RiskLogic.functional_contributors_risk(3) == {:ok, "medium"}
   end
 
   test "confirm functional commiters high" do
