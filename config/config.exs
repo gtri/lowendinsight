@@ -31,6 +31,6 @@ config :lowendinsight,
 
   ## Bell curve contributions - if there are 30 contributors
   ## but 90% of the contributions are from 2...
-  high_functional_contributors_risk: String.to_integer(System.get_env("LEI_HIGH_FUNCTIONAL_CONTRIBUTORS_RISK") || "2"),
-  medium_functional_contributors_risk: String.to_integer(System.get_env("LEI_MEDIUM_FUNCTIONAL_CONTRIBUTORS_RISK") || "4"),
-  low_functional_contributors_risk: String.to_integer(System.get_env("LEI_LOW_FUNCTIONAL_CONTRIBUTORS_RISK") || "5")
+  critical_functional_contributors_level: String.to_integer(System.get_env("LEI_CRITICAL_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "2"),
+  high_functional_contributors_level: String.to_integer(System.get_env("LEI_HIGH_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "3"),
+  medium_functional_contributors_level: String.to_integer(System.get_env("LEI_MEDIUM_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "5")

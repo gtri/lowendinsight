@@ -14,6 +14,7 @@ defmodule AnalyzerTest do
 
     File.rm_rf("xmpp4rails")
     File.rm_rf("lita-cron")
+    File.rm_rf("go.uuid")
 
     {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails")
     {:ok, date} = GitModule.get_last_commit_date(repo)
