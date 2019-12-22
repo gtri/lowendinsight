@@ -13,16 +13,16 @@ defmodule RiskLogic do
   """
   def contributor_risk(contributor_count) do
     cond do
-      contributor_count < Application.fetch_env!(:lowendinsight, :critical_contributor_par_level) ->
+      contributor_count < Application.fetch_env!(:lowendinsight, :critical_contributor_level) ->
         {:ok, "critical"}
 
-      contributor_count < Application.fetch_env!(:lowendinsight, :high_contributor_par_level) ->
+      contributor_count < Application.fetch_env!(:lowendinsight, :high_contributor_level) ->
         {:ok, "high"}
 
-      contributor_count < Application.fetch_env!(:lowendinsight, :medium_contributor_par_level) ->
+      contributor_count < Application.fetch_env!(:lowendinsight, :medium_contributor_level) ->
         {:ok, "medium"}
 
-      contributor_count >= Application.fetch_env!(:lowendinsight, :medium_contributor_par_level) ->
+      contributor_count >= Application.fetch_env!(:lowendinsight, :medium_contributor_level) ->
         {:ok, "low"}
     end
   end
@@ -32,16 +32,16 @@ defmodule RiskLogic do
   """
   def commit_currency_risk(delta_in_weeks) do
     cond do
-      delta_in_weeks < Application.fetch_env!(:lowendinsight, :medium_currency_par_level) ->
+      delta_in_weeks < Application.fetch_env!(:lowendinsight, :medium_currency_level) ->
         {:ok, "low"}
 
-      delta_in_weeks < Application.fetch_env!(:lowendinsight, :high_currency_par_level) ->
+      delta_in_weeks < Application.fetch_env!(:lowendinsight, :high_currency_level) ->
         {:ok, "medium"}
 
-      delta_in_weeks < Application.fetch_env!(:lowendinsight, :critical_currency_par_level) ->
+      delta_in_weeks < Application.fetch_env!(:lowendinsight, :critical_currency_level) ->
         {:ok, "high"}
 
-      delta_in_weeks >= Application.fetch_env!(:lowendinsight, :critical_currency_par_level) ->
+      delta_in_weeks >= Application.fetch_env!(:lowendinsight, :critical_currency_level) ->
         {:ok, "critical"}
     end
   end
