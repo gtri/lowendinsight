@@ -125,10 +125,10 @@ iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "lib"
 
 Possibly a tip (if you're running Docker):
 
-You can pass in this lib, into a base Elixir container.
+You can pass in this lib and configuration settings, into a base Elixir container.
 
 ```
-docker run -i --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp elixir iex -S mix
+docker run -i --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp -e LEI_CRITICAL_CURRENCY_LEVEL=60 elixir iex -S mix
 ```
 
 From iex you can access to the library functions.
