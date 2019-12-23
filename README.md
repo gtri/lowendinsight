@@ -1,6 +1,6 @@
 # LowEndInsight
 
-![build status](https://github.com/kitplummer/lowendinsight/workflows/Elixir%20CI/badge.svg?branch=master)
+![build status](https://github.com/kitplummer/lowendinsight/workflows/default_elixir_ci/badge.svg?branch=master)
 
 LowEndInsight is a simple "bus-factor" risk analysis library for Open
 Source Software which is managed within a Git repository.  Provide the
