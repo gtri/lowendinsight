@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: elixir:1.9.1-alpine
+      image: elixir:1.9.4-alpine
 
     steps:
     - uses: actions/checkout@v1
