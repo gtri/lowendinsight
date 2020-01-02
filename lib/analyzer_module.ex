@@ -123,7 +123,7 @@ defmodule AnalyzerModule do
     report = determine_risk_counts(report)
     end_time = DateTime.utc_now()
     duration = DateTime.diff(end_time, start_time)
-    times = %{start_time: start_time, end_time: end_time, duration: duration}
+    times = %{start_time: DateTime.to_string(start_time), end_time: DateTime.to_string(end_time), duration: duration}
     metadata = Map.put_new(report[:metadata], :times, times) 
     report = report |> Map.put(:metadata, metadata)
     {:ok, report}
