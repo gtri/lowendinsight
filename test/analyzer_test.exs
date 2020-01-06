@@ -42,6 +42,14 @@ defmodule AnalyzerTest do
 
     assert "test" == report[:header][:source_client]
     assert expected_data == report[:data]
+
+    {:ok, json} = File.read("single_report.schema.json")
+    schema = JSON.decode!(json)
+    IO.inspect report
+    IO.inspect ExJsonSchema.Validator.validate(schema, report)
+    assert true == ExJsonSchema.Validator.valid?(schema, report)
+
+
   end
 
   # test "get multi report" do

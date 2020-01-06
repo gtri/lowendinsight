@@ -32,7 +32,22 @@ an ad-hoc reporting tool.
       {
         "data": {
           "commit_currency_risk": "critical",
-          "commit_currency_weeks": 566,
+          "commit_currency_weeks": 573,
+          "config": {
+            "critical_large_commit_level": 0.3,
+            "high_contributor_level": 3,
+            "high_functional_contributors_level": 3,
+            "high_large_commit_level": 0.15,
+            "high_currency_level": 52,
+            "medium_contributor_level": 5,
+            "critical_functional_contributors_level": 2,
+            "critical_currency_level": 104,
+            "medium_functional_contributors_level": 5,
+            "medium_currency_level": 26,
+            "medium_large_commit_level": 0.05,
+            "critical_contributor_level": 2,
+            "access_token": ""
+          },
           "contributor_count": 1,
           "contributor_risk": "critical",
           "functional_contributor_names": [
@@ -47,18 +62,24 @@ an ad-hoc reporting tool.
         },
         "header": {
           "duration": 0,
-          "end_time": "2019-11-14 13:28:48.543895Z",
+          "end_time": "2020-01-06 14:39:57.741377Z",
           "source_client": "mix task",
-          "start_time": "2019-11-14 13:28:48.081742Z",
-          "uuid": "b0b9921a-06e2-11ea-9a3c-784f434ce29a"
+          "start_time": "2020-01-06 14:39:57.324159Z",
+          "uuid": "69422cb0-3092-11ea-94fb-acde48001122"
         }
       }
-    ]
+    ],
+    "uuid": "694239b2-3092-11ea-a1b4-acde48001122"
   },
   "metadata": {
     "repo_count": 1,
     "risk_counts": {
       "critical": 1
+    },
+    "times": {
+      "duration": 0,
+      "end_time": "2020-01-06 14:39:57.752781Z",
+      "start_time": "2020-01-06 14:39:57.317832Z"
     }
   }
 }

@@ -36,7 +36,8 @@ defmodule GithubModule.MixProject do
       {:git_cli, "~> 0.3"},
       {:json, "~> 1.3"},
       {:uuid, "~> 1.1"},
-      {:ex_doc, "~> 0.21"}
+      {:ex_doc, "~> 0.21"},
+      {:ex_json_schema, "~> 0.7.3"}
     ]
   end
 
