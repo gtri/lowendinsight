@@ -6,7 +6,7 @@ defmodule Helpers do
   @moduledoc """
   Collection of generic helper functions.
   """
-  
+
   @doc """
   get_slug/1: extracts the slug from the provided URI argument and returns the path
 
@@ -54,5 +54,5 @@ defmodule Helpers do
   def count_forward_slashes(url) do
     url |> String.graphemes |> Enum.count(& &1 == "/")
   end
-  
+
 end

@@ -37,7 +37,8 @@ defmodule GithubModule.MixProject do
       {:json, "~> 1.3"},
       {:uuid, "~> 1.1"},
       {:ex_doc, "~> 0.21"},
-      {:ex_json_schema, "~> 0.7.3"}
+      {:credo, "~> 0.10", except: :prod, runtime: false},
+      {:json_xema, "~> 0.3"}
     ]
   end
 

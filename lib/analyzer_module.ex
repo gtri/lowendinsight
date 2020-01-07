@@ -3,7 +3,7 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule AnalyzerModule do
-  
+
   @moduledoc """
   Analyzer takes in a repo url and coordinates the analysis,
   returning a simple JSON report.
@@ -64,17 +64,20 @@ defmodule AnalyzerModule do
       GitModule.delete_repo(repo)
 
       # Generate report
-
       end_time = DateTime.utc_now()
       duration = DateTime.diff(end_time, start_time)
+
       # Return summary report as JSON
+      # Workaround to allow `mix analyze` to work even that :application doesn't exist
+      version = if :application.get_application != :undefined, do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string, else: ""
       report = %{
         header: %{
           start_time: DateTime.to_string(start_time),
           end_time: DateTime.to_string(end_time),
           duration: duration,
           uuid: UUID.uuid1(),
-          source_client: source
+          source_client: source,
+          version: version
         },
         data: %{
           config: Application.get_all_env(:lowendinsight),
@@ -90,7 +93,6 @@ defmodule AnalyzerModule do
           functional_contributor_names: functional_contributors
         }
       }
-
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
@@ -115,25 +117,25 @@ defmodule AnalyzerModule do
   def analyze(urls, source) when is_list(urls) do
     start_time = DateTime.utc_now()
     ## Concurrency for parallelizing the analysis.  Turn the analyze/2 function into a worker.
-    l = urls 
+    l = urls
       |> Task.async_stream(__MODULE__, :analyze, [source], [timeout: :infinity, max_concurrency: 10])
       |> Enum.map(fn {:ok, report} -> elem(report, 1) end)
-    report = %{data: %{uuid: UUID.uuid1(), repos: l}, metadata: %{repo_count: length(l)}}
+    report = %{report: %{uuid: UUID.uuid1(), repos: l}, metadata: %{repo_count: length(l)}}
 
     report = determine_risk_counts(report)
     end_time = DateTime.utc_now()
     duration = DateTime.diff(end_time, start_time)
     times = %{start_time: DateTime.to_string(start_time), end_time: DateTime.to_string(end_time), duration: duration}
-    metadata = Map.put_new(report[:metadata], :times, times) 
+    metadata = Map.put_new(report[:metadata], :times, times)
     report = report |> Map.put(:metadata, metadata)
     {:ok, report}
   end
 
   defp determine_risk_counts(report) do
-    count_map = report[:data][:repos]
+    count_map = report[:report][:repos]
         |> Enum.map(fn (repo) -> repo[:data][:risk] end)
         |> Enum.reduce(%{}, fn x, acc -> Map.update(acc, x, 1, &(&1 + 1)) end)
-    metadata = Map.put_new(report[:metadata], :risk_counts, count_map) 
+    metadata = Map.put_new(report[:metadata], :risk_counts, count_map)
     report |> Map.put(:metadata, metadata)
   end
 
