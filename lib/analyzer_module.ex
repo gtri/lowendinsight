@@ -105,7 +105,6 @@ defmodule AnalyzerModule do
       MatchError ->
         {:ok, %{data: %{error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?", risk: "critical"}}}
       e in ArgumentError ->
-        IO.inspect e
         {:ok, %{data: %{error: "Unable to analyze the repo (#{url}). #{e.message}", risk: "N/A"}}}
     end
   end
