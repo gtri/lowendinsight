@@ -69,7 +69,7 @@ defmodule AnalyzerModule do
 
       # Return summary report as JSON
       # Workaround to allow `mix analyze` to work even that :application doesn't exist
-      version = if :application.get_application != :undefined, do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string, else: ""
+      library_version = if :application.get_application != :undefined, do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string, else: ""
       report = %{
         header: %{
           start_time: DateTime.to_string(start_time),
@@ -77,7 +77,7 @@ defmodule AnalyzerModule do
           duration: duration,
           uuid: UUID.uuid1(),
           source_client: source,
-          version: version
+          library_version: library_version
         },
         data: %{
           config: Application.get_all_env(:lowendinsight),

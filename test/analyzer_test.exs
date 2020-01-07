@@ -86,7 +86,7 @@ defmodule AnalyzerTest do
     report = AnalyzerModule.analyze("https://github.com/kitplummer/lita-cron", "test")
     report_json = elem(JSON.encode(elem(report, 1)), 1)
 
-    schema_file = File.read!("schema/single_report.schema.json")
+    schema_file = File.read!("schema/v1/single_report.schema.json")
     schema = JSON.decode!(schema_file) |> JsonXema.new()
 
     report_data = JSON.decode!(report_json)
@@ -100,7 +100,7 @@ defmodule AnalyzerTest do
                                            "test_multi")
 
     {:ok, report_json} = JSON.encode(report)
-    schema_file = File.read!("schema/multi_report.schema.json")
+    schema_file = File.read!("schema/v1/multi_report.schema.json")
     schema = JSON.decode!(schema_file) |> JsonXema.new()
 
     report_data = JSON.decode!(report_json)
