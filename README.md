@@ -232,6 +232,12 @@ To override with an environment variable you just need to have it set:
 LEI_CRITICAL_CURRENCY_PAR_LEVEL=60 mix analyze https://github.com/kitplummer/xmpp4rails
 ```
 
+If you receive an error in the report with the following (or similar missing environment configuration variable) - the required configuration for LowEndInsight hasn't been made available:
+
+```
+could not fetch application environment :critical_contributor_level for application :lowendinsight because the application was not loaded/started. If your application depends on :lowendinsight at runtime, make sure to load/start it or list it under :extra_applications in your mix.exs file
+```
+
 ## Contributing
 
 Thanks for considering, we need your contributions to help this project come to fruition.

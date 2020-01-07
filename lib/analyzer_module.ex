@@ -28,6 +28,13 @@ defmodule AnalyzerModule do
     url = URI.decode(url)
 
     try do
+      # Prevent a clone if configuration isn't found, forces an ArgumentError
+      # "could not fetch application environment :critical_contributor_level
+      #  for application :lowendinsight because the application was not loaded/started.
+      #  If your application depends on :lowendinsight at runtime, make sure to
+      #  load/start it or list it under :extra_applications in your mix.exs file"
+      _config = Application.fetch_env!(:lowendinsight, :critical_contributor_level)
+
 
       if Helpers.count_forward_slashes(url) > 4 do
         raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
@@ -98,6 +105,7 @@ defmodule AnalyzerModule do
       MatchError ->
         {:ok, %{data: %{error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?", risk: "critical"}}}
       e in ArgumentError ->
+        IO.inspect e
         {:ok, %{data: %{error: "Unable to analyze the repo (#{url}). #{e.message}", risk: "N/A"}}}
     end
   end
