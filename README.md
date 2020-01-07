@@ -65,7 +65,8 @@ an ad-hoc reporting tool.
           "end_time": "2020-01-06 14:39:57.741377Z",
           "source_client": "mix task",
           "start_time": "2020-01-06 14:39:57.324159Z",
-          "uuid": "69422cb0-3092-11ea-94fb-acde48001122"
+          "uuid": "69422cb0-3092-11ea-94fb-acde48001122",
+          "version": "0.2.3"
         }
       }
     ],
@@ -117,13 +118,28 @@ iex -S mix
 This will get you the `iex` prompt:
 
 ```
-Interactive Elixir (1.9.1) - press Ctrl+C to exit (type h() ENTER for help)
+Interactive Elixir (1.9.4) - press Ctrl+C to exit (type h() ENTER for help)
 iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "lib"
 {:ok,
  %{
    data: %{
      commit_currency_risk: "critical",
-     commit_currency_weeks: 566,
+     commit_currency_weeks: 573,
+     config: [
+       high_contributor_level: 3,
+       medium_currency_level: 26,
+       medium_contributor_level: 5,
+       medium_large_commit_level: 0.05,
+       critical_large_commit_level: 0.3,
+       medium_functional_contributors_level: 5,
+       critical_functional_contributors_level: 2,
+       high_functional_contributors_level: 3,
+       high_large_commit_level: 0.15,
+       critical_currency_level: 104,
+       access_token: "",
+       critical_contributor_level: 2,
+       high_currency_level: 52
+     ],
      contributor_count: 1,
      contributor_risk: "critical",
      functional_contributor_names: ["Kit Plummer"],
@@ -136,10 +152,11 @@ iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "lib"
    },
    header: %{
      duration: 1,
-     end_time: "2019-11-14 13:30:42.187082Z",
+     end_time: "2020-01-07 12:42:31.353231Z",
      source_client: "lib",
-     start_time: "2019-11-14 13:30:41.076329Z",
-     uuid: "f4762608-06e2-11ea-ad1c-784f434ce29a"
+     start_time: "2020-01-07 12:42:30.689597Z",
+     uuid: "2bb6c086-314b-11ea-8613-784f434ce29a",
+     version: ""
    }
  }}
 ```
