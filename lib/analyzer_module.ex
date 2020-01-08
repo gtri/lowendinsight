@@ -103,9 +103,9 @@ defmodule AnalyzerModule do
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
-        {:ok, %{data: %{error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?", risk: "critical"}}}
+        {:ok, %{data: %{error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?", repo: url, risk: "critical"}}}
       e in ArgumentError ->
-        {:ok, %{data: %{error: "Unable to analyze the repo (#{url}). #{e.message}", risk: "N/A"}}}
+        {:ok, %{data: %{error: "Unable to analyze the repo (#{url}). #{e.message}", repo: url, risk: "N/A"}}}
     end
   end
 

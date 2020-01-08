@@ -6,5 +6,6 @@
   "type": "object",
   "properties": {
     "data": { "$ref": "data.schema.json" }
-  }
+  },
+  "required": ["data"]
 }

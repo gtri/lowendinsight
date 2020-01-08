@@ -62,6 +62,9 @@
         "contributor_risk": {
           "type": "string"
         },
+        "error": {
+          "type": "string"
+        },
         "functional_contributors_names": {
           "type": "array",
           "items": {
@@ -89,8 +92,15 @@
       },
       "required": [
         "risk",
-        "repo",
-        "config"
+        "repo"
+      ],
+      "anyOf": [
+        {
+          "required": ["config"]
+        },
+        {
+          "required": ["error"]
+        }
       ]
     },
     "header": {
@@ -121,5 +131,6 @@
         "start_time"
       ]
     }
-  }
+  },
+  "required": ["data"]
 }
