@@ -2,10 +2,11 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "http://example.com/data.schema.json",
   "title": "Report",
-  "description": "A LowEndInsight report (query response).",
+  "description": "A LowEndInsight dataset for an individual git repo.",
   "type": "object",
   "properties": {
     "data": {
+      "additionalProperties": false,
       "description": "The report data",
       "type": "object",
       "properties": {
@@ -65,7 +66,7 @@
         "error": {
           "type": "string"
         },
-        "functional_contributors_names": {
+        "functional_contributor_names": {
           "type": "array",
           "items": {
             "type": "string"
@@ -104,6 +105,7 @@
       ]
     },
     "header": {
+      "additionalProperties": false,
       "description": "Information about the report's generation.",
       "type": "object",
       "properties": {
@@ -117,9 +119,13 @@
           "type": "string"
         },
         "uuid": {
+          "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
           "type": "string"
         },
-        "version": {
+        "library_version": {
+          "type": "string"
+        },
+        "source_client": {
           "type": "string"
         }
       },
@@ -132,5 +138,15 @@
       ]
     }
   },
-  "required": ["data"]
+  "required": ["data"],
+  "definitions": {
+    "risk-level": {
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ]
+    }
+  }
 }

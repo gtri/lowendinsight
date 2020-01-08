@@ -9,18 +9,6 @@ defmodule AnalyzerModule do
   returning a simple JSON report.
   """
 
-  @doc """
-  analyze/2: returns the LowEndInsight report as JSON
-
-  Returns Map.
-
-  ## Examples
-    ```
-    iex> {:ok, report} = AnalyzerModule.analyze("https://github.com/kitplummer/xmpp4rails", "iex")
-    iex> _risk = report[:data][:risk]
-    "critical"
-    ```
-  """
   @spec analyze(String.t() | list(), String.t()) :: tuple()
   def analyze(url, source) when is_binary(url) do
     start_time = DateTime.utc_now()

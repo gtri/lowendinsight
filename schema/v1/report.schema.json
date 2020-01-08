@@ -1,0 +1,75 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/report.schema.json",
+    "title": "Report",
+    "description": "A LowEndInsight report (query response).",
+    "type": "object",
+    "properties": {
+      "report": {
+        "additionalProperties": false,
+        "type": "object",
+        "description": "Collection of repo reports",
+        "properties":{
+          "repos": {
+            "type": "array",
+            "items": { "$ref": "data.schema.json"}
+          },
+          "uuid": {
+            "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+            "type": "string"
+          }
+        },
+        "required": ["repos"]
+      },
+      "metadata": {
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "repo_count": {
+            "type": "number"
+          },
+          "risk_counts": {
+            "properties": {
+              "additionalProperties": false,
+              "critical": {
+                "type": "integer"
+              },
+              "high": {
+                "type": "integer"
+              },
+              "low": {
+                "type": "integer"
+              },
+              "medium": {
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "times": {
+            "additionalProperties": false,
+            "properties": {
+              "duration": {
+                "type": "integer"
+              },
+              "end_time": {
+                "type": "string"
+              },
+              "start_time": {
+                "type": "string"
+              }
+            },
+            
+            "type": "object"
+          }
+        },
+        "required": [
+          "repo_count",
+          "risk_counts",
+          "times"
+        ]
+      }
+    },  
+    "required": ["report", "metadata"],
+    "additionalProperties": false
+  }

@@ -12,7 +12,7 @@ defmodule Mix.Tasks.AnalyzeTest do
       Analyze.run(["https://github.com/kitplummer/xmpp4rails"])
       assert_received {:mix_shell, :info, [report]}
 
-      schema = File.read!("schema/v1/multi_report.schema.json")
+      schema = File.read!("schema/v1/report.schema.json")
       |> JSON.decode!() 
       |> JsonXema.new()
 
