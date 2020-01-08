@@ -79,8 +79,8 @@ defmodule AnalyzerModule do
       library_version = if :application.get_application != :undefined, do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string, else: ""
       report = %{
         header: %{
-          start_time: DateTime.to_string(start_time),
-          end_time: DateTime.to_string(end_time),
+          start_time: DateTime.to_iso8601(start_time),
+          end_time: DateTime.to_iso8601(end_time),
           duration: duration,
           uuid: UUID.uuid1(),
           source_client: source,
@@ -132,7 +132,7 @@ defmodule AnalyzerModule do
     report = determine_risk_counts(report)
     end_time = DateTime.utc_now()
     duration = DateTime.diff(end_time, start_time)
-    times = %{start_time: DateTime.to_string(start_time), end_time: DateTime.to_string(end_time), duration: duration}
+    times = %{start_time: DateTime.to_iso8601(start_time), end_time: DateTime.to_iso8601(end_time), duration: duration}
     metadata = Map.put_new(report[:metadata], :times, times)
     report = report |> Map.put(:metadata, metadata)
     {:ok, report}
