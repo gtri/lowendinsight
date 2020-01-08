@@ -6,7 +6,7 @@ defmodule TimeHelper do
   @moduledoc """
   Collection of functions for handling time-based conversions.
   """
-  
+
   @minute 60
   @hour @minute * 60
   @day @hour * 24

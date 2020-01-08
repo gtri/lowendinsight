@@ -6,7 +6,7 @@ defmodule Helpers do
   @moduledoc """
   Collection of generic helper functions.
   """
-  
+
   @doc """
   get_slug/1: extracts the slug from the provided URI argument and returns the path
 
@@ -54,5 +54,16 @@ defmodule Helpers do
   def count_forward_slashes(url) do
     url |> String.graphemes |> Enum.count(& &1 == "/")
   end
-  
+
+  # def have_config() do
+  #   try do
+  #     config = Application.fetch_env!(:lowendinsight, :critical_contributor_level)
+  #     IO.inspect config
+  #     IO.puts "CONFIG: "
+
+  #   rescue
+  #     RuntimeError -> raise ArgumentError, message: "No LoweEndInsight configuration found."
+  #   end
+  # end
+
 end

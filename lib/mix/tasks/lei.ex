@@ -45,6 +45,7 @@ defmodule Mix.Tasks.Analyze do
   """
   def run(url) do
     report = AnalyzerModule.analyze(url, "mix task")
-    IO.puts(elem(JSON.encode(elem(report,1)), 1))
+    report = (elem(JSON.encode(elem(report, 1)), 1))
+    Mix.shell.info(report)
   end
 end

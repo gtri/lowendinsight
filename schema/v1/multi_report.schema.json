@@ -1,0 +1,36 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/multi_report.schema.json",
+    "title": "Report",
+    "description": "A LowEndInsight report (query response).",
+    "type": "object",
+    "properties": {
+      "report": {
+        "type": "object",
+        "description": "Collection of repo reports",
+        "properties":{
+          "repos": {
+            "type": "array",
+            "items": { "$ref": "data.schema.json"}
+          }
+        },
+        "required": ["repos"]
+      },
+      "metadata": {
+        "type": "object",
+        "properties": {
+          "repo_count": {
+            "type": "number"
+          },
+          "risk_counts": {
+            "type": "object"
+          },
+          "times": {
+            "type": "object"
+          }
+        }
+      }
+    },  
+    "required": ["report", "metadata"],
+    "additionalProperties": false
+  }

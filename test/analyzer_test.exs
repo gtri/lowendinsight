@@ -44,24 +44,9 @@ defmodule AnalyzerTest do
     assert expected_data == report[:data]
   end
 
-  # test "get multi report" do
-  #   {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails",
-  #                                            "https://github.com/kitplummer/lita-cron"], 
-  #                                          "test_multi")
-  #   assert 2 == report[:metadata][:repo_count]
-  #   assert nil == report[:metadata][:risk_counts][:high]
-  #   assert nil == report[:metadata][:risk_counts][:medium]
-  #   assert nil == report[:metadata][:risk_counts][:low]
-  #   assert 2 == report[:metadata][:risk_counts]["critical"]
-  #   repos = report[:data][:repos]                                        
-  #   assert 2 == length(repos)
-  #   item_one = Enum.at(repos, 0)
-  #   assert "test_multi" == item_one[:header][:source_client]
-  # end
-
   test "get multi report mixed risks" do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails",
-                                             "https://github.com/robbyrussell/oh-my-zsh"], 
+                                             "https://github.com/robbyrussell/oh-my-zsh"],
                                            "test_multi")
     assert 2 == report[:metadata][:repo_count]
     assert nil == report[:metadata][:risk_counts]["high"]
@@ -71,29 +56,55 @@ defmodule AnalyzerTest do
   end
 
   test "get multi report for dot named repo" do
-    {:ok, reportx} = AnalyzerModule.analyze("https%3A%2F%2Fgithub.com%2Fsatori%2Fgo.uuid", 
+    {:ok, reportx} = AnalyzerModule.analyze("https%3A%2F%2Fgithub.com%2Fsatori%2Fgo.uuid",
                                            "test_dot")
     assert "test_dot" == reportx[:header][:source_client]
   end
 
   test "get multi report mixed risks and bad repo" do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails",
-                                             "https://github.com/kitplummer/blah"], 
+                                             "https://github.com/kitplummer/blah"],
                                            "test_multi")
     assert 2 == report[:metadata][:repo_count]
   end
 
   test "get report fail" do
     report = AnalyzerModule.analyze("https://github.com/kitplummer/blah", "test")
-    expected_data = {:ok, %{data: %{error: "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?", risk: "critical"}}}
+    expected_data = {:ok, %{data: %{error: "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?", repo: "https://github.com/kitplummer/blah", risk: "critical"}}}
 
     assert expected_data == report
   end
 
   test "get report fail when subdirectory" do
     report = AnalyzerModule.analyze("https://github.com/kitplummer/xmpp4rails/blah", "test")
-    expected_data = {:ok, %{data: %{error: "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory", risk: "N/A"}}}
+    expected_data = {:ok, %{data: %{error: "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory", repo: "https://github.com/kitplummer/xmpp4rails/blah", risk: "N/A"}}}
 
     assert expected_data == report
+  end
+
+  test "get report validated by single_report schema" do
+    report = AnalyzerModule.analyze("https://github.com/kitplummer/lita-cron", "test")
+    report_json = elem(JSON.encode(elem(report, 1)), 1)
+
+    schema_file = File.read!("schema/v1/single_report.schema.json")
+    schema = JSON.decode!(schema_file) |> JsonXema.new()
+
+    report_data = JSON.decode!(report_json)
+    assert :ok == JsonXema.validate(schema, report_data)
+    assert true == JsonXema.valid?(schema, report_data)
+  end
+
+  test "get report validated by multi_report schema" do
+    {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails",
+                                             "https://github.com/robbyrussell/oh-my-zsh"],
+                                           "test_multi")
+
+    {:ok, report_json} = JSON.encode(report)
+    schema_file = File.read!("schema/v1/multi_report.schema.json")
+    schema = JSON.decode!(schema_file) |> JsonXema.new()
+
+    report_data = JSON.decode!(report_json)
+    assert :ok == JsonXema.validate(schema, report_data)
+    assert true == JsonXema.valid?(schema, report_data)
   end
 end

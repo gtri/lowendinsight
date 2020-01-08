@@ -5,9 +5,6 @@
 use Mix.Config
 
 config :lowendinsight,
-  ## Token for accessing Github
-  ## NOTE: Development of the hub API inquiries is on hold for now.
-  access_token: "",
 
   ## Contributor in terms of discrete users
   ## NOTE: this currently doesn't discern same user with different email
@@ -34,3 +31,7 @@ config :lowendinsight,
   critical_functional_contributors_level: String.to_integer(System.get_env("LEI_CRITICAL_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "2"),
   high_functional_contributors_level: String.to_integer(System.get_env("LEI_HIGH_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "3"),
   medium_functional_contributors_level: String.to_integer(System.get_env("LEI_MEDIUM_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "5")
+
+# JsonXema Schema Loader
+config :xema, loader: SchemaLoader
+
