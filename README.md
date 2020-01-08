@@ -55,7 +55,6 @@ an ad-hoc reporting tool.
             "high_contributor_level": 3,
             "critical_functional_contributors_level": 2,
             "critical_currency_level": 104,
-            "access_token": "",
             "critical_large_commit_level": 0.3,
             "medium_functional_contributors_level": 5
           },
@@ -136,7 +135,6 @@ iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
        high_functional_contributors_level: 3,
        high_large_commit_level: 0.15,
        critical_currency_level: 104,
-       access_token: "",
        critical_contributor_level: 2,
        high_currency_level: 52
      ],

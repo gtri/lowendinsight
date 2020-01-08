@@ -5,7 +5,7 @@
   "description": "A LowEndInsight report (query response).",
   "type": "object",
   "properties": {
-    "data": { "$ref": "data.schema.json" }
+    "report": { "$ref": "data.schema.json" }
   },
   "required": ["data"]
 }
