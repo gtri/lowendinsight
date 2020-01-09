@@ -6,6 +6,7 @@
   "type": "object",
   "properties": {
     "data": {
+      "title": "LowEndInsight Analysis Data",
       "additionalProperties": false,
       "description": "The report data",
       "type": "object",
@@ -52,41 +53,50 @@
           }
         },
         "error": {
-          "type": "string"
+          "title": "Error message",
+          "description": "If LowEndInsight is unable to analyze a repo, it will respond with this error field.",
+          "type": "string",
+          "examples" : [
+            "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?",
+            "Unable to analyze the repo (https://github.com/kitplummer/blah), LowEndInsight configuration not found."
+          ]
         },
         "repo": {
           "type": "string"
         },
         "results": {
-          "commit_currency_risk": {
-            "type": "string"
-          },
-          "commit_currency_weeks": {
-            "type": "number"
-          },
-          "contributor_count": {
-            "type": "number"
-          },
-          "contributor_risk": {
-            "type": "string"
-          },
-          "functional_contributor_names": {
-            "type": "array",
-            "items": {
+          "type": "object",
+          "properties": {
+            "commit_currency_risk": {
               "type": "string"
+            },
+            "commit_currency_weeks": {
+              "type": "number"
+            },
+            "contributor_count": {
+              "type": "number"
+            },
+            "contributor_risk": {
+              "type": "string"
+            },
+            "functional_contributor_names": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "functional_contributors": {
+              "type": "number"
+            },
+            "functional_contributors_risk": {
+              "type": "string"
+            },
+            "large_recent_commit_risk": {
+              "type": "string"
+            },
+            "recent_commit_size_in_percent_of_codebase": {
+              "type": "number"
             }
-          },
-          "functional_contributors": {
-            "type": "number"
-          },
-          "functional_contributors_risk": {
-            "type": "string"
-          },
-          "large_recent_commit_risk": {
-            "type": "string"
-          },
-          "recent_commit_size_in_percent_of_codebase": {
-            "type": "number"
           }
         },
         "risk": {
