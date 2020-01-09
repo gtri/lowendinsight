@@ -1,16 +1,19 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "http://example.com/report.schema.json",
-    "title": "Report",
+    "title": "LowEndInsight JSON Report (Wraps Data) Schema",
     "description": "A LowEndInsight report (query response).",
     "type": "object",
     "properties": {
       "report": {
         "additionalProperties": false,
+        "description": "Collection of repo analysis as a single document.",
+        "title": "LowEndSight Analysis Array of Reports",
         "type": "object",
-        "description": "Collection of repo reports",
         "properties":{
           "repos": {
+            "description": "Array of repo's analyzed.",
+            "title": "LowEndInsight Analyzed Git Repos",
             "type": "array",
             "items": { "$ref": "data.schema.json"}
           },
@@ -23,12 +26,17 @@
       },
       "metadata": {
         "additionalProperties": false,
+        "description": "Collection of rolled-up data about the LowEndInsight analysis process and results.",
+        "title": "LowEndInsight Report Metadata",
         "type": "object",
         "properties": {
           "repo_count": {
             "type": "number"
           },
           "risk_counts": {
+            "additionalProperties": false,
+            "description": "Counts of hits against each risk level",
+            "title": "LowEndInsight Risk Level Counts",
             "properties": {
               "additionalProperties": false,
               "critical": {
@@ -48,6 +56,8 @@
           },
           "times": {
             "additionalProperties": false,
+            "description": "Start, End and Duration times for LowEndInsight times.",
+            "title": "LowEndInsight Analysis Times",
             "properties": {
               "duration": {
                 "type": "integer"
