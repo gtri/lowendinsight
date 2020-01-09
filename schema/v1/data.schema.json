@@ -10,12 +10,6 @@
       "description": "The report data",
       "type": "object",
       "properties": {
-        "commit_currency_risk": {
-          "type": "string"
-        },
-        "commit_currency_weeks": {
-          "type": "number"
-        },
         "config": {
           "type": "object",
           "properties": {
@@ -57,47 +51,56 @@
             }
           }
         },
-        "contributor_count": {
-          "type": "number"
-        },
-        "contributor_risk": {
-          "type": "string"
-        },
         "error": {
           "type": "string"
         },
-        "functional_contributor_names": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "functional_contributors": {
-          "type": "number"
-        },
-        "functional_contributors_risk": {
-          "type": "string"
-        },
-        "large_recent_commit_risk": {
-          "type": "string"
-        },
-        "recent_commit_size_in_percent_of_codebase": {
-          "type": "number"
-        },
         "repo": {
           "type": "string"
+        },
+        "results": {
+          "commit_currency_risk": {
+            "type": "string"
+          },
+          "commit_currency_weeks": {
+            "type": "number"
+          },
+          "contributor_count": {
+            "type": "number"
+          },
+          "contributor_risk": {
+            "type": "string"
+          },
+          "functional_contributor_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "functional_contributors": {
+            "type": "number"
+          },
+          "functional_contributors_risk": {
+            "type": "string"
+          },
+          "large_recent_commit_risk": {
+            "type": "string"
+          },
+          "recent_commit_size_in_percent_of_codebase": {
+            "type": "number"
+          }
         },
         "risk": {
           "type": "string"
         }
       },
       "required": [
+        "config",
         "risk",
         "repo"
       ],
       "anyOf": [
         {
-          "required": ["config"]
+          "required": ["results"]
         },
         {
           "required": ["error"]

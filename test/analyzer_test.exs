@@ -26,16 +26,18 @@ defmodule AnalyzerTest do
   test "get report", context do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"], "test")
     expected_data = %{
-      :commit_currency_risk => "critical",
-      :commit_currency_weeks => context[:weeks],
-      :contributor_count => 1,
-      :contributor_risk => "critical",
       :repo => "https://github.com/kitplummer/xmpp4rails",
-      :functional_contributor_names => ["Kit Plummer"],
-      :functional_contributors => 1,
-      :functional_contributors_risk => "critical",
-      :large_recent_commit_risk => "low",
-      :recent_commit_size_in_percent_of_codebase => 0.003683241252302026,
+      :results => %{
+        :commit_currency_risk => "critical",
+        :commit_currency_weeks => context[:weeks],
+        :contributor_count => 1,
+        :contributor_risk => "critical",
+        :functional_contributor_names => ["Kit Plummer"],
+        :functional_contributors => 1,
+        :functional_contributors_risk => "critical",
+        :large_recent_commit_risk => "low",
+        :recent_commit_size_in_percent_of_codebase => 0.003683241252302026,
+      },
       :risk => "critical",
       :config => Application.get_all_env(:lowendinsight)
     }
@@ -71,14 +73,14 @@ defmodule AnalyzerTest do
 
   test "get report fail" do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/blah"], "test")
-    expected_data = %{data: %{error: "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?", repo: "https://github.com/kitplummer/blah", risk: "critical"}}
+    expected_data = %{data: %{config: Application.get_all_env(:lowendinsight), error: "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?", repo: "https://github.com/kitplummer/blah", risk: "critical"}}
     repo_data = List.first(report[:report][:repos])
     assert expected_data == repo_data
   end
 
   test "get report fail when subdirectory" do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails/blah"], "test")
-    expected_data = %{data: %{error: "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory", repo: "https://github.com/kitplummer/xmpp4rails/blah", risk: "N/A"}}
+    expected_data = %{data: %{config: Application.get_all_env(:lowendinsight), error: "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory", repo: "https://github.com/kitplummer/xmpp4rails/blah", risk: "N/A"}}
     repo_data = List.first(report[:report][:repos])
     assert expected_data == repo_data
   end

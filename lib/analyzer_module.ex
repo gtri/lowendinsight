@@ -77,23 +77,25 @@ defmodule AnalyzerModule do
         data: %{
           config: Application.get_all_env(:lowendinsight),
           repo: url,
-          contributor_count: count,
-          contributor_risk: count_risk,
-          commit_currency_weeks: weeks,
-          commit_currency_risk: delta_risk,
-          large_recent_commit_risk: changes_risk,
-          recent_commit_size_in_percent_of_codebase: lines_percent,
-          functional_contributors_risk: filtered_contributors_risk,
-          functional_contributors: num_filtered_contributors,
-          functional_contributor_names: functional_contributors
+          results: %{
+            contributor_count: count,
+            contributor_risk: count_risk,
+            commit_currency_weeks: weeks,
+            commit_currency_risk: delta_risk,
+            large_recent_commit_risk: changes_risk,
+            recent_commit_size_in_percent_of_codebase: lines_percent,
+            functional_contributors_risk: filtered_contributors_risk,
+            functional_contributors: num_filtered_contributors,
+            functional_contributor_names: functional_contributors
+          }
         }
       }
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
-        {:ok, %{data: %{error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?", repo: url, risk: "critical"}}}
+        {:ok, %{data: %{config: Application.get_all_env(:lowendinsight), error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?", repo: url, risk: "critical"}}}
       e in ArgumentError ->
-        {:ok, %{data: %{error: "Unable to analyze the repo (#{url}). #{e.message}", repo: url, risk: "N/A"}}}
+        {:ok, %{data: %{config: Application.get_all_env(:lowendinsight), error: "Unable to analyze the repo (#{url}). #{e.message}", repo: url, risk: "N/A"}}}
     end
   end
 
@@ -135,7 +137,7 @@ defmodule AnalyzerModule do
   end
 
   defp determine_toplevel_risk(report) do
-    values = Map.values(report[:data])
+    values = Map.values(report[:data][:results])
 
     risk =
       cond do
