@@ -24,24 +24,27 @@ defmodule AnalyzerTest do
   end
 
   test "get report", context do
-    {:ok, report} = AnalyzerModule.analyze("https://github.com/kitplummer/xmpp4rails", "test")
+    {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"], "test")
     expected_data = %{
-      :commit_currency_risk => "critical",
-      :commit_currency_weeks => context[:weeks],
-      :contributor_count => 1,
-      :contributor_risk => "critical",
       :repo => "https://github.com/kitplummer/xmpp4rails",
-      :functional_contributor_names => ["Kit Plummer"],
-      :functional_contributors => 1,
-      :functional_contributors_risk => "critical",
-      :large_recent_commit_risk => "low",
-      :recent_commit_size_in_percent_of_codebase => 0.003683241252302026,
+      :results => %{
+        :commit_currency_risk => "critical",
+        :commit_currency_weeks => context[:weeks],
+        :contributor_count => 1,
+        :contributor_risk => "critical",
+        :functional_contributor_names => ["Kit Plummer"],
+        :functional_contributors => 1,
+        :functional_contributors_risk => "critical",
+        :large_recent_commit_risk => "low",
+        :recent_commit_size_in_percent_of_codebase => 0.003683241252302026,
+      },
       :risk => "critical",
       :config => Application.get_all_env(:lowendinsight)
     }
 
-    assert "test" == report[:header][:source_client]
-    assert expected_data == report[:data]
+    repo_data = List.first(report[:report][:repos])
+    assert "test" == repo_data[:header][:source_client]
+    assert expected_data == repo_data[:data]
   end
 
   test "get multi report mixed risks" do
@@ -56,9 +59,9 @@ defmodule AnalyzerTest do
   end
 
   test "get multi report for dot named repo" do
-    {:ok, reportx} = AnalyzerModule.analyze("https%3A%2F%2Fgithub.com%2Fsatori%2Fgo.uuid",
-                                           "test_dot")
-    assert "test_dot" == reportx[:header][:source_client]
+    {:ok, reportx} = AnalyzerModule.analyze(["https%3A%2F%2Fgithub.com%2Fsatori%2Fgo.uuid"],"test_dot")
+    repo_data = List.first(reportx[:report][:repos])
+    assert "test_dot" == repo_data[:header][:source_client]
   end
 
   test "get multi report mixed risks and bad repo" do
@@ -69,24 +72,24 @@ defmodule AnalyzerTest do
   end
 
   test "get report fail" do
-    report = AnalyzerModule.analyze("https://github.com/kitplummer/blah", "test")
-    expected_data = {:ok, %{data: %{error: "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?", repo: "https://github.com/kitplummer/blah", risk: "critical"}}}
-
-    assert expected_data == report
+    {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/blah"], "test")
+    expected_data = %{data: %{config: Application.get_all_env(:lowendinsight), error: "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?", repo: "https://github.com/kitplummer/blah", risk: "critical"}}
+    repo_data = List.first(report[:report][:repos])
+    assert expected_data == repo_data
   end
 
   test "get report fail when subdirectory" do
-    report = AnalyzerModule.analyze("https://github.com/kitplummer/xmpp4rails/blah", "test")
-    expected_data = {:ok, %{data: %{error: "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory", repo: "https://github.com/kitplummer/xmpp4rails/blah", risk: "N/A"}}}
-
-    assert expected_data == report
+    {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails/blah"], "test")
+    expected_data = %{data: %{config: Application.get_all_env(:lowendinsight), error: "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory", repo: "https://github.com/kitplummer/xmpp4rails/blah", risk: "N/A"}}
+    repo_data = List.first(report[:report][:repos])
+    assert expected_data == repo_data
   end
 
-  test "get report validated by single_report schema" do
-    report = AnalyzerModule.analyze("https://github.com/kitplummer/lita-cron", "test")
-    report_json = elem(JSON.encode(elem(report, 1)), 1)
+  test "get single repo report validated by report schema" do
+    {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/lita-cron"], "test")
+    {:ok, report_json} = JSON.encode(report)
 
-    schema_file = File.read!("schema/v1/single_report.schema.json")
+    schema_file = File.read!("schema/v1/report.schema.json")
     schema = JSON.decode!(schema_file) |> JsonXema.new()
 
     report_data = JSON.decode!(report_json)
@@ -94,13 +97,13 @@ defmodule AnalyzerTest do
     assert true == JsonXema.valid?(schema, report_data)
   end
 
-  test "get report validated by multi_report schema" do
+  test "get multi repo report validated by report schema" do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails",
                                              "https://github.com/robbyrussell/oh-my-zsh"],
                                            "test_multi")
 
     {:ok, report_json} = JSON.encode(report)
-    schema_file = File.read!("schema/v1/multi_report.schema.json")
+    schema_file = File.read!("schema/v1/report.schema.json")
     schema = JSON.decode!(schema_file) |> JsonXema.new()
 
     report_data = JSON.decode!(report_json)
