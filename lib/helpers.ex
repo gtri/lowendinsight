@@ -66,4 +66,52 @@ defmodule Helpers do
   #   end
   # end
 
+
+  @doc """
+  validates field is a valid url
+
+  ## Examples
+  iex> "https:://www.url.com"
+  ...> |> Helpers.validate_url()
+  {:error, "invalid URI"}
+
+  iex> "http://zipbooks.com/"
+  ...> |> Helpers.validate_url()
+  :ok
+
+  iex> "zipbooks.com"
+  ...> |> Helpers.validate_url()
+  {:error, "invalid URI"}
+
+  iex> "https://zipbooks..com"
+  ...> |> Helpers.validate_url()
+  {:error, "invalid URI"}
+  """
+  def validate_url(url) do
+    with :ok <- validate_scheme(url),
+        :ok <- validate_host(url),
+        do: :ok
+  end
+
+  defp validate_host(url) do
+    case URI.parse(url) do
+      %URI{host: nil} -> {:error, "invalid URI"}
+      %URI{host: host} ->
+        case :inet.gethostbyname(Kernel.to_charlist host) do
+          {:ok, _} -> :ok
+          {:error, _} -> {:error, "invalid URI"}
+        end
+    end 
+  end
+
+  defp validate_scheme(url) do
+    case URI.parse(url) do
+      %URI{scheme: nil} -> {:error, "invalid URI"}
+      %URI{scheme: scheme} ->
+        case URI.default_port(scheme) do
+          nil -> {:error, "invalid URI"}
+          p when p > 0 -> :ok
+        end
+    end
+  end
 end
