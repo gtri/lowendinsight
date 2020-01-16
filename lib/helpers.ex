@@ -79,6 +79,14 @@ defmodule Helpers do
   ...> |> Helpers.validate_url()
   :ok
 
+  iex> "https://https://www.google.com"
+  ...> |> Helpers.validate_url()
+  {:error, "invalid URI"}
+
+  iex> '"https://"https://www.google.com"'
+  ...> |> Helpers.validate_url()
+  {:error, "invalid URI"}
+
   iex> "zipbooks.com"
   ...> |> Helpers.validate_url()
   {:error, "invalid URI"}
@@ -88,9 +96,14 @@ defmodule Helpers do
   {:error, "invalid URI"}
   """
   def validate_url(url) do
-    with :ok <- validate_scheme(url),
-        :ok <- validate_host(url),
-        do: :ok
+    try do
+      with :ok <- validate_scheme(url),
+          :ok <- validate_host(url),
+          do: :ok
+    rescue
+      FunctionClauseError ->
+        {:error, "invalid URI"}
+    end
   end
 
   defp validate_host(url) do
