@@ -13,9 +13,9 @@ defmodule AnalyzerModule do
   def analyze(url, source) when is_binary(url) do
     start_time = DateTime.utc_now()
 
-    url = URI.decode(url)
-
     try do
+      url = URI.decode(url)
+
       # Prevent a clone if configuration isn't found, forces an ArgumentError
       # "could not fetch application environment :critical_contributor_level
       #  for application :lowendinsight because the application was not loaded/started.
