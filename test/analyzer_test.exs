@@ -24,14 +24,15 @@ defmodule AnalyzerTest do
   end
 
   test "get empty report" do
+    start_time = DateTime.utc_now()
     uuid = UUID.uuid1
     urls = ["https://github.com/kitplummer/xmpp4rails", "https://github.com/kitplummer/lita-cron"]
-    empty_report = AnalyzerModule.create_empty_report(uuid, urls)
+    empty_report = AnalyzerModule.create_empty_report(uuid, urls, start_time)
     expected_data = %{
       :metadata => %{:times => %{
         :duration => 0,
         :start_time => "",
-        :end_time => ""
+        :end_time => "start_time"
       }},
       :uuid => uuid,
       :state => "incomplete",
@@ -42,6 +43,7 @@ defmodule AnalyzerTest do
 
     assert expected_data[:uuid] == empty_report[:uuid]
     assert expected_data[:report] == empty_report[:report]
+    assert expected_data[:start_time] == empty_report[:start_time]
   end
 
   test "get report", context do

@@ -130,12 +130,12 @@ defmodule AnalyzerModule do
     {:ok, report}
   end
 
-  def create_empty_report(uuid, urls) do
+  def create_empty_report(uuid, urls, start_time \\ DateTime.utc_now()) do
     %{
       :metadata => %{
         :times => %{
           :duration => 0,
-          :start_time => DateTime.to_iso8601(DateTime.utc_now()),
+          :start_time => start_time,
           :end_time => ""
         }
       },
