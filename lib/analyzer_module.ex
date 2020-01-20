@@ -119,7 +119,7 @@ defmodule AnalyzerModule do
     l = urls
       |> Task.async_stream(__MODULE__, :analyze, [source], [timeout: :infinity, max_concurrency: 10])
       |> Enum.map(fn {:ok, report} -> elem(report, 1) end)
-    report = %{report: %{uuid: UUID.uuid1(), state: "complete", repos: l}, metadata: %{repo_count: length(l)}}
+    report = %{state: "complete", report: %{uuid: UUID.uuid1(), repos: l}, metadata: %{repo_count: length(l)}}
 
     report = determine_risk_counts(report)
     end_time = DateTime.utc_now()
@@ -135,7 +135,7 @@ defmodule AnalyzerModule do
       :metadata => %{
         :times => %{
           :duration => 0,
-          :start_time => start_time,
+          :start_time => DateTime.to_iso8601(start_time),
           :end_time => ""
         }
       },
