@@ -106,6 +106,34 @@ defmodule Helpers do
     end
   end
 
+  @doc """
+  iex> ["http://www.google.com","http://www.test.com"]
+  ...> |> Helpers.validate_urls()
+  :ok
+
+  iex> ["https://zipbooks..com", "http://www.test.com"]
+  ...> |> Helpers.validate_urls()
+  {:error, "invalid URI"}
+
+  iex> ["https://https://github.com/kitplummer/xmpp4rails","https://www.zipbooks.com", "http://www.test.com"]
+  ...> |> Helpers.validate_urls()
+  {:error, "invalid URI"}
+
+  iex> "https://zipbooks.com"
+  ...> |> Helpers.validate_urls()
+  {:error, "invalid URI"}
+  """
+  def validate_urls(urls) do
+    try do
+      if !is_list(urls), do: throw(:break)
+      Enum.each urls, fn url ->
+        if :ok == validate_url(url), do: :ok, else: throw(:break)
+      end
+    catch
+      :break -> {:error, "invalid URI"}
+    end
+  end
+
   defp validate_host(url) do
     case URI.parse(url) do
       %URI{host: nil} -> {:error, "invalid URI"}

@@ -8,7 +8,6 @@ defmodule AnalyzerModule do
   Analyzer takes in a repo url and coordinates the analysis,
   returning a simple JSON report.
   """
-
   @spec analyze(String.t() | list(), String.t()) :: tuple()
   def analyze(url, source) when is_binary(url) do
     start_time = DateTime.utc_now()
@@ -100,7 +99,9 @@ defmodule AnalyzerModule do
   end
 
   @doc """
-  analyze/2: returns the LowEndInsight report as JSON for multiple_repos
+  analyze/3: returns the LowEndInsight report as JSON for multiple_repos.  Takes in a "list" of
+  urls, a source id for the calling client, and the start_time of analysis as an optional way
+  to capture the time actually started at whatever the client is (e.g. an async API).
 
   Returns Map.
 
@@ -111,8 +112,9 @@ defmodule AnalyzerModule do
     2
     ```
   """
-  def analyze(urls, source) when is_list(urls) do
-    start_time = DateTime.utc_now()
+  #@defaults %{start_time: DateTime.utc_now()}
+  def analyze(urls, source, start_time \\ DateTime.utc_now()) when is_list(urls) do
+    #%{start_time: start_time} = Enum.into(opts, @defaults)
     ## Concurrency for parallelizing the analysis.  Turn the analyze/2 function into a worker.
     l = urls
       |> Task.async_stream(__MODULE__, :analyze, [source], [timeout: :infinity, max_concurrency: 10])
@@ -126,6 +128,23 @@ defmodule AnalyzerModule do
     metadata = Map.put_new(report[:metadata], :times, times)
     report = report |> Map.put(:metadata, metadata)
     {:ok, report}
+  end
+
+  def create_empty_report(uuid, urls) do
+    %{
+      :metadata => %{
+        :times => %{
+          :duration => 0,
+          :start_time => DateTime.to_iso8601(DateTime.utc_now()),
+          :end_time => ""
+        }
+      },
+      :uuid => uuid,
+      :state => "incomplete",
+      :report => %{
+        :repos => urls |> Enum.map(fn url -> %{:data => %{:repo => url}} end)
+      }
+    }
   end
 
   defp determine_risk_counts(report) do
