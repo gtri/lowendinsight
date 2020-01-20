@@ -23,6 +23,29 @@ defmodule AnalyzerTest do
     [weeks: weeks]
   end
 
+  test "get empty report" do
+    start_time = DateTime.utc_now()
+    uuid = UUID.uuid1
+    urls = ["https://github.com/kitplummer/xmpp4rails", "https://github.com/kitplummer/lita-cron"]
+    empty_report = AnalyzerModule.create_empty_report(uuid, urls, start_time)
+    expected_data = %{
+      :metadata => %{:times => %{
+        :duration => 0,
+        :start_time => "",
+        :end_time => "start_time"
+      }},
+      :uuid => uuid,
+      :state => "incomplete",
+      :report => %{
+        :repos => urls |> Enum.map(fn url -> %{:data => %{:repo => url}} end)
+      }
+    }
+
+    assert expected_data[:uuid] == empty_report[:uuid]
+    assert expected_data[:report] == empty_report[:report]
+    assert expected_data[:start_time] == empty_report[:start_time]
+  end
+
   test "get report", context do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"], "test")
     expected_data = %{
@@ -71,6 +94,14 @@ defmodule AnalyzerTest do
     assert 2 == report[:metadata][:repo_count]
   end
 
+  test "input of optional start time" do
+    start_time = DateTime.utc_now()
+    {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"],
+                                           "test_start_time_option",
+                                           start_time)
+    assert DateTime.to_iso8601(start_time) == report[:metadata][:times][:start_time]
+  end
+  
   test "get report fail" do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/blah"], "test")
     expected_data = %{data: %{config: Application.get_all_env(:lowendinsight), error: "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?", repo: "https://github.com/kitplummer/blah", risk: "critical"}}

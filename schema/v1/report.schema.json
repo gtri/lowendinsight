@@ -17,6 +17,11 @@
             "type": "array",
             "items": { "$ref": "data.schema.json"}
           },
+          "state": {
+            "description": "Status of the analysis.",
+            "title": "LowEndInsight Analysis Status",
+            "type": "string"
+          },
           "uuid": {
             "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
             "type": "string"
