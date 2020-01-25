@@ -5,6 +5,12 @@
     "description": "A LowEndInsight report (query response).",
     "type": "object",
     "properties": {
+      "state": {
+        "additionalProperties": false,
+        "description": "State of the analysis work.",
+        "title": "LowEndInsight Analysis State",
+        "type": "string"
+      },
       "report": {
         "additionalProperties": false,
         "description": "Collection of repo analysis as a single document.",
@@ -85,6 +91,6 @@
         ]
       }
     },  
-    "required": ["report", "metadata"],
+    "required": ["report", "metadata", "state"],
     "additionalProperties": false
   }
