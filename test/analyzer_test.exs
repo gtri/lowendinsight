@@ -10,11 +10,13 @@ defmodule AnalyzerTest do
     on_exit(fn ->
       File.rm_rf("xmpp4rails")
       File.rm_rf("lita-cron")
+      File.rm_rf("oh-my-zsh")
     end)
 
     File.rm_rf("xmpp4rails")
     File.rm_rf("lita-cron")
     File.rm_rf("go.uuid")
+    File.rm_rf("oh-my-zsh")
 
     {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails")
     {:ok, date} = GitModule.get_last_commit_date(repo)
@@ -60,6 +62,7 @@ defmodule AnalyzerTest do
         :functional_contributors_risk => "critical",
         :large_recent_commit_risk => "low",
         :recent_commit_size_in_percent_of_codebase => 0.003683241252302026,
+        :top10_contributors => [%{"Kit Plummer" => 7}]
       },
       :risk => "critical",
       :config => Application.get_all_env(:lowendinsight)
@@ -130,7 +133,7 @@ defmodule AnalyzerTest do
 
   test "get multi repo report validated by report schema" do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails",
-                                             "https://github.com/robbyrussell/oh-my-zsh"],
+                                             "https://github.com/kitplummer/lita-cron"],
                                            "test_multi")
 
     {:ok, report_json} = JSON.encode(report)

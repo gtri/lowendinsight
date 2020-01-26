@@ -101,6 +101,14 @@
                 "type": "string"
               }
             },
+            "top10_contributors": {
+              "description": "Top 10 contributors by number of contributions",
+              "title": "Top 10 Contributors",
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
             "functional_contributors": {
               "description": "Number of functional contributors.",
               "title": "Functional Contributors",
