@@ -9,7 +9,7 @@ defmodule GithubModule.MixProject do
     [
       app: :lowendinsight,
       description: description(),
-      version: "0.3.1",
+      version: "0.3.2",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -18,7 +18,8 @@ defmodule GithubModule.MixProject do
       source_url: "https://bitbucket.org/kitplummer/lowendinsight",
       docs: [
         extras: ["README.md"]
-      ]
+      ],
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -38,7 +39,8 @@ defmodule GithubModule.MixProject do
       {:uuid, "~> 1.1"},
       {:ex_doc, "~> 0.21"},
       {:credo, "~> 0.10", except: :prod, runtime: false},
-      {:json_xema, "~> 0.3"}
+      {:json_xema, "~> 0.3"},
+      {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 

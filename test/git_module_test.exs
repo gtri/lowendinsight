@@ -48,6 +48,48 @@ defmodule GitModuleTest do
     assert {:ok, 3} == count
   end
 
+  test "get contribution maps", %{tag_repo: tag_repo} do
+    {:ok, maps} = GitModule.get_contributions_map(tag_repo)
+    expected_array = [
+      %{"Joachim Nilsson" => 234},
+      %{"Martin Hedenfalk" => 200},
+      %{"Carlo Marcelo Arenas Belon" => 24},
+      %{"Peter Rosin" => 19},
+      %{"Nathan Phillip Brink" => 9},
+      %{"Jonas Johansson" => 5},
+      %{"martinh" => 4},
+      %{"David Grayson" => 4},
+      %{"myd7349" => 3},
+      %{"jjg" => 3},
+      %{"zhabinski" => 2},
+      %{"Frank Hunleth" => 2},
+      %{"Gikoskos" => 2},
+      %{"Nathan Brink" => 1},
+      %{"Craig McQueen" => 1},
+      %{"Georgy Komarov" => 1},
+      %{"Jakub Wilk" => 1},
+      %{"Luca Ceresoli" => 1},
+      %{"Michael Furmur" => 1},
+      %{"Alvaro G. M" => 1},
+      %{"Sebastian Geiger" => 1},
+      %{"Sebastian Roland" => 1},
+      %{"Thomas Adam" => 1},
+      %{"Thomas Epperson" => 1},
+      %{"Vikash Kesarwani" => 1},
+      %{"William D. Jones" => 1}
+    ]
+    assert expected_array == maps
+  end
+
+  # test "wip" do
+  #   {:ok, repo} = GitModule.clone_repo("https://github.com/robbyrussell/oh-my-zsh")
+  #   maps = GitModule.test_kit(repo)
+  #   File.rm_rf("oh-my-zsh")
+
+  #   assert true == Enum.member?(maps, "Prachayapron")
+  #   assert [] == maps
+  # end
+
   test "get last commit date", context do
     date = GitModule.get_last_commit_date(context[:repo])
     assert {:ok, "2009-01-06T20:23:20-07:00"} == date

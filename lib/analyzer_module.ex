@@ -3,7 +3,7 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule AnalyzerModule do
-
+  
   @moduledoc """
   Analyzer takes in a repo url and coordinates the analysis,
   returning a simple JSON report.
@@ -55,6 +55,8 @@ defmodule AnalyzerModule do
       {:ok, filtered_contributors_risk} =
         RiskLogic.functional_contributors_risk(num_filtered_contributors)
 
+      {:ok, top10_contributors} = GitModule.get_top10_contributors_map(repo)
+
       GitModule.delete_repo(repo)
 
       # Generate report
@@ -85,7 +87,8 @@ defmodule AnalyzerModule do
             recent_commit_size_in_percent_of_codebase: lines_percent,
             functional_contributors_risk: filtered_contributors_risk,
             functional_contributors: num_filtered_contributors,
-            functional_contributor_names: functional_contributors
+            functional_contributor_names: functional_contributors,
+            top10_contributors: top10_contributors
           }
         }
       }

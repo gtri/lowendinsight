@@ -27,6 +27,6 @@ jobs:
         mix deps.get
     - name: Run Tests
       run: |
-        mix test --color --cover
+        MIX_ENV=test mix coveralls
         mix docs
 

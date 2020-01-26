@@ -148,4 +148,30 @@ defmodule GitModule do
     {:ok, length, filtered_list} = GitHelper.get_filtered_contributor_count(counts, total)
     {:ok, length, Enum.map(filtered_list, fn {name, _value} -> name end)}
   end
+
+  @doc """
+  get_contributions_map/1: returns a map of contributions per git user
+  note: this map is unfiltered, dupes aren't identified
+  """
+  def get_contributions_map(repo) do
+    map = Git.shortlog!(repo, ["-s", "-n", "HEAD"])
+    |> String.trim()
+    |> String.split(~r{\s\s+})
+    |> Enum.map(fn x ->
+      s = String.split(x, "\t")
+      ## Found that there can be bad entries in the git log, just ignore
+      if String.contains?(x, "\t") do
+        k = Enum.at(s, 1)
+        v = String.to_integer(Enum.at(s, 0))
+        %{k => v}
+      end
+    end)
+    {:ok, map}
+  end
+
+  def get_top10_contributors_map(repo) do
+    {:ok, map} = get_contributions_map(repo)
+    map10 = Enum.take(map, 10) 
+    {:ok, map10}
+  end
 end
