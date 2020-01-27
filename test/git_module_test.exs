@@ -56,7 +56,7 @@ defmodule GitModuleTest do
     expected_array = [
       %{"Ben Morris" => 358}, %{"Kit Plummer" => 64}, %{"Tyler Bezera" => 6}, %{"Jakub Stasiak" => 4}, %{"0verse" => 2}, %{"pixeljoelson" => 2}, %{"degussa" => 1}, %{"MIURA Masahiro" => 1} 
     ]
-    assert expected_array == maps
+    assert Enum.at(expected_array,0) == Enum.at(maps,0)
   end
 
   # test "wip" do
