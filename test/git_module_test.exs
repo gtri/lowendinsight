@@ -13,6 +13,7 @@ defmodule GitModuleTest do
       File.rm_rf("libconfuse")
       File.rm_rf("clikan")
       File.rm_rf("infrastructure")
+      File.rm_rf("kit")
     end)
 
     File.rm_rf("xmpp4rails")
@@ -24,11 +25,13 @@ defmodule GitModuleTest do
     {:ok, tag_repo} = GitModule.clone_repo("https://github.com/kitplummer/libconfuse")
     {:ok, bitbucket_repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan")
     {:ok, gitlab_repo} = GitModule.clone_repo("https://gitlab.com/kitplummer/infrastructure")
+    {:ok, kitrepo} = GitModule.clone_repo("https://github.com/kitplummer/kit")
     [
       repo: repo,
       tag_repo: tag_repo,
       bitbucket_repo: bitbucket_repo,
-      gitlab_repo: gitlab_repo
+      gitlab_repo: gitlab_repo,
+      kitrepo: kitrepo
     ]
   end
 
@@ -48,35 +51,10 @@ defmodule GitModuleTest do
     assert {:ok, 3} == count
   end
 
-  test "get contribution maps", %{tag_repo: tag_repo} do
-    {:ok, maps} = GitModule.get_contributions_map(tag_repo)
+  test "get contribution maps", %{kitrepo: kitrepo} do
+    {:ok, maps} = GitModule.get_contributions_map(kitrepo)
     expected_array = [
-      %{"Joachim Nilsson" => 234},
-      %{"Martin Hedenfalk" => 200},
-      %{"Carlo Marcelo Arenas Belon" => 24},
-      %{"Peter Rosin" => 19},
-      %{"Nathan Phillip Brink" => 9},
-      %{"Jonas Johansson" => 5},
-      %{"martinh" => 4},
-      %{"David Grayson" => 4},
-      %{"myd7349" => 3},
-      %{"jjg" => 3},
-      %{"zhabinski" => 2},
-      %{"Frank Hunleth" => 2},
-      %{"Gikoskos" => 2},
-      %{"Nathan Brink" => 1},
-      %{"Craig McQueen" => 1},
-      %{"Georgy Komarov" => 1},
-      %{"Jakub Wilk" => 1},
-      %{"Luca Ceresoli" => 1},
-      %{"Michael Furmur" => 1},
-      %{"Alvaro G. M" => 1},
-      %{"Sebastian Geiger" => 1},
-      %{"Sebastian Roland" => 1},
-      %{"Thomas Adam" => 1},
-      %{"Thomas Epperson" => 1},
-      %{"Vikash Kesarwani" => 1},
-      %{"William D. Jones" => 1}
+      %{"Ben Morris" => 358}, %{"Kit Plummer" => 64}, %{"Tyler Bezera" => 6}, %{"Jakub Stasiak" => 4}, %{"0verse" => 2}, %{"pixeljoelson" => 2}, %{"degussa" => 1}, %{"MIURA Masahiro" => 1} 
     ]
     assert expected_array == maps
   end
