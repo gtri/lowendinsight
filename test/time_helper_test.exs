@@ -15,6 +15,10 @@ defmodule TimeHelperTest do
     assert TimeHelper.sec_to_weeks(333_282_014) == 551
   end
 
+  test "get days from seconds" do
+    assert TimeHelper.sec_to_days(333_282_014) == 3857
+  end
+
   test "compute delta" do
     seconds = TimeHelper.get_commit_delta("2009-01-07T03:23:20Z")
     weeks = TimeHelper.sec_to_weeks(seconds)

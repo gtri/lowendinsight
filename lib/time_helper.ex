@@ -36,10 +36,17 @@ defmodule TimeHelper do
   end
 
   @doc """
-  sec_to_str/1: returns a roll-up of weeks from a number of secs
+  sec_to_weeks/1: returns a roll-up of weeks from a number of secs
   """
   def sec_to_weeks(sec) do
     Kernel.trunc(sec / @week)
+  end
+
+  @doc """
+  sec_to_days/1: returns a roll-up of days from a number of secs
+  """
+  def sec_to_days(sec) do
+    Kernel.trunc(sec / @day)
   end
 
   @doc """
