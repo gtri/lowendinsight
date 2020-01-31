@@ -13,6 +13,7 @@ defmodule GitModuleTest do
       File.rm_rf("libconfuse")
       File.rm_rf("clikan")
       File.rm_rf("infrastructure")
+      File.rm_rf("kit")
     end)
 
     File.rm_rf("xmpp4rails")
@@ -24,11 +25,13 @@ defmodule GitModuleTest do
     {:ok, tag_repo} = GitModule.clone_repo("https://github.com/kitplummer/libconfuse")
     {:ok, bitbucket_repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan")
     {:ok, gitlab_repo} = GitModule.clone_repo("https://gitlab.com/kitplummer/infrastructure")
+    {:ok, kitrepo} = GitModule.clone_repo("https://github.com/kitplummer/kit")
     [
       repo: repo,
       tag_repo: tag_repo,
       bitbucket_repo: bitbucket_repo,
-      gitlab_repo: gitlab_repo
+      gitlab_repo: gitlab_repo,
+      kitrepo: kitrepo
     ]
   end
 
@@ -36,7 +39,7 @@ defmodule GitModuleTest do
     # yeah, this is empty, just here for posterity.  this would run before each
     :ok
   end
-  
+
   test "get contributor list 1", %{repo: repo} do
     count = GitModule.get_contributor_count(repo)
     assert {:ok, 1} == count
@@ -47,6 +50,23 @@ defmodule GitModuleTest do
     count = GitModule.get_contributor_count(lc_repo)
     assert {:ok, 3} == count
   end
+
+  test "get contribution maps", %{kitrepo: kitrepo} do
+    {:ok, maps} = GitModule.get_contributions_map(kitrepo)
+    expected_array = [
+      %{"Ben Morris" => 358}, %{"Kit Plummer" => 64}, %{"Tyler Bezera" => 6}, %{"Jakub Stasiak" => 4}, %{"0verse" => 2}, %{"pixeljoelson" => 2}, %{"degussa" => 1}, %{"MIURA Masahiro" => 1} 
+    ]
+    assert Enum.at(expected_array,0) == Enum.at(maps,0)
+  end
+
+  # test "wip" do
+  #   {:ok, repo} = GitModule.clone_repo("https://github.com/robbyrussell/oh-my-zsh")
+  #   maps = GitModule.test_kit(repo)
+  #   File.rm_rf("oh-my-zsh")
+
+  #   assert true == Enum.member?(maps, "Prachayapron")
+  #   assert [] == maps
+  # end
 
   test "get last commit date", context do
     date = GitModule.get_last_commit_date(context[:repo])

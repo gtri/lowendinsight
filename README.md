@@ -27,12 +27,37 @@ an ad-hoc reporting tool.
 ```
 ✗ mix analyze https://github.com/kitplummer/xmpp4rails | jq
 {
-  "data": {
+  "metadata": {
+    "repo_count": 1,
+    "risk_counts": {
+      "critical": 1
+    },
+    "times": {
+      "duration": 1,
+      "end_time": "2020-01-08T01:50:20.098278Z",
+      "start_time": "2020-01-08T01:50:19.552588Z"
+    }
+  },
+  "report": {
     "repos": [
       {
         "data": {
           "commit_currency_risk": "critical",
-          "commit_currency_weeks": 566,
+          "commit_currency_weeks": 573,
+          "config": {
+            "high_currency_level": 52,
+            "critical_contributor_level": 2,
+            "medium_large_commit_level": 0.05,
+            "medium_currency_level": 26,
+            "high_functional_contributors_level": 3,
+            "medium_contributor_level": 5,
+            "high_large_commit_level": 0.15,
+            "high_contributor_level": 3,
+            "critical_functional_contributors_level": 2,
+            "critical_currency_level": 104,
+            "critical_large_commit_level": 0.3,
+            "medium_functional_contributors_level": 5
+          },
           "contributor_count": 1,
           "contributor_risk": "critical",
           "functional_contributor_names": [
@@ -46,20 +71,16 @@ an ad-hoc reporting tool.
           "risk": "critical"
         },
         "header": {
-          "duration": 0,
-          "end_time": "2019-11-14 13:28:48.543895Z",
+          "duration": 1,
+          "end_time": "2020-01-08T01:50:20.084189Z",
+          "library_version": "",
           "source_client": "mix task",
-          "start_time": "2019-11-14 13:28:48.081742Z",
-          "uuid": "b0b9921a-06e2-11ea-9a3c-784f434ce29a"
+          "start_time": "2020-01-08T01:50:19.562877Z",
+          "uuid": "3a0ea2f2-31b9-11ea-b537-784f434ce29a"
         }
       }
-    ]
-  },
-  "metadata": {
-    "repo_count": 1,
-    "risk_counts": {
-      "critical": 1
-    }
+    ],
+    "uuid": "3a0ed3a8-31b9-11ea-9cff-784f434ce29a"
   }
 }
 ```
@@ -96,13 +117,27 @@ iex -S mix
 This will get you the `iex` prompt:
 
 ```
-Interactive Elixir (1.9.1) - press Ctrl+C to exit (type h() ENTER for help)
-iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "lib"
+Interactive Elixir (1.9.4) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
 {:ok,
  %{
    data: %{
      commit_currency_risk: "critical",
-     commit_currency_weeks: 566,
+     commit_currency_weeks: 573,
+     config: [
+       high_contributor_level: 3,
+       medium_currency_level: 26,
+       medium_contributor_level: 5,
+       medium_large_commit_level: 0.05,
+       critical_large_commit_level: 0.3,
+       medium_functional_contributors_level: 5,
+       critical_functional_contributors_level: 2,
+       high_functional_contributors_level: 3,
+       high_large_commit_level: 0.15,
+       critical_currency_level: 104,
+       critical_contributor_level: 2,
+       high_currency_level: 52
+     ],
      contributor_count: 1,
      contributor_risk: "critical",
      functional_contributor_names: ["Kit Plummer"],
@@ -114,11 +149,12 @@ iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "lib"
      risk: "critical"
    },
    header: %{
-     duration: 1,
-     end_time: "2019-11-14 13:30:42.187082Z",
-     source_client: "lib",
-     start_time: "2019-11-14 13:30:41.076329Z",
-     uuid: "f4762608-06e2-11ea-ad1c-784f434ce29a"
+     duration: 0,
+     end_time: "2020-01-08T01:51:54.633837Z",
+     library_version: "",
+     source_client: "iex",
+     start_time: "2020-01-08T01:51:54.069485Z",
+     uuid: "726a728e-31b9-11ea-bfa9-784f434ce29a"
    }
  }}
 ```
@@ -192,6 +228,12 @@ To override with an environment variable you just need to have it set:
 
 ```
 LEI_CRITICAL_CURRENCY_PAR_LEVEL=60 mix analyze https://github.com/kitplummer/xmpp4rails
+```
+
+If you receive an error in the report with the following (or similar missing environment configuration variable) - the required configuration for LowEndInsight hasn't been made available:
+
+```
+could not fetch application environment :critical_contributor_level for application :lowendinsight because the application was not loaded/started. If your application depends on :lowendinsight at runtime, make sure to load/start it or list it under :extra_applications in your mix.exs file
 ```
 
 ## Contributing

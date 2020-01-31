@@ -1,0 +1,96 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://example.com/report.schema.json",
+    "title": "LowEndInsight JSON Report (Wraps Data) Schema",
+    "description": "A LowEndInsight report (query response).",
+    "type": "object",
+    "properties": {
+      "state": {
+        "additionalProperties": false,
+        "description": "State of the analysis work.",
+        "title": "LowEndInsight Analysis State",
+        "type": "string"
+      },
+      "report": {
+        "additionalProperties": false,
+        "description": "Collection of repo analysis as a single document.",
+        "title": "LowEndSight Analysis Array of Reports",
+        "type": "object",
+        "properties":{
+          "repos": {
+            "description": "Array of repo's analyzed.",
+            "title": "LowEndInsight Analyzed Git Repos",
+            "type": "array",
+            "items": { "$ref": "data.schema.json"}
+          },
+          "state": {
+            "description": "Status of the analysis.",
+            "title": "LowEndInsight Analysis Status",
+            "type": "string"
+          },
+          "uuid": {
+            "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+            "type": "string"
+          }
+        },
+        "required": ["repos"]
+      },
+      "metadata": {
+        "additionalProperties": false,
+        "description": "Collection of rolled-up data about the LowEndInsight analysis process and results.",
+        "title": "LowEndInsight Report Metadata",
+        "type": "object",
+        "properties": {
+          "repo_count": {
+            "type": "number"
+          },
+          "risk_counts": {
+            "additionalProperties": false,
+            "description": "Counts of hits against each risk level",
+            "title": "LowEndInsight Risk Level Counts",
+            "properties": {
+              "additionalProperties": false,
+              "critical": {
+                "type": "integer"
+              },
+              "high": {
+                "type": "integer"
+              },
+              "low": {
+                "type": "integer"
+              },
+              "medium": {
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "times": {
+            "additionalProperties": false,
+            "description": "Start, End and Duration times for LowEndInsight times.",
+            "title": "LowEndInsight Analysis Times",
+            "properties": {
+              "duration": {
+                "type": "integer"
+              },
+              "end_time": {
+                "type": "string"
+              },
+              "start_time": {
+                "type": "string"
+              }
+            },
+            
+            "type": "object"
+          }
+        },
+        "required": [
+          "repo_count",
+          "risk_counts",
+          "times"
+        ]
+      }
+    },  
+    "required": ["report", "metadata", "state"],
+    "additionalProperties": false
+  }

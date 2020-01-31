@@ -3,7 +3,7 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule RiskLogicTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest RiskLogic
 
   test "confirm contributor critical" do

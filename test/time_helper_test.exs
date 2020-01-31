@@ -3,7 +3,7 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule TimeHelperTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest TimeHelper
 
   test "convert seconds to string" do
@@ -13,6 +13,10 @@ defmodule TimeHelperTest do
 
   test "get weeks from seconds" do
     assert TimeHelper.sec_to_weeks(333_282_014) == 551
+  end
+
+  test "get days from seconds" do
+    assert TimeHelper.sec_to_days(333_282_014) == 3857
   end
 
   test "compute delta" do

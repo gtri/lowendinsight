@@ -1,0 +1,211 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/data.schema.json",
+  "title": "LowEndInsight Analysis Data Schema",
+  "description": "A LowEndInsight dataset for an individual git repo.",
+  "type": "object",
+  "properties": {
+    "data": {
+      "title": "LowEndInsight Analysis Data",
+      "additionalProperties": false,
+      "description": "The report data",
+      "type": "object",
+      "properties": {
+        "config": {
+          "description": "Configuration criteria for LowEndInsight to use in defining analysis levels.",
+          "title": "LowEndInsight Configuration Inputs",
+          "type": "object",
+          "properties": {
+            "medium_large_commit_level": {
+              "type": "number"
+            },
+            "high_functional_contributors_level": {
+              "type": "number"
+            },
+            "critical_currency_level": {
+              "type": "number"
+            },
+            "high_contributor_level": {
+              "type": "number"
+            },
+            "high_large_commit_level": {
+              "type": "number"
+            },
+            "critcal_contributor_level": {
+              "type": "number"
+            },
+            "medium_contributor_level": {
+              "type": "number"
+            },
+            "high_currency_level": {
+              "type": "number"
+            },
+            "critical_functional_contributors_level": {
+              "type": "number"
+            },
+            "medium_functional_contributors_level": {
+              "type": "number"
+            },
+            "medium_currency_level": {
+              "type": "number"
+            },
+            "critical_large_commit_level": {
+              "type": "number"
+            }
+          }
+        },
+        "error": {
+          "title": "Error message",
+          "description": "If LowEndInsight is unable to analyze a repo, it will respond with this error field.",
+          "type": "string",
+          "examples" : [
+            "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?",
+            "Unable to analyze the repo (https://github.com/kitplummer/blah), LowEndInsight configuration not found."
+          ]
+        },
+        "repo": {
+          "description": "The git repo url being analyzed by LowEndInsight.",
+          "title": "Source Git Repo",
+          "type": "string"
+        },
+        "results": {
+          "description": "The LowEndInsight analysis data for a given repo.",
+          "title": "LowEndInsight Per-Repo Analysis Results",
+          "type": "object",
+          "properties": {
+            "commit_currency_risk": {
+              "description": "Risk associated with the currency of the source repo activity.",
+              "title": "Commit Currency Risk",
+              "type": "string"
+            },
+            "commit_currency_weeks": {
+              "description": "How long since the last commit to this repo (in weeks).",
+              "title": "Commit Currency Weeks",
+              "type": "number"
+            },
+            "contributor_count": {
+              "description": "Number of unique contributors to this repo",
+              "title": "Contributor Count",
+              "type": "number"
+            },
+            "contributor_risk": {
+              "description": "Risk associated with the number of contributors to this repo.",
+              "title": "Contributor Risk",
+              "type": "string"
+            },
+            "functional_contributor_names": {
+              "description": "Collection of contributors labeled as 'functional' by LowEndInsight.",
+              "title": "Functional Contributors per Repo",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "top10_contributors": {
+              "description": "Top 10 contributors by number of contributions",
+              "title": "Top 10 Contributors",
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "functional_contributors": {
+              "description": "Number of functional contributors.",
+              "title": "Functional Contributors",
+              "type": "number"
+            },
+            "functional_contributors_risk": {
+              "description": "Risk associated with the number of functional contributors.",
+              "title": "Functional Contributors Risk",
+              "type": "string"
+            },
+            "large_recent_commit_risk": {
+              "description": "Risk associated with the amount of change within recent commits - volatility.",
+              "title": "Large Recent Commit Risk",
+              "type": "string"
+            },
+            "recent_commit_size_in_percent_of_codebase": {
+              "description": "Percent of codebase changed by recent commits.",
+              "title": "Recent Commit Size in Percent of Codebase",
+              "type": "number"
+            }
+          }
+        },
+        "risk": {
+          "description": "The risk associated with analysis on a given repository, highest level risk identified.",
+          "title": "LowEndInsight Rolled-Up Risk for a Repo",
+          "type": "string"
+        }
+      },
+      "required": [
+        "config",
+        "risk",
+        "repo"
+      ],
+      "anyOf": [
+        {
+          "title": "LowEndInsight Results",
+          "required": ["results"]
+        },
+        {
+          "title": "LowEndInsight Error",
+          "required": ["error"]
+        }
+      ]
+    },
+    "header": {
+      "additionalProperties": false,
+      "description": "Information about the report's generation.",
+      "title": "LowEndInsight Per-Repo Analsyis Metadata",
+      "type": "object",
+      "properties": {
+        "duration": {
+          "description": "Time it took to complete the analysis of this repo (in seconds).",
+          "type": "number"
+        },
+        "end_time": {
+          "description": "ISO8601 Date string for the end of analysis.",
+          "type": "string"
+        },
+        "start_time": {
+          "description": "ISO8601 Date string for the start of analysis.",
+          "type": "string"
+        },
+        "uuid": {
+          "description": "Unique identifier for this given analysis.",
+          "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+          "type": "string"
+        },
+        "library_version": {
+          "description": "The version of the LowEndInsight library that analyzed this repo.",
+          "type": "string"
+        },
+        "source_client": {
+          "description": "Identifier of what instigated this analysis.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "uuid",
+        "library_version",
+        "duration",
+        "end_time",
+        "start_time"
+      ]
+    }
+  },
+  "required": ["data"],
+  "definitions": {
+    "risk-level": {
+      "additionalProperties": false,
+      "description": "Risk Ratings - Based on NIST CVSS Severity Classifications",
+      "title": "LowEndInsight Risk Classifiers",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ]
+    }
+  }
+}
