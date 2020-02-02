@@ -58,7 +58,6 @@ defmodule Helpers do
   # def have_config() do
   #   try do
   #     config = Application.fetch_env!(:lowendinsight, :critical_contributor_level)
-  #     IO.inspect config
   #     IO.puts "CONFIG: "
 
   #   rescue
@@ -155,4 +154,13 @@ defmodule Helpers do
         end
     end
   end
+
+  @doc """
+  convert_config_to_list/1: takes in Application.get_all_env(:app) and returns a list of
+  maps, to be encoded as JSON.  Since JSON doesn't have an equivalent tuple type the
+  libs all bonk on encoding config values.  
+  """
+  def convert_config_to_list(config) do
+    Enum.into(config, %{})
+  end  
 end

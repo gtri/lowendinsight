@@ -35,7 +35,8 @@ defmodule GithubModule.MixProject do
     [
       {:tentacat, "~> 1.0"},
       {:git_cli, "~> 0.3"},
-      {:json, "~> 1.3"},
+      {:poison, "~> 3.1"},
+      {:jason, "~> 1.1"},
       {:uuid, "~> 1.1"},
       {:ex_doc, "~> 0.21"},
       {:credo, "~> 0.10", except: :prod, runtime: false},
