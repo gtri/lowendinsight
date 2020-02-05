@@ -164,7 +164,7 @@ Possibly a tip (if you're running Docker):
 You can pass in this lib and configuration settings, into a base Elixir container.
 
 ```
-docker run -i --rm -v "$PWD":/usr/src/myapp -w /usr/src/myapp -e LEI_CRITICAL_CURRENCY_LEVEL=60 elixir mix local.hex; mix deps.get; iex -S mix
+docker run --rm -v $PWD:/app -w /app -it -e LEI_CRITICAL_CURRENCY_LEVEL=60 elixir:latest bash -c "mix local.hex;mix deps.get;iex -S mix"
 ```
 
 From iex you can access to the library functions.
