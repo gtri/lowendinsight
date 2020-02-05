@@ -27,6 +27,8 @@ jobs:
         MIX_ENV=test mix coveralls
         mix docs
     - name: Publish to Hex
+      env: # Or as an environment variable
+        HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
       if: github.event.pull_request.merged == true
       run: |
         mix hex.publish --yes
