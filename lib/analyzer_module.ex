@@ -76,7 +76,7 @@ defmodule AnalyzerModule do
           library_version: library_version
         },
         data: %{
-          config: Application.get_all_env(:lowendinsight),
+          config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
           repo: url,
           results: %{
             contributor_count: count,
@@ -95,9 +95,9 @@ defmodule AnalyzerModule do
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
-        {:ok, %{data: %{config: Application.get_all_env(:lowendinsight), error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?", repo: url, risk: "critical"}}}
+        {:ok, %{data: %{config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)), error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?", repo: url, risk: "critical"}}}
       e in ArgumentError ->
-        {:ok, %{data: %{config: Application.get_all_env(:lowendinsight), error: "Unable to analyze the repo (#{url}). #{e.message}", repo: url, risk: "N/A"}}}
+        {:ok, %{data: %{config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)), error: "Unable to analyze the repo (#{url}). #{e.message}", repo: url, risk: "N/A"}}}
     end
   end
 
@@ -133,6 +133,11 @@ defmodule AnalyzerModule do
     {:ok, report}
   end
 
+  @doc """
+  create_empty_report/3: takes in a uuid, list of urls, and a start time and 
+  produces the repo report object to be returned immediately by asynchronous
+  requestors (e.g. LowEndInsight-Get HTTP endpoint)
+  """
   def create_empty_report(uuid, urls, start_time \\ DateTime.utc_now()) do
     %{
       :metadata => %{
@@ -150,7 +155,14 @@ defmodule AnalyzerModule do
     }
   end
 
-  defp determine_risk_counts(report) do
+  @doc """
+  determine_risk_counts/1: takes in a full report of n-repo reports, and calculates
+  the number or risk ratings, given the number of repos.  It returns a new report
+  with the risk_counts object populated with the count table.  Have to accommodate
+  both the atom and string elements, becuse the JSON gets parsed into the string
+  format - so caching can be supported (as reports are stored in JSON).
+  """
+  def determine_risk_counts(report) do
     count_map = report[:report][:repos]
         |> Enum.map(fn (repo) -> repo[:data][:risk] end)
         |> Enum.reduce(%{}, fn x, acc -> Map.update(acc, x, 1, &(&1 + 1)) end)
@@ -158,7 +170,11 @@ defmodule AnalyzerModule do
     report |> Map.put(:metadata, metadata)
   end
 
-  defp determine_toplevel_risk(report) do
+  @doc """
+  determine_toplevel_risk/1: takes in a report and determines the highest
+  criticality, and assigns it to the "risk" element for the repo report.
+  """
+  def determine_toplevel_risk(report) do
     values = Map.values(report[:data][:results])
 
     risk =
