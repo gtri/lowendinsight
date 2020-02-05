@@ -13,17 +13,17 @@ defmodule Mix.Tasks.AnalyzeTest do
       assert_received {:mix_shell, :info, [report]}
 
       schema = File.read!("schema/v1/report.schema.json")
-      |> JSON.decode!() 
+      |> Poison.decode!() 
       |> JsonXema.new()
 
-      report_data = JSON.decode!(report)
+      report_data = Poison.decode!(report)
       assert :ok == JsonXema.validate(schema, report_data)
       assert true == JsonXema.valid?(schema, report_data)
 
       Analyze.run(["https://github.com/kitplummer/blah"])
       assert_received {:mix_shell, :info, [report]}
 
-      report_data = JSON.decode!(report)
+      report_data = Poison.decode!(report)
       assert :ok == JsonXema.validate(schema, report_data)
       assert true == JsonXema.valid?(schema, report_data)
     end

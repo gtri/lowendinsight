@@ -65,7 +65,7 @@ defmodule AnalyzerTest do
         :top10_contributors => [%{"Kit Plummer" => 7}]
       },
       :risk => "critical",
-      :config => Application.get_all_env(:lowendinsight)
+      :config => Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight))
     }
 
     repo_data = List.first(report[:report][:repos])
@@ -107,26 +107,27 @@ defmodule AnalyzerTest do
   
   test "get report fail" do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/blah"], "test")
-    expected_data = %{data: %{config: Application.get_all_env(:lowendinsight), error: "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?", repo: "https://github.com/kitplummer/blah", risk: "critical"}}
+    expected_data = %{data: %{config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)), error: "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?", repo: "https://github.com/kitplummer/blah", risk: "critical"}}
     repo_data = List.first(report[:report][:repos])
     assert expected_data == repo_data
   end
 
   test "get report fail when subdirectory" do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails/blah"], "test")
-    expected_data = %{data: %{config: Application.get_all_env(:lowendinsight), error: "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory", repo: "https://github.com/kitplummer/xmpp4rails/blah", risk: "N/A"}}
+    expected_data = %{data: %{config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)), error: "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory", repo: "https://github.com/kitplummer/xmpp4rails/blah", risk: "N/A"}}
     repo_data = List.first(report[:report][:repos])
     assert expected_data == repo_data
   end
 
   test "get single repo report validated by report schema" do
     {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/lita-cron"], "test")
-    {:ok, report_json} = JSON.encode(report)
+
+    {:ok, report_json} = Poison.encode(report)
 
     schema_file = File.read!("schema/v1/report.schema.json")
-    schema = JSON.decode!(schema_file) |> JsonXema.new()
+    schema = Poison.decode!(schema_file) |> JsonXema.new()
 
-    report_data = JSON.decode!(report_json)
+    report_data = Poison.decode!(report_json)
     assert :ok == JsonXema.validate(schema, report_data)
     assert true == JsonXema.valid?(schema, report_data)
   end
@@ -136,11 +137,11 @@ defmodule AnalyzerTest do
                                              "https://github.com/kitplummer/lita-cron"],
                                            "test_multi")
 
-    {:ok, report_json} = JSON.encode(report)
+    {:ok, report_json} = Poison.encode(report)
     schema_file = File.read!("schema/v1/report.schema.json")
-    schema = JSON.decode!(schema_file) |> JsonXema.new()
+    schema = Poison.decode!(schema_file) |> JsonXema.new()
 
-    report_data = JSON.decode!(report_json)
+    report_data = Poison.decode!(report_json)
     assert :ok == JsonXema.validate(schema, report_data)
     assert true == JsonXema.valid?(schema, report_data)
   end

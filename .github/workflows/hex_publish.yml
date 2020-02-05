@@ -1,12 +1,10 @@
-name: default_elixir_ci
+name: elixir_ci_hex_publish
 
 on:
-  push:
-    branches:
-      - develop
   pull_request:
+    types: [closed]
     branches:
-      - develop
+      - master
 
 jobs:
   build:
@@ -28,4 +26,8 @@ jobs:
       run: |
         MIX_ENV=test mix coveralls
         mix docs
+    - name: Publish to Hex
+      if: github.event.pull_request.merged == true
+      run: |
+        mix hex.publish --yes
 

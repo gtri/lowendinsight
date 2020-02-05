@@ -5,5 +5,10 @@
 defmodule Lowendinsight.HelpersTest do
     use ExUnit.Case, async: true
     doctest Helpers
+
+    test "converter works?" do
+      Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight))
+      |> Poison.encode!()
+    end
   end
   
