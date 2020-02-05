@@ -164,7 +164,7 @@ defmodule AnalyzerModule do
   """
   def determine_risk_counts(report) do
     count_map = report[:report][:repos]
-        |> Enum.map(fn (repo) -> repo[:data][:risk] || repo["data"]["risk"] end)
+        |> Enum.map(fn (repo) -> repo[:data][:risk] end)
         |> Enum.reduce(%{}, fn x, acc -> Map.update(acc, x, 1, &(&1 + 1)) end)
     metadata = Map.put_new(report[:metadata], :risk_counts, count_map)
     report |> Map.put(:metadata, metadata)
