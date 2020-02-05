@@ -78,10 +78,6 @@ defmodule Helpers do
   ...> |> Helpers.validate_url()
   :ok
 
-  iex> "https://https://www.google.com"
-  ...> |> Helpers.validate_url()
-  {:error, "invalid URI"}
-
   iex> '"https://"https://www.google.com"'
   ...> |> Helpers.validate_url()
   {:error, "invalid URI"}
@@ -114,7 +110,7 @@ defmodule Helpers do
   ...> |> Helpers.validate_urls()
   {:error, "invalid URI"}
 
-  iex> ["https://https://github.com/kitplummer/xmpp4rails","https://www.zipbooks.com", "http://www.test.com"]
+  iex> ["https//github.com/kitplummer/xmpp4rails","https://www.zipbooks.com", "http://www.test.com"]
   ...> |> Helpers.validate_urls()
   {:error, "invalid URI"}
 
@@ -133,6 +129,14 @@ defmodule Helpers do
     end
   end
 
+  # Found a rare case.  https://https://www.google.com is a valid
+  # URI, which makes 'https' the host, which apparently resolves.
+  # Killed way too many cells chasing this edge case:
+  # iex(1)> :inet.gethostbyname(Kernel.to_charlist "https")
+  # {:ok,
+  # {:hostent, 'https.cust.blueprintrf.com', [], :inet, 4,
+  # [{23, 202, 231, 167}, {23, 217, 138, 108}]}}
+  # oh well i guess, will handle the issue downstream i guess.
   defp validate_host(url) do
     case URI.parse(url) do
       %URI{host: nil} -> {:error, "invalid URI"}

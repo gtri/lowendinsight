@@ -23,8 +23,7 @@ defmodule RepoTest do
     s_repo = %RepoReport{data: e_repo}
     j_repo = Poison.encode!(s_repo)
     d_repo = Poison.decode!(j_repo, as: %RepoReport{data: %Data{results: %Results{}}})
-    IO.inspect d_repo[%Data{}]
 
-    assert d_repo[:data][:risk] == "critical"
+    assert d_repo.data.risk == "critical"
   end
 end
