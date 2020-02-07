@@ -29,8 +29,8 @@ jobs:
         MIX_ENV=test mix coveralls.html
         mix docs
     - name: Archive code coverage report
-        uses: actions/upload-artifact@v1
-        with:
-          name: code-coverage-report
-          path: cover/excoveralls.html
+      uses: actions/upload-artifact@v1
+      with:
+        name: code-coverage-report
+        path: cover/excoveralls.html
 
