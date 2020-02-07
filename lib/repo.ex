@@ -1,18 +1,6 @@
-# defmodule Config do
-#   @derive [Poison.Encoder]
-#   defstruct config: {}
-# end
-
-# defmodule Repo do
-#   @derive [Poison.Encoder]
-#   defstruct repo: ""
-# end
-
-# defmodule Risk do
-#   @derive [Poison.Encoder]
-
-#   defstruct risk: ""
-# end
+# Copyright (C) 2020 by the Georgia Tech Research Institute (GTRI)
+# This software may be modified and distributed under the terms of
+# the BSD 3-Clause license. See the LICENSE file for details
 
 defmodule Results do
   @derive [Poison.Encoder]
