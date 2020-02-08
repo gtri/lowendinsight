@@ -231,13 +231,11 @@ https://github.com/gtri/lowendinsight-get
 
 API available at: https://hexdocs.pm/lowendinsight/readme.html#content
 
-This is the library piece of the puzzle.  There is a brewing API/service
-interface that will expose this library to HTTP(S) POSTs.  Stay tuned,
-it'll be open sourced shortly following this library.
+This is the library piece of the puzzle.  As mentioned above there is an HTTP API available as well.
 
 The library is written in Elixir.
 
-`mix docs` will generate static docs available locally within the project in the `docs/` subfolder.
+`mix docs` will generate static docs available locally within the repo's root, in the `docs/` subfolder.
 
 ### A Note about the metrics used
 * Recent commit size: This is a measure of how large the most recent commit is in relatino to the size of the codebase. The idea being that a large recent commit is much more likely to be bug filled than a relatively small commit.
