@@ -3,7 +3,6 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule AnalyzerModule do
-  
   @moduledoc """
   Analyzer takes in a repo url and coordinates the analysis,
   returning a simple JSON report.
@@ -21,7 +20,6 @@ defmodule AnalyzerModule do
       #  If your application depends on :lowendinsight at runtime, make sure to
       #  load/start it or list it under :extra_applications in your mix.exs file"
       _config = Application.fetch_env!(:lowendinsight, :critical_contributor_level)
-
 
       if Helpers.count_forward_slashes(url) > 4 do
         raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
@@ -65,7 +63,11 @@ defmodule AnalyzerModule do
 
       # Return summary report as JSON
       # Workaround to allow `mix analyze` to work even that :application doesn't exist
-      library_version = if :application.get_application != :undefined, do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string, else: ""
+      library_version =
+        if :application.get_application() != :undefined,
+          do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string(),
+          else: ""
+
       report = %{
         header: %{
           start_time: DateTime.to_iso8601(start_time),
@@ -92,12 +94,30 @@ defmodule AnalyzerModule do
           }
         }
       }
+
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
-        {:ok, %{data: %{config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)), error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?", repo: url, risk: "critical"}}}
+        {:ok,
+         %{
+           data: %{
+             config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
+             error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?",
+             repo: url,
+             risk: "critical"
+           }
+         }}
+
       e in ArgumentError ->
-        {:ok, %{data: %{config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)), error: "Unable to analyze the repo (#{url}). #{e.message}", repo: url, risk: "N/A"}}}
+        {:ok,
+         %{
+           data: %{
+             config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
+             error: "Unable to analyze the repo (#{url}). #{e.message}",
+             repo: url,
+             risk: "N/A"
+           }
+         }}
     end
   end
 
@@ -115,19 +135,31 @@ defmodule AnalyzerModule do
     2
     ```
   """
-  #@defaults %{start_time: DateTime.utc_now()}
+  # @defaults %{start_time: DateTime.utc_now()}
   def analyze(urls, source, start_time \\ DateTime.utc_now()) when is_list(urls) do
-    #%{start_time: start_time} = Enum.into(opts, @defaults)
+    # %{start_time: start_time} = Enum.into(opts, @defaults)
     ## Concurrency for parallelizing the analysis.  Turn the analyze/2 function into a worker.
-    l = urls
-      |> Task.async_stream(__MODULE__, :analyze, [source], [timeout: :infinity, max_concurrency: 10])
+    l =
+      urls
+      |> Task.async_stream(__MODULE__, :analyze, [source], timeout: :infinity, max_concurrency: 10)
       |> Enum.map(fn {:ok, report} -> elem(report, 1) end)
-    report = %{state: "complete", report: %{uuid: UUID.uuid1(), repos: l}, metadata: %{repo_count: length(l)}}
+
+    report = %{
+      state: "complete",
+      report: %{uuid: UUID.uuid1(), repos: l},
+      metadata: %{repo_count: length(l)}
+    }
 
     report = determine_risk_counts(report)
     end_time = DateTime.utc_now()
     duration = DateTime.diff(end_time, start_time)
-    times = %{start_time: DateTime.to_iso8601(start_time), end_time: DateTime.to_iso8601(end_time), duration: duration}
+
+    times = %{
+      start_time: DateTime.to_iso8601(start_time),
+      end_time: DateTime.to_iso8601(end_time),
+      duration: duration
+    }
+
     metadata = Map.put_new(report[:metadata], :times, times)
     report = report |> Map.put(:metadata, metadata)
     {:ok, report}
@@ -163,9 +195,11 @@ defmodule AnalyzerModule do
   format - so caching can be supported (as reports are stored in JSON).
   """
   def determine_risk_counts(report) do
-    count_map = report[:report][:repos]
-        |> Enum.map(fn (repo) -> repo[:data][:risk] end)
-        |> Enum.reduce(%{}, fn x, acc -> Map.update(acc, x, 1, &(&1 + 1)) end)
+    count_map =
+      report[:report][:repos]
+      |> Enum.map(fn repo -> repo[:data][:risk] end)
+      |> Enum.reduce(%{}, fn x, acc -> Map.update(acc, x, 1, &(&1 + 1)) end)
+
     metadata = Map.put_new(report[:metadata], :risk_counts, count_map)
     report |> Map.put(:metadata, metadata)
   end

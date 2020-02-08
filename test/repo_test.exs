@@ -23,7 +23,7 @@ defmodule RepoTest do
       :risk => "critical",
       :config => Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight))
     }
-    
+
     s_repo = %RepoReport{data: e_repo}
     j_repo = Poison.encode!(s_repo)
     d_repo = Poison.decode!(j_repo, as: %RepoReport{data: %Data{results: %Results{}}})

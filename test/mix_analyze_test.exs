@@ -7,14 +7,16 @@ Mix.shell(Mix.Shell.Process)
 defmodule Mix.Tasks.AnalyzeTest do
   use ExUnit.Case, async: true
   alias Mix.Tasks.Analyze
+
   describe "run/1" do
     test "run analysis, validate report, return report" do
       Analyze.run(["https://github.com/kitplummer/xmpp4rails"])
       assert_received {:mix_shell, :info, [report]}
 
-      schema = File.read!("schema/v1/report.schema.json")
-      |> Poison.decode!() 
-      |> JsonXema.new()
+      schema =
+        File.read!("schema/v1/report.schema.json")
+        |> Poison.decode!()
+        |> JsonXema.new()
 
       report_data = Poison.decode!(report)
       assert :ok == JsonXema.validate(schema, report_data)

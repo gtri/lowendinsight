@@ -45,7 +45,7 @@ defmodule Mix.Tasks.Analyze do
   """
   def run(url) do
     report = AnalyzerModule.analyze(url, "mix task")
-    report = (elem(Poison.encode(elem(report, 1)), 1))
-    Mix.shell.info(report)
+    report = elem(Poison.encode(elem(report, 1)), 1)
+    Mix.shell().info(report)
   end
 end

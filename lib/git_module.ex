@@ -12,10 +12,11 @@ defmodule GitModule do
   """
 
   def clone_repo(url) do
-    {:ok, slug} = url |> Helpers.get_slug
-    {:ok, _, repo_name} = Helpers.split_slug slug
+    {:ok, slug} = url |> Helpers.get_slug()
+    {:ok, _, repo_name} = Helpers.split_slug(slug)
 
     response = Git.clone([url, repo_name])
+
     case response do
       {:ok, repo} ->
         {:ok, repo}
@@ -154,24 +155,26 @@ defmodule GitModule do
   note: this map is unfiltered, dupes aren't identified
   """
   def get_contributions_map(repo) do
-    map = Git.shortlog!(repo, ["-s", "-n", "HEAD"])
-    |> String.trim()
-    |> String.split(~r{\s\s+})
-    |> Enum.map(fn x ->
-      s = String.split(x, "\t")
-      ## Found that there can be bad entries in the git log, just ignore
-      if String.contains?(x, "\t") do
-        k = Enum.at(s, 1)
-        v = String.to_integer(Enum.at(s, 0))
-        %{k => v}
-      end
-    end)
+    map =
+      Git.shortlog!(repo, ["-s", "-n", "HEAD"])
+      |> String.trim()
+      |> String.split(~r{\s\s+})
+      |> Enum.map(fn x ->
+        s = String.split(x, "\t")
+        ## Found that there can be bad entries in the git log, just ignore
+        if String.contains?(x, "\t") do
+          k = Enum.at(s, 1)
+          v = String.to_integer(Enum.at(s, 0))
+          %{k => v}
+        end
+      end)
+
     {:ok, map}
   end
 
   def get_top10_contributors_map(repo) do
     {:ok, map} = get_contributions_map(repo)
-    map10 = Enum.take(map, 10) 
+    map10 = Enum.take(map, 10)
     {:ok, map10}
   end
 end

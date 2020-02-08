@@ -26,6 +26,7 @@ defmodule GitModuleTest do
     {:ok, bitbucket_repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan")
     {:ok, gitlab_repo} = GitModule.clone_repo("https://gitlab.com/kitplummer/infrastructure")
     {:ok, kitrepo} = GitModule.clone_repo("https://github.com/kitplummer/kit")
+
     [
       repo: repo,
       tag_repo: tag_repo,
@@ -53,10 +54,19 @@ defmodule GitModuleTest do
 
   test "get contribution maps", %{kitrepo: kitrepo} do
     {:ok, maps} = GitModule.get_contributions_map(kitrepo)
+
     expected_array = [
-      %{"Ben Morris" => 358}, %{"Kit Plummer" => 64}, %{"Tyler Bezera" => 6}, %{"Jakub Stasiak" => 4}, %{"0verse" => 2}, %{"pixeljoelson" => 2}, %{"degussa" => 1}, %{"MIURA Masahiro" => 1} 
+      %{"Ben Morris" => 358},
+      %{"Kit Plummer" => 64},
+      %{"Tyler Bezera" => 6},
+      %{"Jakub Stasiak" => 4},
+      %{"0verse" => 2},
+      %{"pixeljoelson" => 2},
+      %{"degussa" => 1},
+      %{"MIURA Masahiro" => 1}
     ]
-    assert Enum.at(expected_array,0) == Enum.at(maps,0)
+
+    assert Enum.at(expected_array, 0) == Enum.at(maps, 0)
   end
 
   # test "wip" do

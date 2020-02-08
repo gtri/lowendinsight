@@ -3,12 +3,11 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule Lowendinsight.HelpersTest do
-    use ExUnit.Case, async: true
-    doctest Helpers
+  use ExUnit.Case, async: true
+  doctest Helpers
 
-    test "converter works?" do
-      Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight))
-      |> Poison.encode!()
-    end
+  test "converter works?" do
+    Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight))
+    |> Poison.encode!()
   end
-  
+end

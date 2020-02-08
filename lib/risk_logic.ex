@@ -70,16 +70,19 @@ defmodule RiskLogic do
   """
   def functional_contributors_risk(contributors) do
     cond do
-      contributors >= Application.fetch_env!(:lowendinsight, :medium_functional_contributors_level) ->
+      contributors >=
+          Application.fetch_env!(:lowendinsight, :medium_functional_contributors_level) ->
         {:ok, "low"}
 
       contributors >= Application.fetch_env!(:lowendinsight, :high_functional_contributors_level) ->
         {:ok, "medium"}
 
-      contributors >= Application.fetch_env!(:lowendinsight, :critical_functional_contributors_level) ->
+      contributors >=
+          Application.fetch_env!(:lowendinsight, :critical_functional_contributors_level) ->
         {:ok, "high"}
 
-      contributors < Application.fetch_env!(:lowendinsight, :critical_functional_contributors_level) ->
+      contributors <
+          Application.fetch_env!(:lowendinsight, :critical_functional_contributors_level) ->
         {:ok, "critical"}
     end
   end
