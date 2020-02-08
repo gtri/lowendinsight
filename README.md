@@ -1,6 +1,6 @@
 # LowEndInsight
 
-![build status](https://github.com/kitplummer/lowendinsight/workflows/default_elixir_ci/badge.svg?branch=master)
+![build status](https://github.com/kitplummer/lowendinsight/workflows/default_elixir_ci/badge.svg?branch=master) ![Hex.pm](https://img.shields.io/hexpm/v/lowendinsight)
 
 LowEndInsight is a simple "bus-factor" risk analysis library for Open
 Source Software which is managed within a Git repository.  Provide the
@@ -87,16 +87,13 @@ an ad-hoc reporting tool.
 
 ## Installation
 
-NOTE: the library is not currently deployed to Hex, while awaiting approvals to
-OSS.
-
 [LowEndInsight available in Hex](https://hex.pm/packages/lowendinsight), the package can be installed
 by adding `lowendinsight` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:lowendinsight, "~> 0.2.1"}
+    {:lowendinsight, "~> 0.3"}
   ]
 end
 ```
