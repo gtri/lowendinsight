@@ -23,7 +23,7 @@ the decision to use.  LowEndInsight provides a simple mechanism for
 investigating and applying basic governance (based on your definition of
 the tolerance level) and responds with a useful report for integrating
 into your existing automation.  Or you can easily use LowEndInsight as
-an ad-hoc reporting tool.
+an ad-hoc reporting tool, running it manually.
 ```
 ✗ mix analyze https://github.com/kitplummer/xmpp4rails | jq
 {
@@ -156,9 +156,9 @@ iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
  }}
 ```
 
-Possibly a tip (if you're running Docker):
+### Docker
 
-You can pass in this lib and configuration settings, into a base Elixir container.
+You can pass in this lib and configuration settings, into a base Elixir container.  From the root directory of a clone of this repo run this:
 
 ```
 docker run --rm -v $PWD:/app -w /app -it -e LEI_CRITICAL_CURRENCY_LEVEL=60 elixir:latest bash -c "mix local.hex;mix deps.get;iex -S mix"
@@ -166,14 +166,64 @@ docker run --rm -v $PWD:/app -w /app -it -e LEI_CRITICAL_CURRENCY_LEVEL=60 elixi
 
 From iex you can access to the library functions.
 
+```
+Erlang/OTP 22 [erts-10.6.3] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [hipe] [dtrace]
+
+Interactive Elixir (1.10.0) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"], "iex")
+{:ok,
+ %{
+   metadata: %{
+     repo_count: 1,
+     risk_counts: %{"critical" => 1},
+     times: %{
+       duration: 1,
+       end_time: "2020-02-08T04:35:35.109053Z",
+       start_time: "2020-02-08T04:35:34.078971Z"
+     }
+   },
+   report: %{
+     repos: [
+       %{
+...
+}
+```
+
+### Mix
+
 There is also an Elixir `mix` task that you can use to access the
-`AnalyzeModule.analyze(url, client)` function.
+`AnalyzeModule.analyze(url, client)` function.  So if have this repo cloned:
 
 ```
-mix analyze https://github.com/kitplummer/xmpp4rails, mix
+mix analyze https://github.com/kitplummer/xmpp4rails | jq
 ```
 
-## Docs?
+This will return:
+
+```json
+{
+  "state": "complete",
+  "report": {
+    "uuid": "86ac4538-4a28-11ea-897f-82dd17abe001",
+    "repos": [
+      {
+        "header": {
+          "uuid": "86ac38f4-4a28-11ea-89c1-82dd17abe001",
+          "start_time": "2020-02-08T04:07:29.736126Z",
+          "source_client": "mix task",
+...
+}
+```
+
+### LowEndInsight REST-y API
+
+Also, there is a sister project that wraps this library and provides an HTTP-based interface.
+
+https://github.com/gtri/lowendinsight-get
+
+## Docs
+
+API available at: https://hexdocs.pm/lowendinsight/readme.html#content
 
 This is the library piece of the puzzle.  There is a brewing API/service
 interface that will expose this library to HTTP(S) POSTs.  Stay tuned,
@@ -181,7 +231,7 @@ it'll be open sourced shortly following this library.
 
 The library is written in Elixir.
 
-`mix docs` will generate static docs available within the project in the `docs/` subfolder.
+`mix docs` will generate static docs available locally within the project in the `docs/` subfolder.
 
 ### A Note about the metrics used
 * Recent commit size: This is a measure of how large the most recent commit is in relatino to the size of the codebase. The idea being that a large recent commit is much more likely to be bug filled than a relatively small commit.
@@ -191,7 +241,7 @@ The library is written in Elixir.
 
 ### Configuration
 
-LowEndInsight allows for customization of the risk levels, to determine "low", "medium", "high" and "critical" acceptance.  The library reads this configuration from config.exs here, or as providing in environment variables.
+LowEndInsight allows for customization of the risk levels, to determine "low", "medium", "high" and "critical" acceptance.  The library reads this configuration from config.exs (or dev|test|prod.exs) as seen here, or as providing in environment variables.
 
 ```
 ## Contributor in terms of discrete users
