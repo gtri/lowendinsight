@@ -1,4 +1,4 @@
-# Copyright (C) 2018 by the Georgia Tech Research Institute (GTRI)
+# Copyright (C) 2020 by the Georgia Tech Research Institute (GTRI)
 # This software may be modified and distributed under the terms of
 # the BSD 3-Clause license. See the LICENSE file for details.
 
@@ -52,7 +52,7 @@ defmodule Helpers do
   end
 
   def count_forward_slashes(url) do
-    url |> String.graphemes |> Enum.count(& &1 == "/")
+    url |> String.graphemes() |> Enum.count(&(&1 == "/"))
   end
 
   # def have_config() do
@@ -64,7 +64,6 @@ defmodule Helpers do
   #     RuntimeError -> raise ArgumentError, message: "No LoweEndInsight configuration found."
   #   end
   # end
-
 
   @doc """
   validates field is a valid url
@@ -93,8 +92,8 @@ defmodule Helpers do
   def validate_url(url) do
     try do
       with :ok <- validate_scheme(url),
-          :ok <- validate_host(url),
-          do: :ok
+           :ok <- validate_host(url),
+           do: :ok
     rescue
       FunctionClauseError ->
         {:error, "invalid URI"}
@@ -121,9 +120,10 @@ defmodule Helpers do
   def validate_urls(urls) do
     try do
       if !is_list(urls), do: throw(:break)
-      Enum.each urls, fn url ->
+
+      Enum.each(urls, fn url ->
         if :ok == validate_url(url), do: :ok, else: throw(:break)
-      end
+      end)
     catch
       :break -> {:error, "invalid URI"}
     end
@@ -139,18 +139,22 @@ defmodule Helpers do
   # oh well i guess, will handle the issue downstream i guess.
   defp validate_host(url) do
     case URI.parse(url) do
-      %URI{host: nil} -> {:error, "invalid URI"}
+      %URI{host: nil} ->
+        {:error, "invalid URI"}
+
       %URI{host: host} ->
-        case :inet.gethostbyname(Kernel.to_charlist host) do
+        case :inet.gethostbyname(Kernel.to_charlist(host)) do
           {:ok, _} -> :ok
           {:error, _} -> {:error, "invalid URI"}
         end
-    end 
+    end
   end
 
   defp validate_scheme(url) do
     case URI.parse(url) do
-      %URI{scheme: nil} -> {:error, "invalid URI"}
+      %URI{scheme: nil} ->
+        {:error, "invalid URI"}
+
       %URI{scheme: scheme} ->
         case URI.default_port(scheme) do
           nil -> {:error, "invalid URI"}
@@ -166,5 +170,5 @@ defmodule Helpers do
   """
   def convert_config_to_list(config) do
     Enum.into(config, %{})
-  end  
+  end
 end

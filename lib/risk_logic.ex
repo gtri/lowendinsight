@@ -1,4 +1,4 @@
-# Copyright (C) 2018 by the Georgia Tech Research Institute (GTRI)
+# Copyright (C) 2020 by the Georgia Tech Research Institute (GTRI)
 # This software may be modified and distributed under the terms of
 # the BSD 3-Clause license. See the LICENSE file for details.
 
@@ -70,16 +70,19 @@ defmodule RiskLogic do
   """
   def functional_contributors_risk(contributors) do
     cond do
-      contributors >= Application.fetch_env!(:lowendinsight, :medium_functional_contributors_level) ->
+      contributors >=
+          Application.fetch_env!(:lowendinsight, :medium_functional_contributors_level) ->
         {:ok, "low"}
 
       contributors >= Application.fetch_env!(:lowendinsight, :high_functional_contributors_level) ->
         {:ok, "medium"}
 
-      contributors >= Application.fetch_env!(:lowendinsight, :critical_functional_contributors_level) ->
+      contributors >=
+          Application.fetch_env!(:lowendinsight, :critical_functional_contributors_level) ->
         {:ok, "high"}
 
-      contributors < Application.fetch_env!(:lowendinsight, :critical_functional_contributors_level) ->
+      contributors <
+          Application.fetch_env!(:lowendinsight, :critical_functional_contributors_level) ->
         {:ok, "critical"}
     end
   end

@@ -1,3 +1,7 @@
+# Copyright (C) 2020 by the Georgia Tech Research Institute (GTRI)
+# This software may be modified and distributed under the terms of
+# the BSD 3-Clause license. See the LICENSE file for details
+
 defmodule RepoTest do
   use ExUnit.Case
 
@@ -19,7 +23,7 @@ defmodule RepoTest do
       :risk => "critical",
       :config => Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight))
     }
-    
+
     s_repo = %RepoReport{data: e_repo}
     j_repo = Poison.encode!(s_repo)
     d_repo = Poison.decode!(j_repo, as: %RepoReport{data: %Data{results: %Results{}}})
