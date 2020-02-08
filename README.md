@@ -25,62 +25,68 @@ the tolerance level) and responds with a useful report for integrating
 into your existing automation.  Or you can easily use LowEndInsight as
 an ad-hoc reporting tool, running it manually.
 ```
-✗ mix analyze https://github.com/kitplummer/xmpp4rails | jq
+✗ mix analyze https://github.com/facebook/react | jq
 {
-  "metadata": {
-    "repo_count": 1,
-    "risk_counts": {
-      "critical": 1
-    },
-    "times": {
-      "duration": 1,
-      "end_time": "2020-01-08T01:50:20.098278Z",
-      "start_time": "2020-01-08T01:50:19.552588Z"
-    }
-  },
+  "state": "complete",
   "report": {
+    "uuid": "5e60926e-4a32-11ea-96b4-82dd17abe001",
     "repos": [
       {
+        "header": {
+          "uuid": "5e6074f0-4a32-11ea-ad6a-82dd17abe001",
+          "start_time": "2020-02-08T05:15:21.689451Z",
+          "source_client": "mix task",
+          "library_version": "",
+          "end_time": "2020-02-08T05:17:58.034154Z",
+          "duration": 157
+        },
         "data": {
-          "commit_currency_risk": "critical",
-          "commit_currency_weeks": 573,
+          "risk": "low",
+          "results": {
+            "top10_contributors": [
+            ...
+            ],
+            "recent_commit_size_in_percent_of_codebase": 2.4487357177489264e-06,
+            "large_recent_commit_risk": "low",
+            "functional_contributors_risk": "low",
+            "functional_contributors": 83,
+            "functional_contributor_names": [
+            ...
+            ],
+            "contributor_risk": "low",
+            "contributor_count": 1482,
+            "commit_currency_weeks": 0,
+            "commit_currency_risk": "low"
+          },
+          "repo": "https://github.com/facebook/react",
           "config": {
-            "high_currency_level": 52,
-            "critical_contributor_level": 2,
             "medium_large_commit_level": 0.05,
+            "medium_functional_contributors_level": 5,
             "medium_currency_level": 26,
-            "high_functional_contributors_level": 3,
             "medium_contributor_level": 5,
             "high_large_commit_level": 0.15,
+            "high_functional_contributors_level": 3,
+            "high_currency_level": 52,
             "high_contributor_level": 3,
+            "critical_large_commit_level": 0.3,
             "critical_functional_contributors_level": 2,
             "critical_currency_level": 104,
-            "critical_large_commit_level": 0.3,
-            "medium_functional_contributors_level": 5
-          },
-          "contributor_count": 1,
-          "contributor_risk": "critical",
-          "functional_contributor_names": [
-            "Kit Plummer"
-          ],
-          "functional_contributors": 1,
-          "functional_contributors_risk": "critical",
-          "large_recent_commit_risk": "low",
-          "recent_commit_size_in_percent_of_codebase": 0.003683241252302026,
-          "repo": "https://github.com/kitplummer/xmpp4rails",
-          "risk": "critical"
-        },
-        "header": {
-          "duration": 1,
-          "end_time": "2020-01-08T01:50:20.084189Z",
-          "library_version": "",
-          "source_client": "mix task",
-          "start_time": "2020-01-08T01:50:19.562877Z",
-          "uuid": "3a0ea2f2-31b9-11ea-b537-784f434ce29a"
+            "critical_contributor_level": 2
+          }
         }
       }
-    ],
-    "uuid": "3a0ed3a8-31b9-11ea-9cff-784f434ce29a"
+    ]
+  },
+  "metadata": {
+    "times": {
+      "start_time": "2020-02-08T05:15:21.683038Z",
+      "end_time": "2020-02-08T05:17:58.042901Z",
+      "duration": 157
+    },
+    "risk_counts": {
+      "low": 1
+    },
+    "repo_count": 1
   }
 }
 ```
