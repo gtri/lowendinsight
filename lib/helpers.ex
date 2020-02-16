@@ -142,10 +142,18 @@ defmodule Helpers do
       %URI{host: nil} ->
         {:error, "invalid URI"}
 
-      %URI{host: host} ->
-        case :inet.gethostbyname(Kernel.to_charlist(host)) do
-          {:ok, _} -> :ok
-          {:error, _} -> {:error, "invalid URI"}
+      %URI{host: host, path: path} ->
+        cond do
+          host == "" ->
+            case File.dir?(path) do
+              true -> :ok
+              false -> {:error, "invalid URI path"}
+            end
+          host != "" ->
+            case :inet.gethostbyname(Kernel.to_charlist(host)) do
+              {:ok, _} -> :ok
+              {:error, _} -> {:error, "invalid URI"}
+            end
         end
     end
   end
@@ -156,9 +164,11 @@ defmodule Helpers do
         {:error, "invalid URI"}
 
       %URI{scheme: scheme} ->
-        case URI.default_port(scheme) do
-          nil -> {:error, "invalid URI"}
-          p when p > 0 -> :ok
+        case scheme do
+          "https" -> :ok
+          "http" -> :ok
+          "file" -> :ok
+          _ -> {:error, "invalid URI scheme"}
         end
     end
   end
@@ -166,7 +176,7 @@ defmodule Helpers do
   @doc """
   convert_config_to_list/1: takes in Application.get_all_env(:app) and returns a list of
   maps, to be encoded as JSON.  Since JSON doesn't have an equivalent tuple type the
-  libs all bonk on encoding config values.  
+  libs all bonk on encoding config values.
   """
   def convert_config_to_list(config) do
     Enum.into(config, %{})

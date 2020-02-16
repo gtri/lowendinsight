@@ -8,7 +8,7 @@ defmodule GitModule do
   """
 
   @doc """
-  clone/1: clones the repo
+  clone_repo/1: clones the repo
   """
 
   def clone_repo(url) do
@@ -24,6 +24,17 @@ defmodule GitModule do
       {:error, _error} ->
         # This error message is not always appropriate
         {:error, "Repository not found"}
+    end
+  end
+
+  @doc """
+  get_repo/1: gets a repo by path, returns Repository struct
+  """
+  def get_repo(path) do
+    repo = Git.new(path)
+    case Git.status(repo) do
+      {:ok, _} -> {:ok, repo}
+      {:error, msg} -> {:error, msg}
     end
   end
 

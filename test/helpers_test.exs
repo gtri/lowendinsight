@@ -10,4 +10,13 @@ defmodule Lowendinsight.HelpersTest do
     Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight))
     |> Poison.encode!()
   end
+
+  test "validate path url" do
+    assert :ok == Helpers.validate_url("file://#{elem(File.cwd(),1)}")
+    assert {:error, "invalid URI path"} == Helpers.validate_url("file:///blah")
+  end
+
+  test "validate  scheme" do
+    assert {:error, "invalid URI scheme"} == Helpers.validate_url("blah://blah")
+  end
 end

@@ -25,6 +25,12 @@ defmodule AnalyzerTest do
     [weeks: weeks]
   end
 
+  test "analyze local path repo" do
+    {:ok, report} = AnalyzerModule.analyze(["file:///."], "path_test")
+    IO.inspect report
+
+  end
+
   test "get empty report" do
     start_time = DateTime.utc_now()
     uuid = UUID.uuid1()

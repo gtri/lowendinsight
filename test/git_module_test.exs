@@ -290,4 +290,14 @@ defmodule GitModuleTest do
 
     assert number == 1
   end
+
+  test "get local path repo" do
+    {:ok, repo} = GitModule.get_repo(".")
+    assert "." == repo.path
+  end
+
+  test "error on not a valid local path repo" do
+    {:error, msg} = GitModule.get_repo("/tmp")
+    assert 128 == msg.code
+  end
 end
