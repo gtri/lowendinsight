@@ -26,9 +26,11 @@ defmodule AnalyzerTest do
   end
 
   test "analyze local path repo" do
-    {:ok, report} = AnalyzerModule.analyze(["file:///."], "path_test")
-    IO.inspect report
-
+    #{:ok, report} = AnalyzerModule.analyze(["file:///Users/cplummer8/Code/sheetworld"], "path_test")
+    {:ok, report} = AnalyzerModule.analyze(["file:///#{elem(File.cwd(),1)}"], "path_test")
+    assert "complete" == report[:state]
+    repo_data = List.first(report[:report][:repos])
+    assert "path_test" == repo_data[:header][:source_client]
   end
 
   test "get empty report" do

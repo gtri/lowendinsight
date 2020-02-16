@@ -91,6 +91,10 @@ an ad-hoc reporting tool, running it manually.
 }
 ```
 
+NOTE: that the "file://" is also supporting, but presumes that the directory provided
+is a valid Git clone.  Analysis of a file://-based repo will not conclude with the 
+directory structure being removed.
+
 ## Installation
 
 [LowEndInsight available in Hex](https://hex.pm/packages/lowendinsight), the package can be installed
