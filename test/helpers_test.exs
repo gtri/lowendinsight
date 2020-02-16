@@ -12,7 +12,9 @@ defmodule Lowendinsight.HelpersTest do
   end
 
   test "validate path url" do
-    assert :ok == Helpers.validate_url("file://#{elem(File.cwd(),1)}")
+    {:ok, cwd} = File.cwd()
+    IO.puts("CWD: #{cwd}")
+    assert :ok == Helpers.validate_url("file://#{cwd}")
     assert {:error, "invalid URI path"} == Helpers.validate_url("file:///blah")
   end
 
