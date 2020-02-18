@@ -4,8 +4,10 @@
 
 defmodule AnalyzerModule do
   @moduledoc """
-  Analyzer takes in a repo url and coordinates the analysis,
-  returning a simple JSON report.
+  Analyzer takes in a valid repo URL and coordinates the analysis,
+  returning a simple JSON report.  The URL can be one of "https", "http",
+  or "file".  Note, that the latter scheme will only work an existing clone
+  and won't remove the directory structure upon completion of analysis.
   """
   @spec analyze(String.t() | list(), String.t()) :: tuple()
   def analyze(url, source) when is_binary(url) do
@@ -21,11 +23,17 @@ defmodule AnalyzerModule do
       #  load/start it or list it under :extra_applications in your mix.exs file"
       _config = Application.fetch_env!(:lowendinsight, :critical_contributor_level)
 
-      if Helpers.count_forward_slashes(url) > 4 do
-        raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
-      end
+      uri = URI.parse(url)
 
-      {:ok, repo} = GitModule.clone_repo(url)
+      {:ok, repo} = cond do
+        uri.scheme == "file" ->
+          GitModule.get_repo(uri.path)
+        uri.scheme == "https" or uri.scheme == "http" ->
+          if Helpers.count_forward_slashes(url) > 4 do
+            raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
+          end
+          GitModule.clone_repo(url)
+      end
 
       # Get unique contributors count
       {:ok, count} = GitModule.get_contributor_count(repo)
@@ -55,7 +63,9 @@ defmodule AnalyzerModule do
 
       {:ok, top10_contributors} = GitModule.get_top10_contributors_map(repo)
 
-      GitModule.delete_repo(repo)
+      if uri.scheme == "https" or uri.scheme == "http" do
+        GitModule.delete_repo(repo)
+      end
 
       # Generate report
       end_time = DateTime.utc_now()
@@ -166,7 +176,7 @@ defmodule AnalyzerModule do
   end
 
   @doc """
-  create_empty_report/3: takes in a uuid, list of urls, and a start time and 
+  create_empty_report/3: takes in a uuid, list of urls, and a start time and
   produces the repo report object to be returned immediately by asynchronous
   requestors (e.g. LowEndInsight-Get HTTP endpoint)
   """

@@ -25,6 +25,15 @@ defmodule AnalyzerTest do
     [weeks: weeks]
   end
 
+  test "analyze local path repo" do
+    #{:ok, report} = AnalyzerModule.analyze(["file:///Users/cplummer8/Code/sheetworld"], "path_test")
+    {:ok, cwd} = File.cwd()
+    {:ok, report} = AnalyzerModule.analyze(["file:///#{cwd}"], "path_test")
+    assert "complete" == report[:state]
+    repo_data = List.first(report[:report][:repos])
+    assert "path_test" == repo_data[:header][:source_client]
+  end
+
   test "get empty report" do
     start_time = DateTime.utc_now()
     uuid = UUID.uuid1()
