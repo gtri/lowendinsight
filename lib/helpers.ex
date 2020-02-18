@@ -71,7 +71,7 @@ defmodule Helpers do
   ## Examples
   iex> "https:://www.url.com"
   ...> |> Helpers.validate_url()
-  {:error, "invalid URI"}
+  {:error, "invalid URI path"}
 
   iex> "http://zipbooks.com/"
   ...> |> Helpers.validate_url()
@@ -87,7 +87,7 @@ defmodule Helpers do
 
   iex> "https://zipbooks..com"
   ...> |> Helpers.validate_url()
-  {:error, "invalid URI"}
+  {:error, "invalid URI host"}
   """
   def validate_url(url) do
     try do
@@ -139,11 +139,13 @@ defmodule Helpers do
   # oh well i guess, will handle the issue downstream i guess.
   defp validate_host(url) do
     case URI.parse(url) do
-      %URI{host: nil} ->
-        {:error, "invalid URI"}
-
       %URI{host: host, path: path} ->
         cond do
+          host == nil ->
+            case File.dir?(path) do
+              true -> :ok
+              false -> {:error, "invalid URI path"}
+            end
           host == "" ->
             case File.dir?(path) do
               true -> :ok
@@ -152,7 +154,7 @@ defmodule Helpers do
           host != "" ->
             case :inet.gethostbyname(Kernel.to_charlist(host)) do
               {:ok, _} -> :ok
-              {:error, _} -> {:error, "invalid URI"}
+              {:error, _} -> {:error, "invalid URI host"}
             end
         end
     end
