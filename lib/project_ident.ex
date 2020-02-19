@@ -34,7 +34,8 @@ defmodule ProjectIdent do
   """
   @spec is_node?(atom | %{path: any}) :: boolean
   def is_node?(repo) do
-    Enum.count(Path.wildcard("#{repo.path}/{package.json}")) > 0
+    paths = Path.wildcard("#{repo.path}/{package.json}")
+    %{"node" => paths}
   end
 
   @doc """

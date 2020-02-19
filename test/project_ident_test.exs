@@ -13,14 +13,16 @@ defmodule ProjectIdentTest do
   end
 
   test "is_python?(repo)" do
+    {:ok, cwd} = File.cwd
     {:ok, repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan")
-    assert %{"python" => ["/Users/cplummer8/Code/lowendinsight/clikan/setup.py"]} == ProjectIdent.is_python?(repo)
+    assert %{"python" => ["#{cwd}/clikan/setup.py"]} == ProjectIdent.is_python?(repo)
     GitModule.delete_repo(repo)
   end
 
   test "is_node?(repo)" do
+    {:ok, cwd} = File.cwd
     {:ok, repo} = GitModule.clone_repo("https://github.com/expressjs/express")
-    assert true == ProjectIdent.is_node?(repo)
+    assert %{"node" => ["#{cwd}/epressjs/express/package.json"]} == ProjectIdent.is_node?(repo)
     GitModule.delete_repo(repo)
   end
 
