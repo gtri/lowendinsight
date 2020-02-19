@@ -9,12 +9,55 @@ defmodule ProjectIdentTest do
   test "is_mix?(repo)" do
     {:ok, cwd} = File.cwd
     {:ok, repo} = GitModule.get_repo(cwd)
-    assert true == ProjectIdent.is_mix?(repo)
+    assert %{"mix" => ["#{cwd}/mix.exs"]} == ProjectIdent.is_mix?(repo)
   end
 
-  test "is_pip?(repo)" do
+  test "is_python?(repo)" do
     {:ok, repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan")
-    assert true == ProjectIdent.is_pip?(repo)
+    assert %{"python" => ["/Users/cplummer8/Code/lowendinsight/clikan/setup.py"]} == ProjectIdent.is_python?(repo)
     GitModule.delete_repo(repo)
+  end
+
+  test "is_node?(repo)" do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/expressjs/express")
+    assert true == ProjectIdent.is_node?(repo)
+    GitModule.delete_repo(repo)
+  end
+
+  test "is_go_mod?(repo)" do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/go-kit/kit")
+    assert true == ProjectIdent.is_go_mod?(repo)
+    GitModule.delete_repo(repo)
+  end
+
+  test "is_cargo?(repo)" do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/clap-rs/clap")
+    assert true == ProjectIdent.is_cargo?(repo)
+    GitModule.delete_repo(repo)
+  end
+
+  test "is_rubygem?(repo)" do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/rubocop-hq/rubocop")
+    assert true == ProjectIdent.is_rubygem?(repo)
+    GitModule.delete_repo(repo)
+  end
+
+  test "is_maven?(repo)" do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/snyk/snyk-maven-plugin")
+    assert true == ProjectIdent.is_maven?(repo)
+    GitModule.delete_repo(repo)
+  end
+
+  test "is_gradle?(repo)" do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/ReactiveX/RxKotlin")
+    assert true == ProjectIdent.is_gradle?(repo)
+    GitModule.delete_repo(repo)
+  end
+
+  test "project_types?(repo)" do
+    {:ok, cwd} = File.cwd
+    {:ok, repo} = GitModule.get_repo(cwd)
+    assert %{"mix"=>["/Users/cplummer8/Code/lowendinsight/mix.exs"], "python" => []} = ProjectIdent.project_types?(repo)
+
   end
 end
