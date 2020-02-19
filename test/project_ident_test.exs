@@ -6,10 +6,15 @@ defmodule ProjectIdentTest do
   use ExUnit.Case, async: true
 
   doctest ProjectIdent
-  test "is_elixir?(repo)" do
+  test "is_mix?(repo)" do
     {:ok, cwd} = File.cwd
     {:ok, repo} = GitModule.get_repo(cwd)
-    assert true == ProjectIdent.is_elixir?(repo)
+    assert true == ProjectIdent.is_mix?(repo)
   end
 
+  test "is_pip?(repo)" do
+    {:ok, repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan")
+    assert true == ProjectIdent.is_pip?(repo)
+    GitModule.delete_repo(repo)
+  end
 end
