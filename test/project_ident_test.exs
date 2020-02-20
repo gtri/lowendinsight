@@ -22,7 +22,7 @@ defmodule ProjectIdentTest do
   test "is_node?(repo)" do
     {:ok, cwd} = File.cwd
     {:ok, repo} = GitModule.clone_repo("https://github.com/expressjs/express")
-    assert %{"node" => ["#{cwd}/epressjs/express/package.json"]} == ProjectIdent.is_node?(repo)
+    assert %{"node" => ["#{cwd}/express/package.json"]} == ProjectIdent.is_node?(repo)
     GitModule.delete_repo(repo)
   end
 
@@ -59,7 +59,7 @@ defmodule ProjectIdentTest do
   test "project_types?(repo)" do
     {:ok, cwd} = File.cwd
     {:ok, repo} = GitModule.get_repo(cwd)
-    assert %{"mix"=>["/Users/cplummer8/Code/lowendinsight/mix.exs"], "python" => []} = ProjectIdent.project_types?(repo)
+    assert %{"mix"=>["#{cwd}/mix.exs"], "python" => []} == ProjectIdent.project_types?(repo)
 
   end
 end
