@@ -8,7 +8,6 @@ defmodule ProjectIdent do
   is_mix?/1: takes in a Repository struct and returns true
   if the repo has a mix.exs file.
   """
-  @spec is_mix?(atom | %{path: any}) :: boolean
   def is_mix?(repo) do
     paths = Path.wildcard("#{repo.path}/mix.exs")
     %{"mix" => paths}
@@ -20,7 +19,6 @@ defmodule ProjectIdent do
 
   NOTE: this could be either a pip or conda project.
   """
-  @spec is_python?(atom | %{path: any}) :: boolean
   def is_python?(repo) do
     paths = Path.wildcard("#{repo.path}/{setup.py, *requirements.txt*}")
     %{"python" => paths}
@@ -32,7 +30,6 @@ defmodule ProjectIdent do
 
   NOTE: this could be a yarn or npm project.
   """
-  @spec is_node?(atom | %{path: any}) :: boolean
   def is_node?(repo) do
     paths = Path.wildcard("#{repo.path}/{package.json}")
     %{"node" => paths}
@@ -42,58 +39,69 @@ defmodule ProjectIdent do
   is_go_mod?/1: takes in a Repository struct and returns true
   if there is presence of a go.mod file.
   """
-  @spec is_go_mod?(atom | %{path: any}) :: boolean
   def is_go_mod?(repo) do
-    Enum.count(Path.wildcard("#{repo.path}/{go.mod}")) > 0
+    paths = Path.wildcard("#{repo.path}/{go.mod}")
+    %{"go_mod" => paths}
   end
 
   @doc """
   is_cargo?/1: takes in a Repository struct and returns true
   if there is presence of a Cargo.toml file.
   """
-  @spec is_cargo?(atom | %{path: any}) :: boolean
   def is_cargo?(repo) do
-    Enum.count(Path.wildcard("#{repo.path}/{Cargo.toml}")) > 0
+    paths = Path.wildcard("#{repo.path}/{Cargo.toml}")
+    %{"cargo" => paths}
   end
 
   @doc """
   is_rubygem?/1: takes in a Repository struct and returns true
   if there is presence of a Gemfile file.
   """
-  @spec is_rubygem?(atom | %{path: any}) :: boolean
   def is_rubygem?(repo) do
-    Enum.count(Path.wildcard("#{repo.path}/{Gemfile}")) > 0
+    paths = Path.wildcard("#{repo.path}/{Gemfile}")
+    %{"rubygem" => paths}
   end
 
   @doc """
   is_maven?/1: takes in a Repository struct and returns true
   if there is presence of a pom.xml
   """
-  @spec is_maven?(atom | %{path: any}) :: boolean
   def is_maven?(repo) do
-    Enum.count(Path.wildcard("#{repo.path}/**/{pom.xml}")) > 0
+    paths = Path.wildcard("#{repo.path}/**/{pom.xml}")
+    %{"maven" => paths}
   end
 
   @doc """
   is_gradle?/1: takes in a Repository struct and returns true
   if there is presence of a build.gradle file.
   """
-  @spec is_gradle?(atom | %{path: any}) :: boolean
   def is_gradle?(repo) do
-    Enum.count(Path.wildcard("#{repo.path}/**/{build.gradle*}")) > 0
+    paths = Path.wildcard("#{repo.path}/**/{build.gradle*}")
+    %{"gradle" => paths}
   end
 
   @doc """
   project_types?/1: takes in a Repository and will return a list
   of found project types within the repo.
   """
-  @spec project_types?(atom | %{path: any}) :: Map
   def project_types?(repo) do
     projects = %{}
     mix = is_mix?(repo)
     projects = Map.merge(projects, mix)
     python = is_python?(repo)
     projects = Map.merge(projects, python)
+    node = is_node?(repo)
+    projects = Map.merge(projects, node)
+    go_mod = is_go_mod?(repo)
+    projects = Map.merge(projects, go_mod)
+    cargo = is_cargo?(repo)
+    projects = Map.merge(projects, cargo)
+    rubygem = is_rubygem?(repo)
+    projects = Map.merge(projects, rubygem)
+    maven = is_maven?(repo)
+    projects = Map.merge(projects, maven)
+    gradle = is_gradle?(repo)
+    projects = Map.merge(projects, gradle)
     projects
   end
 

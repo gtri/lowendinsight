@@ -59,7 +59,14 @@ defmodule ProjectIdentTest do
   test "project_types?(repo)" do
     {:ok, cwd} = File.cwd
     {:ok, repo} = GitModule.get_repo(cwd)
-    assert %{"mix"=>["#{cwd}/mix.exs"], "python" => []} == ProjectIdent.project_types?(repo)
+    assert %{"mix"=>["#{cwd}/mix.exs"],
+             "python" => [],
+             "node" => [],
+             "cargo" => [],
+             "rubygem" => [],
+             "go_mod" => [],
+             "maven" => [],
+             "gradle" => []} == ProjectIdent.project_types?(repo)
 
   end
 end
