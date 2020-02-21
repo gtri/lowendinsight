@@ -166,6 +166,12 @@ iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
  }}
 ```
 
+Here's the command that you would paste in to the `iex` REPL as an example:
+
+```
+AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
+```
+
 ### Docker
 
 You can pass in this lib and configuration settings, into a base Elixir container.  From the root directory of a clone of this repo run this:
