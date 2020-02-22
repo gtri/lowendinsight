@@ -68,6 +68,11 @@
           "title": "Source Git Repo",
           "type": "string"
         },
+        "project_types": {
+          "description": "Enumeration of project types within the repo, based on build tooling configuration found.",
+          "title": "Project Types",
+          "type": "object"
+        },
         "results": {
           "description": "The LowEndInsight analysis data for a given repo.",
           "title": "LowEndInsight Per-Repo Analysis Results",
@@ -140,7 +145,8 @@
       "required": [
         "config",
         "risk",
-        "repo"
+        "repo",
+        "project_types"
       ],
       "anyOf": [
         {

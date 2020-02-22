@@ -58,7 +58,7 @@ defmodule ProjectIdent do
   if there is presence of a Gemfile file.
   """
   def is_rubygem?(repo) do
-    paths = Path.wildcard("#{repo.path}/{Gemfile}")
+    paths = Path.wildcard("#{repo.path}/{Gemfile*,*.gemspec}")
     %{"rubygem" => paths}
   end
 
@@ -87,21 +87,61 @@ defmodule ProjectIdent do
   def project_types?(repo) do
     projects = %{}
     mix = is_mix?(repo)
-    projects = Map.merge(projects, mix)
+    projects = if Kernel.length(mix["mix"]) > 0 do
+      Map.merge(projects, mix)
+    else
+      projects
+    end
+
     python = is_python?(repo)
-    projects = Map.merge(projects, python)
+    projects = if Kernel.length(python["python"]) > 0 do
+      Map.merge(projects, python)
+    else
+      projects
+    end
+
     node = is_node?(repo)
-    projects = Map.merge(projects, node)
+    projects = if Kernel.length(node["node"]) > 0 do
+      Map.merge(projects, node)
+    else
+      projects
+    end
+
     go_mod = is_go_mod?(repo)
-    projects = Map.merge(projects, go_mod)
+    projects = if Kernel.length(go_mod["go_mod"]) > 0 do
+      Map.merge(projects, go_mod)
+    else
+      projects
+    end
+
     cargo = is_cargo?(repo)
-    projects = Map.merge(projects, cargo)
+    projects = if Kernel.length(cargo["cargo"]) > 0 do
+      Map.merge(projects, cargo)
+    else
+      projects
+    end
+
     rubygem = is_rubygem?(repo)
-    projects = Map.merge(projects, rubygem)
+    projects = if Kernel.length(rubygem["rubygem"]) > 0 do
+      Map.merge(projects, rubygem)
+    else
+      projects
+    end
+
     maven = is_maven?(repo)
-    projects = Map.merge(projects, maven)
+    projects = if Kernel.length(maven["maven"]) > 0 do
+      Map.merge(projects, maven)
+    else
+      projects
+    end
+
     gradle = is_gradle?(repo)
-    projects = Map.merge(projects, gradle)
+    projects = if Kernel.length(gradle["gradle"]) > 0 do
+      Map.merge(projects, gradle)
+    else
+      projects
+    end
+
     projects
   end
 

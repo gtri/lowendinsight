@@ -67,6 +67,9 @@ defmodule AnalyzerModule do
         GitModule.delete_repo(repo)
       end
 
+      ## Determine project typs
+      project_types = ProjectIdent.project_types?(repo)
+
       # Generate report
       end_time = DateTime.utc_now()
       duration = DateTime.diff(end_time, start_time)
@@ -90,6 +93,7 @@ defmodule AnalyzerModule do
         data: %{
           config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
           repo: url,
+          project_types: project_types,
           results: %{
             contributor_count: count,
             contributor_risk: count_risk,
@@ -114,7 +118,8 @@ defmodule AnalyzerModule do
              config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?",
              repo: url,
-             risk: "critical"
+             risk: "critical",
+             project_types: %{"undetermined" => "undetermined"}
            }
          }}
 
@@ -125,7 +130,8 @@ defmodule AnalyzerModule do
              config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}). #{e.message}",
              repo: url,
-             risk: "N/A"
+             risk: "N/A",
+             project_types: %{"undetermined" => "undetermined"}
            }
          }}
     end

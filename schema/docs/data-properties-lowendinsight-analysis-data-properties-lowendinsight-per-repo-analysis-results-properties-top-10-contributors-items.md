@@ -1,16 +1,16 @@
-# Contributor Risk Schema
+# Untitled object in LowEndInsight Analysis Data Schema Schema
 
 ```txt
-http://example.com/data.schema.json#/properties/data/properties/results/properties/contributor_risk
+http://example.com/data.schema.json#/properties/data/properties/results/properties/top10_contributors/items
 ```
 
-Risk associated with the number of contributors to this repo.
+
 
 
 | Abstract            | Extensible | Status         | Identifiable            | Custom Properties | Additional Properties | Access Restrictions | Defined In                                                                 |
 | :------------------ | ---------- | -------------- | ----------------------- | :---------------- | --------------------- | ------------------- | -------------------------------------------------------------------------- |
 | Can be instantiated | No         | Unknown status | Unknown identifiability | Forbidden         | Allowed               | none                | [data.schema.json\*](../../out/v1/data.schema.json "open original schema") |
 
-## contributor_risk Type
+## items Type
 
-`string` ([Contributor Risk](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results-properties-contributor-risk.md))
+`object` ([Details](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results-properties-top-10-contributors-items.md))

@@ -7,9 +7,9 @@ http://example.com/data.schema.json#/properties/header
 Information about the report's generation.
 
 
-| Abstract            | Extensible | Status         | Identifiable | Custom Properties | Additional Properties | Access Restrictions | Defined In                                                                        |
-| :------------------ | ---------- | -------------- | ------------ | :---------------- | --------------------- | ------------------- | --------------------------------------------------------------------------------- |
-| Can be instantiated | No         | Unknown status | No           | Forbidden         | Forbidden             | none                | [data.schema.json\*](../../out/schema/v1/data.schema.json "open original schema") |
+| Abstract            | Extensible | Status         | Identifiable | Custom Properties | Additional Properties | Access Restrictions | Defined In                                                                 |
+| :------------------ | ---------- | -------------- | ------------ | :---------------- | --------------------- | ------------------- | -------------------------------------------------------------------------- |
+| Can be instantiated | No         | Unknown status | No           | Forbidden         | Forbidden             | none                | [data.schema.json\*](../../out/v1/data.schema.json "open original schema") |
 
 ## header Type
 
