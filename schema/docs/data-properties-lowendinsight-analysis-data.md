@@ -7,9 +7,9 @@ http://example.com/data.schema.json#/properties/data
 The report data
 
 
-| Abstract            | Extensible | Status         | Identifiable | Custom Properties | Additional Properties | Access Restrictions | Defined In                                                                        |
-| :------------------ | ---------- | -------------- | ------------ | :---------------- | --------------------- | ------------------- | --------------------------------------------------------------------------------- |
-| Can be instantiated | No         | Unknown status | No           | Forbidden         | Forbidden             | none                | [data.schema.json\*](../../out/schema/v1/data.schema.json "open original schema") |
+| Abstract            | Extensible | Status         | Identifiable | Custom Properties | Additional Properties | Access Restrictions | Defined In                                                                 |
+| :------------------ | ---------- | -------------- | ------------ | :---------------- | --------------------- | ------------------- | -------------------------------------------------------------------------- |
+| Can be instantiated | No         | Unknown status | No           | Forbidden         | Forbidden             | none                | [data.schema.json\*](../../out/v1/data.schema.json "open original schema") |
 
 ## data Type
 
@@ -22,13 +22,14 @@ any of
 
 # LowEndInsight Analysis Data Properties
 
-| Property            | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                             |
-| :------------------ | -------- | -------- | -------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [config](#config)   | `object` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-configuration-inputs.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/config")       |
-| [error](#error)     | `string` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-error-message.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/error")                             |
-| [repo](#repo)       | `string` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-source-git-repo.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/repo")                            |
-| [results](#results) | `object` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/results") |
-| [risk](#risk)       | `string` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-rolled-up-risk-for-a-repo.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/risk")    |
+| Property                        | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                             |
+| :------------------------------ | -------- | -------- | -------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [config](#config)               | `object` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-configuration-inputs.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/config")       |
+| [error](#error)                 | `string` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-error-message.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/error")                             |
+| [repo](#repo)                   | `string` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-source-git-repo.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/repo")                            |
+| [project_types](#project_types) | `object` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-project-types.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/project_types")                     |
+| [results](#results)             | `object` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/results") |
+| [risk](#risk)                   | `string` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-rolled-up-risk-for-a-repo.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/risk")    |
 
 ## config
 
@@ -87,6 +88,22 @@ The git repo url being analyzed by LowEndInsight.
 ### repo Type
 
 `string` ([Source Git Repo](data-properties-lowendinsight-analysis-data-properties-source-git-repo.md))
+
+## project_types
+
+Enumeration of project types within the repo, based on build tooling configuration found.
+
+
+`project_types`
+
+-   is required
+-   Type: `object` ([Project Types](data-properties-lowendinsight-analysis-data-properties-project-types.md))
+-   cannot be null
+-   defined in: [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-project-types.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/project_types")
+
+### project_types Type
+
+`object` ([Project Types](data-properties-lowendinsight-analysis-data-properties-project-types.md))
 
 ## results
 

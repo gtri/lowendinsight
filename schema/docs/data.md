@@ -7,9 +7,9 @@ http://example.com/data.schema.json
 A LowEndInsight dataset for an individual git repo.
 
 
-| Abstract            | Extensible | Status         | Identifiable | Custom Properties | Additional Properties | Access Restrictions | Defined In                                                                      |
-| :------------------ | ---------- | -------------- | ------------ | :---------------- | --------------------- | ------------------- | ------------------------------------------------------------------------------- |
-| Can be instantiated | Yes        | Unknown status | No           | Forbidden         | Allowed               | none                | [data.schema.json](../../out/schema/v1/data.schema.json "open original schema") |
+| Abstract            | Extensible | Status         | Identifiable | Custom Properties | Additional Properties | Access Restrictions | Defined In                                                               |
+| :------------------ | ---------- | -------------- | ------------ | :---------------- | --------------------- | ------------------- | ------------------------------------------------------------------------ |
+| Can be instantiated | Yes        | Unknown status | No           | Forbidden         | Allowed               | none                | [data.schema.json](../../out/v1/data.schema.json "open original schema") |
 
 ## LowEndInsight Analysis Data Schema Type
 

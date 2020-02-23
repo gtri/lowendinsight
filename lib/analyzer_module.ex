@@ -32,7 +32,8 @@ defmodule AnalyzerModule do
           if Helpers.count_forward_slashes(url) > 4 do
             raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
           end
-          GitModule.clone_repo(url)
+          {:ok, tmp_path} = Temp.path "lei"
+          GitModule.clone_repo(url, tmp_path)
       end
 
       # Get unique contributors count
@@ -63,11 +64,12 @@ defmodule AnalyzerModule do
 
       {:ok, top10_contributors} = GitModule.get_top10_contributors_map(repo)
 
+      project_types = ProjectIdent.project_types?(repo)
+
       if uri.scheme == "https" or uri.scheme == "http" do
         GitModule.delete_repo(repo)
       end
 
-      # Generate report
       end_time = DateTime.utc_now()
       duration = DateTime.diff(end_time, start_time)
 
@@ -90,6 +92,7 @@ defmodule AnalyzerModule do
         data: %{
           config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
           repo: url,
+          project_types: Helpers.convert_config_to_list(project_types),
           results: %{
             contributor_count: count,
             contributor_risk: count_risk,
@@ -114,7 +117,8 @@ defmodule AnalyzerModule do
              config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?",
              repo: url,
-             risk: "critical"
+             risk: "critical",
+             project_types: %{"undetermined" => "undetermined"}
            }
          }}
 
@@ -125,7 +129,8 @@ defmodule AnalyzerModule do
              config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}). #{e.message}",
              repo: url,
-             risk: "N/A"
+             risk: "N/A",
+             project_types: %{"undetermined" => "undetermined"}
            }
          }}
     end

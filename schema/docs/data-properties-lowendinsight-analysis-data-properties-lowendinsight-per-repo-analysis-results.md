@@ -7,9 +7,9 @@ http://example.com/data.schema.json#/properties/data/properties/results
 The LowEndInsight analysis data for a given repo.
 
 
-| Abstract            | Extensible | Status         | Identifiable | Custom Properties | Additional Properties | Access Restrictions | Defined In                                                                        |
-| :------------------ | ---------- | -------------- | ------------ | :---------------- | --------------------- | ------------------- | --------------------------------------------------------------------------------- |
-| Can be instantiated | No         | Unknown status | No           | Forbidden         | Allowed               | none                | [data.schema.json\*](../../out/schema/v1/data.schema.json "open original schema") |
+| Abstract            | Extensible | Status         | Identifiable | Custom Properties | Additional Properties | Access Restrictions | Defined In                                                                 |
+| :------------------ | ---------- | -------------- | ------------ | :---------------- | --------------------- | ------------------- | -------------------------------------------------------------------------- |
+| Can be instantiated | No         | Unknown status | No           | Forbidden         | Allowed               | none                | [data.schema.json\*](../../out/v1/data.schema.json "open original schema") |
 
 ## results Type
 
@@ -24,6 +24,7 @@ The LowEndInsight analysis data for a given repo.
 | [contributor_count](#contributor_count)                                                 | `number` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results-properties-contributor-count.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/results/properties/contributor_count")                                                 |
 | [contributor_risk](#contributor_risk)                                                   | `string` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results-properties-contributor-risk.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/results/properties/contributor_risk")                                                   |
 | [functional_contributor_names](#functional_contributor_names)                           | `array`  | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results-properties-functional-contributors-per-repo.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/results/properties/functional_contributor_names")                       |
+| [top10_contributors](#top10_contributors)                                               | `array`  | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results-properties-top-10-contributors.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/results/properties/top10_contributors")                                              |
 | [functional_contributors](#functional_contributors)                                     | `number` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results-properties-functional-contributors.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/results/properties/functional_contributors")                                     |
 | [functional_contributors_risk](#functional_contributors_risk)                           | `string` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results-properties-functional-contributors-risk.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/results/properties/functional_contributors_risk")                           |
 | [large_recent_commit_risk](#large_recent_commit_risk)                                   | `string` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results-properties-large-recent-commit-risk.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/results/properties/large_recent_commit_risk")                                   |
@@ -108,6 +109,22 @@ Collection of contributors labeled as 'functional' by LowEndInsight.
 ### functional_contributor_names Type
 
 `string[]`
+
+## top10_contributors
+
+Top 10 contributors by number of contributions
+
+
+`top10_contributors`
+
+-   is optional
+-   Type: `object[]` ([Details](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results-properties-top-10-contributors-items.md))
+-   cannot be null
+-   defined in: [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results-properties-top-10-contributors.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/results/properties/top10_contributors")
+
+### top10_contributors Type
+
+`object[]` ([Details](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results-properties-top-10-contributors-items.md))
 
 ## functional_contributors
 

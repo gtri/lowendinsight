@@ -7,9 +7,9 @@ http://example.com/report.schema.json#/properties/metadata/properties/times
 Start, End and Duration times for LowEndInsight times.
 
 
-| Abstract            | Extensible | Status         | Identifiable | Custom Properties | Additional Properties | Access Restrictions | Defined In                                                                            |
-| :------------------ | ---------- | -------------- | ------------ | :---------------- | --------------------- | ------------------- | ------------------------------------------------------------------------------------- |
-| Can be instantiated | No         | Unknown status | No           | Forbidden         | Forbidden             | none                | [report.schema.json\*](../../out/schema/v1/report.schema.json "open original schema") |
+| Abstract            | Extensible | Status         | Identifiable | Custom Properties | Additional Properties | Access Restrictions | Defined In                                                                     |
+| :------------------ | ---------- | -------------- | ------------ | :---------------- | --------------------- | ------------------- | ------------------------------------------------------------------------------ |
+| Can be instantiated | No         | Unknown status | No           | Forbidden         | Forbidden             | none                | [report.schema.json\*](../../out/v1/report.schema.json "open original schema") |
 
 ## times Type
 

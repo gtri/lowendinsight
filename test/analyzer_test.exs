@@ -7,18 +7,8 @@ defmodule AnalyzerTest do
   doctest AnalyzerModule
 
   setup_all do
-    on_exit(fn ->
-      File.rm_rf("xmpp4rails")
-      File.rm_rf("lita-cron")
-      File.rm_rf("oh-my-zsh")
-    end)
-
-    File.rm_rf("xmpp4rails")
-    File.rm_rf("lita-cron")
-    File.rm_rf("go.uuid")
-    File.rm_rf("oh-my-zsh")
-
-    {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails")
+    {:ok, tmp_path} = Temp.path "lei-analyzer-test"
+    {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails", tmp_path)
     {:ok, date} = GitModule.get_last_commit_date(repo)
     GitModule.delete_repo(repo)
     weeks = TimeHelper.get_commit_delta(date) |> TimeHelper.sec_to_weeks()
@@ -26,12 +16,12 @@ defmodule AnalyzerTest do
   end
 
   test "analyze local path repo" do
-    #{:ok, report} = AnalyzerModule.analyze(["file:///Users/cplummer8/Code/sheetworld"], "path_test")
     {:ok, cwd} = File.cwd()
     {:ok, report} = AnalyzerModule.analyze(["file:///#{cwd}"], "path_test")
     assert "complete" == report[:state]
     repo_data = List.first(report[:report][:repos])
     assert "path_test" == repo_data[:header][:source_client]
+    assert %{"mix" => ["#{cwd}/mix.exs","#{cwd}/mix.lock"]} == repo_data[:data][:project_types]
   end
 
   test "get empty report" do
@@ -77,6 +67,7 @@ defmodule AnalyzerTest do
         :recent_commit_size_in_percent_of_codebase => 0.003683241252302026,
         :top10_contributors => [%{"Kit Plummer" => 7}]
       },
+      :project_types => %{},
       :risk => "critical",
       :config => Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight))
     }
@@ -140,7 +131,8 @@ defmodule AnalyzerTest do
         error:
           "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?",
         repo: "https://github.com/kitplummer/blah",
-        risk: "critical"
+        risk: "critical",
+        project_types: %{"undetermined" => "undetermined"}
       }
     }
 
@@ -158,7 +150,8 @@ defmodule AnalyzerTest do
         error:
           "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory",
         repo: "https://github.com/kitplummer/xmpp4rails/blah",
-        risk: "N/A"
+        risk: "N/A",
+        project_types: %{"undetermined" => "undetermined"}
       }
     }
 
