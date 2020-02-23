@@ -239,7 +239,11 @@ This is the library piece of the puzzle.  As mentioned above there is an HTTP AP
 
 The library is written in Elixir.
 
-`mix docs` will generate static docs available locally within the repo's root, in the `docs/` subfolder.
+`mix docs` will generate static docs available locally within the repo's root, in the `docs/` subdirectory.
+
+### JSON Schema
+
+LowEndInsight makes available the API's schema in JSON form, which can be found in the `schema/` subdirectory. In addition, the schema docs are available in `schema/docs` as Markdown.
 
 ### A Note about the metrics used
 * Recent commit size: This is a measure of how large the most recent commit is in relatino to the size of the codebase. The idea being that a large recent commit is much more likely to be bug filled than a relatively small commit.
@@ -332,6 +336,12 @@ Always write a clear log message for your commits. One-line messages are fine fo
     $ git commit -m "A brief summary of the commit
     >
     > A paragraph describing what changed and its impact."
+
+### JSON Schema
+
+The JSON schema found in `schema` is and should be used to validate the main analysis interfaces' input and expected outputs. Any modifications in implementations should also be made to the schemas and verified/validated by tests.
+
+There is an external tool used to do the schema docs conversion: `jsonschema2md -d schemas/ -o schema/docs`. If you make a modification to the schema please run the tool to update the docs with the submission.
 
 ## License
 

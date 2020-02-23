@@ -7,9 +7,12 @@ defmodule ProjectIdent do
   @doc """
   is_mix?/1: takes in a Repository struct and returns true
   if the repo has a mix.exs file.
+  NOTE: mix will install dependencies into deps/ so we're gonna
+  ignore those, and only recognize the mix.exs/mix.lock at the
+  root directory
   """
   def is_mix?(repo) do
-    paths = Path.wildcard("#{repo.path}/mix.exs")
+    paths = Path.wildcard("#{repo.path}/{mix.exs,mix.lock}")
     %{"mix" => paths}
   end
 
@@ -20,7 +23,7 @@ defmodule ProjectIdent do
   NOTE: this could be either a pip or conda project.
   """
   def is_python?(repo) do
-    paths = Path.wildcard("#{repo.path}/{setup.py, *requirements.txt*}")
+    paths = Path.wildcard("#{repo.path}/**/{setup.py, *requirements.txt*}")
     %{"python" => paths}
   end
 
@@ -31,7 +34,7 @@ defmodule ProjectIdent do
   NOTE: this could be a yarn or npm project.
   """
   def is_node?(repo) do
-    paths = Path.wildcard("#{repo.path}/{package.json}")
+    paths = Path.wildcard("#{repo.path}/**/{package.json}")
     %{"node" => paths}
   end
 
@@ -40,7 +43,7 @@ defmodule ProjectIdent do
   if there is presence of a go.mod file.
   """
   def is_go_mod?(repo) do
-    paths = Path.wildcard("#{repo.path}/{go.mod}")
+    paths = Path.wildcard("#{repo.path}/**/{go.mod}")
     %{"go_mod" => paths}
   end
 
@@ -49,7 +52,7 @@ defmodule ProjectIdent do
   if there is presence of a Cargo.toml file.
   """
   def is_cargo?(repo) do
-    paths = Path.wildcard("#{repo.path}/{Cargo.toml}")
+    paths = Path.wildcard("#{repo.path}/**/{Cargo.toml}")
     %{"cargo" => paths}
   end
 
@@ -58,7 +61,7 @@ defmodule ProjectIdent do
   if there is presence of a Gemfile file.
   """
   def is_rubygem?(repo) do
-    paths = Path.wildcard("#{repo.path}/{Gemfile*,*.gemspec}")
+    paths = Path.wildcard("#{repo.path}/**/{Gemfile*,*.gemspec}")
     %{"rubygem" => paths}
   end
 

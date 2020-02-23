@@ -14,6 +14,7 @@ defmodule ProjectIdentTest do
       File.rm_rf("rubocop")
       File.rm_rf("snyk-maven-plugin")
       File.rm_rf("RxKotlin")
+      File.rm_rf("java-npm-gradle-integration-example")
     end)
 
     {:ok, cwd} = File.cwd
@@ -21,11 +22,6 @@ defmodule ProjectIdentTest do
   end
 
   doctest ProjectIdent
-  test "is_mix?(repo)", %{cwd: cwd} do
-    {:ok, repo} = GitModule.get_repo(cwd)
-    assert %{"mix" => ["#{cwd}/mix.exs"]} == ProjectIdent.is_mix?(repo)
-    assert %{"mix" => ["#{cwd}/mix.exs"]} == ProjectIdent.project_types?(repo)
-  end
 
   test "is_python?(repo)" do
     {:ok, cwd} = File.cwd
@@ -54,9 +50,14 @@ defmodule ProjectIdentTest do
 
   test "is_cargo?(repo)", %{cwd: cwd} do
     {:ok, repo} = GitModule.clone_repo("https://github.com/clap-rs/clap")
-    assert %{"cargo" => ["#{cwd}/clap/Cargo.toml"]} == ProjectIdent.is_cargo?(repo)
     assert %{
-      "cargo" => ["#{cwd}/clap/Cargo.toml"],
+      "cargo" => ["#{cwd}/clap/Cargo.toml",
+      "#{cwd}/clap/clap_derive/Cargo.toml",
+      "#{cwd}/clap/clap_generate/Cargo.toml"]} == ProjectIdent.is_cargo?(repo)
+    assert %{
+      "cargo" => ["#{cwd}/clap/Cargo.toml",
+      "#{cwd}/clap/clap_derive/Cargo.toml",
+      "#{cwd}/clap/clap_generate/Cargo.toml"]
     } == ProjectIdent.project_types?(repo)
     GitModule.delete_repo(repo)
   end
@@ -98,7 +99,21 @@ defmodule ProjectIdentTest do
 
   test "project_types?(repo)", %{cwd: cwd} do
     {:ok, repo} = GitModule.get_repo(cwd)
-    assert %{"mix"=>["#{cwd}/mix.exs"]} == ProjectIdent.project_types?(repo)
-
+    assert %{"mix"=>["#{cwd}/mix.exs", "#{cwd}/mix.lock"]} == ProjectIdent.project_types?(repo)
   end
+
+  test "many build or package managers", %{cwd: cwd} do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/xword/java-npm-gradle-integration-example")
+    assert %{
+      "gradle" => ["#{cwd}/java-npm-gradle-integration-example/gradle-groovy-dsl/build.gradle",
+       "#{cwd}/java-npm-gradle-integration-example/gradle-groovy-dsl/java-app/build.gradle",
+       "#{cwd}/java-npm-gradle-integration-example/gradle-groovy-dsl/npm-app/build.gradle",
+       "#{cwd}/java-npm-gradle-integration-example/gradle-kotlin-dsl/build.gradle.kts",
+       "#{cwd}/java-npm-gradle-integration-example/gradle-kotlin-dsl/java-app/build.gradle.kts",
+       "#{cwd}/java-npm-gradle-integration-example/gradle-kotlin-dsl/npm-app/build.gradle.kts"],
+      "node" => ["#{cwd}/java-npm-gradle-integration-example/gradle-groovy-dsl/npm-app/package.json",
+       "#{cwd}/java-npm-gradle-integration-example/gradle-kotlin-dsl/npm-app/package.json"]
+    } == ProjectIdent.project_types?(repo)
+  end
+
 end
