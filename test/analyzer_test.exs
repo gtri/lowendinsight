@@ -7,18 +7,8 @@ defmodule AnalyzerTest do
   doctest AnalyzerModule
 
   setup_all do
-    on_exit(fn ->
-      File.rm_rf("xmpp4rails")
-      File.rm_rf("lita-cron")
-      File.rm_rf("oh-my-zsh")
-    end)
-
-    File.rm_rf("xmpp4rails")
-    File.rm_rf("lita-cron")
-    File.rm_rf("go.uuid")
-    File.rm_rf("oh-my-zsh")
-
-    {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails")
+    {:ok, tmp_path} = Temp.path "lei-analyzer-test"
+    {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails", tmp_path)
     {:ok, date} = GitModule.get_last_commit_date(repo)
     GitModule.delete_repo(repo)
     weeks = TimeHelper.get_commit_delta(date) |> TimeHelper.sec_to_weeks()

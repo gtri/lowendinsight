@@ -8,14 +8,19 @@ defmodule GitModule do
   """
 
   @doc """
-  clone_repo/1: clones the repo
+  clone_repo/2: clones the repo
   """
 
-  def clone_repo(url) do
+  def clone_repo(url, tmp_path) do
+
+
     {:ok, slug} = url |> Helpers.get_slug()
     {:ok, _, repo_name} = Helpers.split_slug(slug)
 
-    response = Git.clone([url, repo_name])
+    ## repo_name needs to go to a tmp path struct
+    tmp_repo_path = Path.join(tmp_path, repo_name)
+
+    response = Git.clone([url, tmp_repo_path])
 
     case response do
       {:ok, repo} ->

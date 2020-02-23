@@ -32,7 +32,8 @@ defmodule AnalyzerModule do
           if Helpers.count_forward_slashes(url) > 4 do
             raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
           end
-          GitModule.clone_repo(url)
+          {:ok, tmp_path} = Temp.path "lei"
+          GitModule.clone_repo(url, tmp_path)
       end
 
       # Get unique contributors count

@@ -40,6 +40,7 @@ defmodule GithubModule.MixProject do
       {:ex_doc, "~> 0.21"},
       {:credo, "~> 0.10", except: :prod, runtime: false},
       {:json_xema, "~> 0.3"},
+      {:temp, "~> 0.4"},
       {:excoveralls, "~> 0.10", only: :test}
     ]
   end

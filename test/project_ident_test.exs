@@ -6,94 +6,83 @@ defmodule ProjectIdentTest do
   use ExUnit.Case, async: false
 
   setup_all do
-    on_exit(fn ->
-      File.rm_rf("clikan")
-      File.rm_rf("expres")
-      File.rm_rf("kit")
-      File.rm_rf("clap")
-      File.rm_rf("rubocop")
-      File.rm_rf("snyk-maven-plugin")
-      File.rm_rf("RxKotlin")
-      File.rm_rf("java-npm-gradle-integration-example")
-    end)
-
     {:ok, cwd} = File.cwd
-    [cwd: cwd]
+    {:ok, tmp_path} = Temp.path "lei-test"
+
+    [cwd: cwd, tmp_path: tmp_path]
   end
 
   doctest ProjectIdent
 
-  test "is_python?(repo)" do
-    {:ok, cwd} = File.cwd
-    {:ok, repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan")
-    assert %{"python" => ["#{cwd}/clikan/setup.py"]} == ProjectIdent.is_python?(repo)
-    assert %{"python" => ["#{cwd}/clikan/setup.py"]} == ProjectIdent.project_types?(repo)
+  test "is_python?(repo)", %{tmp_path: tmp_path} do
+    {:ok, repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan", tmp_path)
+    assert %{"python" => ["#{tmp_path}/clikan/setup.py"]} == ProjectIdent.is_python?(repo)
+    assert %{"python" => ["#{tmp_path}/clikan/setup.py"]} == ProjectIdent.project_types?(repo)
     GitModule.delete_repo(repo)
   end
 
-  test "is_node?(repo)" do
-    {:ok, cwd} = File.cwd
-    {:ok, repo} = GitModule.clone_repo("https://github.com/expressjs/express")
-    assert %{"node" => ["#{cwd}/express/package.json"]} == ProjectIdent.is_node?(repo)
-    assert %{"node" => ["#{cwd}/express/package.json"]} == ProjectIdent.project_types?(repo)
+  test "is_node?(repo)", %{tmp_path: tmp_path} do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/expressjs/express", tmp_path)
+    assert %{"node" => ["#{tmp_path}/express/package.json"]} == ProjectIdent.is_node?(repo)
+    assert %{"node" => ["#{tmp_path}/express/package.json"]} == ProjectIdent.project_types?(repo)
     GitModule.delete_repo(repo)
   end
 
-  test "is_go_mod?(repo)", %{cwd: cwd} do
-    {:ok, repo} = GitModule.clone_repo("https://github.com/go-kit/kit")
-    assert %{"go_mod" => ["#{cwd}/kit/go.mod"]} == ProjectIdent.is_go_mod?(repo)
+  test "is_go_mod?(repo)", %{tmp_path: tmp_path} do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/go-kit/kit", tmp_path)
+    assert %{"go_mod" => ["#{tmp_path}/kit/go.mod"]} == ProjectIdent.is_go_mod?(repo)
     assert %{
-      "go_mod" => ["#{cwd}/kit/go.mod"],
+      "go_mod" => ["#{tmp_path}/kit/go.mod"],
     } == ProjectIdent.project_types?(repo)
     GitModule.delete_repo(repo)
   end
 
-  test "is_cargo?(repo)", %{cwd: cwd} do
-    {:ok, repo} = GitModule.clone_repo("https://github.com/clap-rs/clap")
+  test "is_cargo?(repo)", %{tmp_path: tmp_path} do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/clap-rs/clap", tmp_path)
     assert %{
-      "cargo" => ["#{cwd}/clap/Cargo.toml",
-      "#{cwd}/clap/clap_derive/Cargo.toml",
-      "#{cwd}/clap/clap_generate/Cargo.toml"]} == ProjectIdent.is_cargo?(repo)
+      "cargo" => ["#{tmp_path}/clap/Cargo.toml",
+      "#{tmp_path}/clap/clap_derive/Cargo.toml",
+      "#{tmp_path}/clap/clap_generate/Cargo.toml"]} == ProjectIdent.is_cargo?(repo)
     assert %{
-      "cargo" => ["#{cwd}/clap/Cargo.toml",
-      "#{cwd}/clap/clap_derive/Cargo.toml",
-      "#{cwd}/clap/clap_generate/Cargo.toml"]
+      "cargo" => ["#{tmp_path}/clap/Cargo.toml",
+      "#{tmp_path}/clap/clap_derive/Cargo.toml",
+      "#{tmp_path}/clap/clap_generate/Cargo.toml"]
     } == ProjectIdent.project_types?(repo)
     GitModule.delete_repo(repo)
   end
 
-  test "is_rubygem?(repo)", %{cwd: cwd} do
-    {:ok, repo} = GitModule.clone_repo("https://github.com/rubocop-hq/rubocop")
-    assert %{"rubygem" => ["#{cwd}/rubocop/Gemfile", "#{cwd}/rubocop/rubocop.gemspec"]} == ProjectIdent.is_rubygem?(repo)
+  test "is_rubygem?(repo)", %{tmp_path: tmp_path} do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/rubocop-hq/rubocop", tmp_path)
+    assert %{"rubygem" => ["#{tmp_path}/rubocop/Gemfile", "#{tmp_path}/rubocop/rubocop.gemspec"]} == ProjectIdent.is_rubygem?(repo)
     assert %{
-      "rubygem" => ["#{cwd}/rubocop/Gemfile","#{cwd}/rubocop/rubocop.gemspec"]
+      "rubygem" => ["#{tmp_path}/rubocop/Gemfile","#{tmp_path}/rubocop/rubocop.gemspec"]
     } == ProjectIdent.project_types?(repo)
     GitModule.delete_repo(repo)
   end
 
-  test "is_maven?(repo)", %{cwd: cwd} do
-    {:ok, repo} = GitModule.clone_repo("https://github.com/snyk/snyk-maven-plugin")
-    assert %{"maven" => ["#{cwd}/snyk-maven-plugin/pom.xml",
-                         "#{cwd}/snyk-maven-plugin/src/it/license-issues-module/pom.xml",
-                         "#{cwd}/snyk-maven-plugin/src/it/multi-module/child-module/pom.xml",
-                         "#{cwd}/snyk-maven-plugin/src/it/multi-module/pom.xml",
-                         "#{cwd}/snyk-maven-plugin/src/it/private-repo-module/pom.xml",
-                         "#{cwd}/snyk-maven-plugin/src/it/single-module/pom.xml"]} == ProjectIdent.is_maven?(repo)
+  test "is_maven?(repo)", %{tmp_path: tmp_path} do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/snyk/snyk-maven-plugin", tmp_path)
+    assert %{"maven" => ["#{tmp_path}/snyk-maven-plugin/pom.xml",
+                         "#{tmp_path}/snyk-maven-plugin/src/it/license-issues-module/pom.xml",
+                         "#{tmp_path}/snyk-maven-plugin/src/it/multi-module/child-module/pom.xml",
+                         "#{tmp_path}/snyk-maven-plugin/src/it/multi-module/pom.xml",
+                         "#{tmp_path}/snyk-maven-plugin/src/it/private-repo-module/pom.xml",
+                         "#{tmp_path}/snyk-maven-plugin/src/it/single-module/pom.xml"]} == ProjectIdent.is_maven?(repo)
     assert %{
-      "maven" => ["#{cwd}/snyk-maven-plugin/pom.xml",
-        "#{cwd}/snyk-maven-plugin/src/it/license-issues-module/pom.xml",
-        "#{cwd}/snyk-maven-plugin/src/it/multi-module/child-module/pom.xml",
-        "#{cwd}/snyk-maven-plugin/src/it/multi-module/pom.xml",
-        "#{cwd}/snyk-maven-plugin/src/it/private-repo-module/pom.xml",
-        "#{cwd}/snyk-maven-plugin/src/it/single-module/pom.xml"],
+      "maven" => ["#{tmp_path}/snyk-maven-plugin/pom.xml",
+        "#{tmp_path}/snyk-maven-plugin/src/it/license-issues-module/pom.xml",
+        "#{tmp_path}/snyk-maven-plugin/src/it/multi-module/child-module/pom.xml",
+        "#{tmp_path}/snyk-maven-plugin/src/it/multi-module/pom.xml",
+        "#{tmp_path}/snyk-maven-plugin/src/it/private-repo-module/pom.xml",
+        "#{tmp_path}/snyk-maven-plugin/src/it/single-module/pom.xml"],
     } == ProjectIdent.project_types?(repo)
     GitModule.delete_repo(repo)
   end
 
-  test "is_gradle?(repo)", %{cwd: cwd} do
-    {:ok, repo} = GitModule.clone_repo("https://github.com/ReactiveX/RxKotlin")
-    assert %{"gradle" => ["#{cwd}/RxKotlin/build.gradle.kts"]} == ProjectIdent.is_gradle?(repo)
-    assert %{"gradle" => ["#{cwd}/RxKotlin/build.gradle.kts"]} == ProjectIdent.project_types?(repo)
+  test "is_gradle?(repo)", %{tmp_path: tmp_path} do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/ReactiveX/RxKotlin", tmp_path)
+    assert %{"gradle" => ["#{tmp_path}/RxKotlin/build.gradle.kts"]} == ProjectIdent.is_gradle?(repo)
+    assert %{"gradle" => ["#{tmp_path}/RxKotlin/build.gradle.kts"]} == ProjectIdent.project_types?(repo)
     GitModule.delete_repo(repo)
   end
 
@@ -102,17 +91,17 @@ defmodule ProjectIdentTest do
     assert %{"mix"=>["#{cwd}/mix.exs", "#{cwd}/mix.lock"]} == ProjectIdent.project_types?(repo)
   end
 
-  test "many build or package managers", %{cwd: cwd} do
-    {:ok, repo} = GitModule.clone_repo("https://github.com/xword/java-npm-gradle-integration-example")
+  test "many build or package managers", %{tmp_path: tmp_path} do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/xword/java-npm-gradle-integration-example", tmp_path)
     assert %{
-      "gradle" => ["#{cwd}/java-npm-gradle-integration-example/gradle-groovy-dsl/build.gradle",
-       "#{cwd}/java-npm-gradle-integration-example/gradle-groovy-dsl/java-app/build.gradle",
-       "#{cwd}/java-npm-gradle-integration-example/gradle-groovy-dsl/npm-app/build.gradle",
-       "#{cwd}/java-npm-gradle-integration-example/gradle-kotlin-dsl/build.gradle.kts",
-       "#{cwd}/java-npm-gradle-integration-example/gradle-kotlin-dsl/java-app/build.gradle.kts",
-       "#{cwd}/java-npm-gradle-integration-example/gradle-kotlin-dsl/npm-app/build.gradle.kts"],
-      "node" => ["#{cwd}/java-npm-gradle-integration-example/gradle-groovy-dsl/npm-app/package.json",
-       "#{cwd}/java-npm-gradle-integration-example/gradle-kotlin-dsl/npm-app/package.json"]
+      "gradle" => ["#{tmp_path}/java-npm-gradle-integration-example/gradle-groovy-dsl/build.gradle",
+       "#{tmp_path}/java-npm-gradle-integration-example/gradle-groovy-dsl/java-app/build.gradle",
+       "#{tmp_path}/java-npm-gradle-integration-example/gradle-groovy-dsl/npm-app/build.gradle",
+       "#{tmp_path}/java-npm-gradle-integration-example/gradle-kotlin-dsl/build.gradle.kts",
+       "#{tmp_path}/java-npm-gradle-integration-example/gradle-kotlin-dsl/java-app/build.gradle.kts",
+       "#{tmp_path}/java-npm-gradle-integration-example/gradle-kotlin-dsl/npm-app/build.gradle.kts"],
+      "node" => ["#{tmp_path}/java-npm-gradle-integration-example/gradle-groovy-dsl/npm-app/package.json",
+       "#{tmp_path}/java-npm-gradle-integration-example/gradle-kotlin-dsl/npm-app/package.json"]
     } == ProjectIdent.project_types?(repo)
   end
 

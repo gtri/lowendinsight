@@ -7,27 +7,19 @@ defmodule GitModuleTest do
   doctest GitModule
 
   setup_all do
-    on_exit(fn ->
-      File.rm_rf("xmpp4rails")
-      File.rm_rf("lita-cron")
-      File.rm_rf("libconfuse")
-      File.rm_rf("clikan")
-      File.rm_rf("infrastructure")
-      File.rm_rf("kit")
-    end)
+    # on_exit(fn ->
+    # end)
 
-    File.rm_rf("xmpp4rails")
-    File.rm_rf("lita-cron")
-    File.rm_rf("libconfuse")
-    File.rm_rf("clikan")
-    File.rm_rf("infrastructure")
-    {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails")
-    {:ok, tag_repo} = GitModule.clone_repo("https://github.com/kitplummer/libconfuse")
-    {:ok, bitbucket_repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan")
-    {:ok, gitlab_repo} = GitModule.clone_repo("https://gitlab.com/kitplummer/infrastructure")
-    {:ok, kitrepo} = GitModule.clone_repo("https://github.com/kitplummer/kit")
+    {:ok, tmp_path} = Temp.path "lei"
+
+    {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails", tmp_path)
+    {:ok, tag_repo} = GitModule.clone_repo("https://github.com/kitplummer/libconfuse", tmp_path)
+    {:ok, bitbucket_repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan", tmp_path)
+    {:ok, gitlab_repo} = GitModule.clone_repo("https://gitlab.com/kitplummer/infrastructure", tmp_path)
+    {:ok, kitrepo} = GitModule.clone_repo("https://github.com/kitplummer/kit", tmp_path)
 
     [
+      tmp_path: tmp_path,
       repo: repo,
       tag_repo: tag_repo,
       bitbucket_repo: bitbucket_repo,
@@ -46,8 +38,8 @@ defmodule GitModuleTest do
     assert {:ok, 1} == count
   end
 
-  test "get contributor list 3" do
-    {:ok, lc_repo} = GitModule.clone_repo("https://github.com/kitplummer/lita-cron")
+  test "get contributor list 3", %{tmp_path: tmp_path} do
+    {:ok, lc_repo} = GitModule.clone_repo("https://github.com/kitplummer/lita-cron", tmp_path)
     count = GitModule.get_contributor_count(lc_repo)
     assert {:ok, 3} == count
   end
