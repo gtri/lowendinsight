@@ -64,14 +64,12 @@ defmodule AnalyzerModule do
 
       {:ok, top10_contributors} = GitModule.get_top10_contributors_map(repo)
 
+      project_types = ProjectIdent.project_types?(repo)
+
       if uri.scheme == "https" or uri.scheme == "http" do
         GitModule.delete_repo(repo)
       end
 
-      ## Determine project typs
-      project_types = ProjectIdent.project_types?(repo)
-
-      # Generate report
       end_time = DateTime.utc_now()
       duration = DateTime.diff(end_time, start_time)
 
@@ -94,7 +92,7 @@ defmodule AnalyzerModule do
         data: %{
           config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
           repo: url,
-          project_types: project_types,
+          project_types: Helpers.convert_config_to_list(project_types),
           results: %{
             contributor_count: count,
             contributor_risk: count_risk,

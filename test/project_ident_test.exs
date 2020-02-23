@@ -28,6 +28,13 @@ defmodule ProjectIdentTest do
     GitModule.delete_repo(repo)
   end
 
+  test "is_node?(repo)2", %{tmp_path: tmp_path} do
+    {:ok, repo} = GitModule.clone_repo("https://github.com/expressjs/express", tmp_path)
+    assert %{"node" => ["#{tmp_path}/express/package.json"]} == ProjectIdent.is_node?(repo)
+    assert %{"node" => ["#{tmp_path}/express/package.json"]} == ProjectIdent.project_types?(repo)
+    GitModule.delete_repo(repo)
+  end
+
   test "is_go_mod?(repo)", %{tmp_path: tmp_path} do
     {:ok, repo} = GitModule.clone_repo("https://github.com/go-kit/kit", tmp_path)
     assert %{"go_mod" => ["#{tmp_path}/kit/go.mod"]} == ProjectIdent.is_go_mod?(repo)

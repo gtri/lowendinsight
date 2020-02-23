@@ -10,7 +10,7 @@ defmodule Mix.Tasks.AnalyzeTest do
 
   describe "run/1" do
     test "run analysis, validate report, return report" do
-      Analyze.run(["https://github.com/kitplummer/xmpp4rails"])
+      Analyze.run(["https://github.com/expressjs/express"])
       assert_received {:mix_shell, :info, [report]}
 
       schema =
@@ -22,9 +22,11 @@ defmodule Mix.Tasks.AnalyzeTest do
       assert :ok == JsonXema.validate(schema, report_data)
       assert true == JsonXema.valid?(schema, report_data)
 
+      repo_data = List.first(report_data["report"]["repos"])
+      assert repo_data["data"]["project_types"] != nil
+
       Analyze.run(["https://github.com/kitplummer/blah"])
       assert_received {:mix_shell, :info, [report]}
-
       report_data = Poison.decode!(report)
       assert :ok == JsonXema.validate(schema, report_data)
       assert true == JsonXema.valid?(schema, report_data)

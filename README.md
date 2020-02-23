@@ -29,36 +29,83 @@ an ad-hoc reporting tool, running it manually.
 {
   "state": "complete",
   "report": {
-    "uuid": "5e60926e-4a32-11ea-96b4-82dd17abe001",
+    "uuid": "96b516a0-5660-11ea-a1fa-784f434ce29a",
     "repos": [
       {
         "header": {
-          "uuid": "5e6074f0-4a32-11ea-ad6a-82dd17abe001",
-          "start_time": "2020-02-08T05:15:21.689451Z",
+          "uuid": "96b4e202-5660-11ea-81d3-784f434ce29a",
+          "start_time": "2020-02-23T17:18:38.532966Z",
           "source_client": "mix task",
           "library_version": "",
-          "end_time": "2020-02-08T05:17:58.034154Z",
-          "duration": 157
+          "end_time": "2020-02-23T17:19:03.321647Z",
+          "duration": 25
         },
         "data": {
           "risk": "low",
           "results": {
             "top10_contributors": [
-            ...
+              {
+                "Paul O’Shannessy": 1777
+              },
+              {
+                "Dan Abramov": 1351
+              },
+              {
+                "Brian Vaughn": 1326
+              },
+              {
+                "Sophie Alpert": 1265
+              },
+              {
+                "Sebastian Markbåge": 753
+              },
+              {
+                "Andrew Clark": 691
+              },
+              {
+                "Jim Sproch": 456
+              },
+              {
+                "Pete Hunt": 332
+              },
+              {
+                "Dominic Gannaway": 319
+              },
+              {
+                "Cheng Lou": 222
+              }
             ],
-            "recent_commit_size_in_percent_of_codebase": 2.4487357177489264e-06,
+            "recent_commit_size_in_percent_of_codebase": 1.4611978900302468e-05,
             "large_recent_commit_risk": "low",
             "functional_contributors_risk": "low",
             "functional_contributors": 83,
             "functional_contributor_names": [
-            ...
+              "yiminghe",
+              "Marshall Roch",
+              "Flarnie Marchan",
+              "Daniel Lo Nigro",
+              "Philipp Spieß",
+              "Edvin Erikson",
+              "Mateusz Burzyński",
+              "Pete Hunt",
+              ...
             ],
             "contributor_risk": "low",
-            "contributor_count": 1482,
+            "contributor_count": 1488,
             "commit_currency_weeks": 0,
             "commit_currency_risk": "low"
           },
           "repo": "https://github.com/facebook/react",
+          "project_types": {
+            "node": [
+              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/art/package.json",
+              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/attribute-behavior/package.json",
+              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/concurrent/time-slicing/package.json",
+              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/dom/package.json",
+              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/eslint/package.json",
+              ...
+            ]
+          },
           "config": {
             "medium_large_commit_level": 0.05,
             "medium_functional_contributors_level": 5,
@@ -79,9 +126,9 @@ an ad-hoc reporting tool, running it manually.
   },
   "metadata": {
     "times": {
-      "start_time": "2020-02-08T05:15:21.683038Z",
-      "end_time": "2020-02-08T05:17:58.042901Z",
-      "duration": 157
+      "start_time": "2020-02-23T17:18:38.523771Z",
+      "end_time": "2020-02-23T17:19:03.352096Z",
+      "duration": 25
     },
     "risk_counts": {
       "low": 1
