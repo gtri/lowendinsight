@@ -41,7 +41,7 @@ defmodule GitModuleTest do
   test "get contributor list 3", %{tmp_path: tmp_path} do
     {:ok, lc_repo} = GitModule.clone_repo("https://github.com/kitplummer/lita-cron", tmp_path)
     count = GitModule.get_contributor_count(lc_repo)
-    assert {:ok, 3} == count
+    assert {:ok, 4} == count
   end
 
   test "get contribution maps", %{kitrepo: kitrepo} do
