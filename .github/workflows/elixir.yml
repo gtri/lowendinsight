@@ -26,11 +26,6 @@ jobs:
         mix deps.get
     - name: Run Tests
       run: |
-        MIX_ENV=test mix coveralls.html
+        MIX_ENV=test mix coveralls.github
         mix docs
-    - name: Archive code coverage report
-      uses: actions/upload-artifact@v1
-      with:
-        name: code-coverage-report
-        path: cover/excoveralls.html
 
