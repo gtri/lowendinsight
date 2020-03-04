@@ -24,11 +24,11 @@ config :lowendinsight,
   ## Percentage of changes to repo in recent commit - is the codebase
   ## volatile in terms of quantity of source being changed
   critical_large_commit_level:
-    String.to_float(System.get_env("LEI_CRITICAL_LARGE_COMMIT_LEVEL") || "0.30"),
+    String.to_float(System.get_env("LEI_CRITICAL_LARGE_COMMIT_LEVEL") || "0.40"),
   high_large_commit_level:
-    String.to_float(System.get_env("LEI_HIGH_LARGE_COMMIT_LEVEL") || "0.15"),
+    String.to_float(System.get_env("LEI_HIGH_LARGE_COMMIT_LEVEL") || "0.30"),
   medium_large_commit_level:
-    String.to_float(System.get_env("LEI_MEDIUM_LARGE_COMMIT_LEVEL") || "0.05"),
+    String.to_float(System.get_env("LEI_MEDIUM_LARGE_COMMIT_LEVEL") || "0.20"),
 
   ## Bell curve contributions - if there are 30 contributors
   ## but 90% of the contributions are from 2...
