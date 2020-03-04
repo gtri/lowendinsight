@@ -9,13 +9,13 @@ defmodule GithubModule.MixProject do
     [
       app: :lowendinsight,
       description: description(),
-      version: "0.3.3",
+      version: "0.4.1",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
       name: "LowEndInsight",
-      source_url: "https://bitbucket.org/kitplummer/lowendinsight",
+      source_url: "https://github.com/gtri/lowendinsight",
       docs: [
         extras: ["README.md"]
       ],
@@ -46,7 +46,7 @@ defmodule GithubModule.MixProject do
   end
 
   defp links() do
-    %{"Bitbucket" => "https://bitbucket.org/kitplummer/lowendinsight"}
+    %{"Bitbucket" => "https://github.com/gtri/lowendinsight"}
   end
 
   defp description() do
