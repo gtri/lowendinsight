@@ -46,7 +46,7 @@ defmodule GithubModule.MixProject do
   end
 
   defp links() do
-    %{"Bitbucket" => "https://github.com/gtri/lowendinsight"}
+    %{"github" => "https://github.com/gtri/lowendinsight"}
   end
 
   defp description() do
