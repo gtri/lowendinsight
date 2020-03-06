@@ -14,5 +14,4 @@ defmodule SchemaLoader do
       |> Path.join(uri.path)
       |> File.read!()
       |> Jason.decode()
-
 end

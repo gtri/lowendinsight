@@ -1,4 +1,4 @@
-# Copyright (C) 2018 by the Georgia Tech Research Institute (GTRI)
+# Copyright (C) 2020 by the Georgia Tech Research Institute (GTRI)
 # This software may be modified and distributed under the terms of
 # the BSD 3-Clause license. See the LICENSE file for details.
 
@@ -55,15 +55,15 @@ defmodule RiskLogicTest do
   end
 
   test "confirm large commit medium" do
-    assert RiskLogic.commit_change_size_risk(0.10) == {:ok, "medium"}
+    assert RiskLogic.commit_change_size_risk(0.20) == {:ok, "medium"}
   end
 
   test "confirm large commit high" do
-    assert RiskLogic.commit_change_size_risk(0.16) == {:ok, "high"}
+    assert RiskLogic.commit_change_size_risk(0.16) == {:ok, "low"}
   end
 
   test "confirm large commit critical" do
-    assert RiskLogic.commit_change_size_risk(0.35) == {:ok, "critical"}
+    assert RiskLogic.commit_change_size_risk(0.45) == {:ok, "critical"}
   end
 
   test "confirm functional commiters low" do

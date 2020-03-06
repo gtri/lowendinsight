@@ -1,4 +1,4 @@
-# Copyright (C) 2018 by the Georgia Tech Research Institute (GTRI)
+# Copyright (C) 2020 by the Georgia Tech Research Institute (GTRI)
 # This software may be modified and distributed under the terms of
 # the BSD 3-Clause license. See the LICENSE file for details.
 
@@ -8,14 +8,20 @@ defmodule GitModule do
   """
 
   @doc """
-  clone/1: clones the repo
+  clone_repo/2: clones the repo
   """
 
-  def clone_repo(url) do
-    {:ok, slug} = url |> Helpers.get_slug
-    {:ok, _, repo_name} = Helpers.split_slug slug
+  def clone_repo(url, tmp_path) do
 
-    response = Git.clone([url, repo_name])
+
+    {:ok, slug} = url |> Helpers.get_slug()
+    {:ok, _, repo_name} = Helpers.split_slug(slug)
+
+    ## repo_name needs to go to a tmp path struct
+    tmp_repo_path = Path.join(tmp_path, repo_name)
+
+    response = Git.clone([url, tmp_repo_path])
+
     case response do
       {:ok, repo} ->
         {:ok, repo}
@@ -23,6 +29,17 @@ defmodule GitModule do
       {:error, _error} ->
         # This error message is not always appropriate
         {:error, "Repository not found"}
+    end
+  end
+
+  @doc """
+  get_repo/1: gets a repo by path, returns Repository struct
+  """
+  def get_repo(path) do
+    repo = Git.new(path)
+    case Git.status(repo) do
+      {:ok, _} -> {:ok, repo}
+      {:error, msg} -> {:error, msg}
     end
   end
 
@@ -154,24 +171,26 @@ defmodule GitModule do
   note: this map is unfiltered, dupes aren't identified
   """
   def get_contributions_map(repo) do
-    map = Git.shortlog!(repo, ["-s", "-n", "HEAD"])
-    |> String.trim()
-    |> String.split(~r{\s\s+})
-    |> Enum.map(fn x ->
-      s = String.split(x, "\t")
-      ## Found that there can be bad entries in the git log, just ignore
-      if String.contains?(x, "\t") do
-        k = Enum.at(s, 1)
-        v = String.to_integer(Enum.at(s, 0))
-        %{k => v}
-      end
-    end)
+    map =
+      Git.shortlog!(repo, ["-s", "-n", "HEAD"])
+      |> String.trim()
+      |> String.split(~r{\s\s+})
+      |> Enum.map(fn x ->
+        s = String.split(x, "\t")
+        ## Found that there can be bad entries in the git log, just ignore
+        if String.contains?(x, "\t") do
+          k = Enum.at(s, 1)
+          v = String.to_integer(Enum.at(s, 0))
+          %{k => v}
+        end
+      end)
+
     {:ok, map}
   end
 
   def get_top10_contributors_map(repo) do
     {:ok, map} = get_contributions_map(repo)
-    map10 = Enum.take(map, 10) 
+    map10 = Enum.take(map, 10)
     {:ok, map10}
   end
 end

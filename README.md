@@ -1,6 +1,6 @@
 # LowEndInsight
 
-![build status](https://github.com/kitplummer/lowendinsight/workflows/default_elixir_ci/badge.svg?branch=master)
+![build status](https://github.com/gtri/lowendinsight/workflows/default_elixir_ci/badge.svg?branch=develop) ![Hex.pm](https://img.shields.io/hexpm/v/lowendinsight) [![Coverage Status](https://coveralls.io/repos/github/gtri/lowendinsight/badge.svg?branch=develop)](https://coveralls.io/github/gtri/lowendinsight?branch=develop)
 
 LowEndInsight is a simple "bus-factor" risk analysis library for Open
 Source Software which is managed within a Git repository.  Provide the
@@ -23,72 +23,126 @@ the decision to use.  LowEndInsight provides a simple mechanism for
 investigating and applying basic governance (based on your definition of
 the tolerance level) and responds with a useful report for integrating
 into your existing automation.  Or you can easily use LowEndInsight as
-an ad-hoc reporting tool.
+an ad-hoc reporting tool, running it manually.
 ```
-✗ mix analyze https://github.com/kitplummer/xmpp4rails | jq
+✗ mix analyze https://github.com/facebook/react | jq
 {
-  "metadata": {
-    "repo_count": 1,
-    "risk_counts": {
-      "critical": 1
-    },
-    "times": {
-      "duration": 1,
-      "end_time": "2020-01-08T01:50:20.098278Z",
-      "start_time": "2020-01-08T01:50:19.552588Z"
-    }
-  },
+  "state": "complete",
   "report": {
+    "uuid": "96b516a0-5660-11ea-a1fa-784f434ce29a",
     "repos": [
       {
+        "header": {
+          "uuid": "96b4e202-5660-11ea-81d3-784f434ce29a",
+          "start_time": "2020-02-23T17:18:38.532966Z",
+          "source_client": "mix task",
+          "library_version": "",
+          "end_time": "2020-02-23T17:19:03.321647Z",
+          "duration": 25
+        },
         "data": {
-          "commit_currency_risk": "critical",
-          "commit_currency_weeks": 573,
+          "risk": "low",
+          "results": {
+            "top10_contributors": [
+              {
+                "Paul O’Shannessy": 1777
+              },
+              {
+                "Dan Abramov": 1351
+              },
+              {
+                "Brian Vaughn": 1326
+              },
+              {
+                "Sophie Alpert": 1265
+              },
+              {
+                "Sebastian Markbåge": 753
+              },
+              {
+                "Andrew Clark": 691
+              },
+              {
+                "Jim Sproch": 456
+              },
+              {
+                "Pete Hunt": 332
+              },
+              {
+                "Dominic Gannaway": 319
+              },
+              {
+                "Cheng Lou": 222
+              }
+            ],
+            "recent_commit_size_in_percent_of_codebase": 1.4611978900302468e-05,
+            "large_recent_commit_risk": "low",
+            "functional_contributors_risk": "low",
+            "functional_contributors": 83,
+            "functional_contributor_names": [
+              "yiminghe",
+              "Marshall Roch",
+              "Flarnie Marchan",
+              "Daniel Lo Nigro",
+              "Philipp Spieß",
+              "Edvin Erikson",
+              "Mateusz Burzyński",
+              "Pete Hunt",
+              ...
+            ],
+            "contributor_risk": "low",
+            "contributor_count": 1488,
+            "commit_currency_weeks": 0,
+            "commit_currency_risk": "low"
+          },
+          "repo": "https://github.com/facebook/react",
+          "project_types": {
+            "node": [
+              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/art/package.json",
+              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/attribute-behavior/package.json",
+              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/concurrent/time-slicing/package.json",
+              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/dom/package.json",
+              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/eslint/package.json",
+              ...
+            ]
+          },
           "config": {
-            "high_currency_level": 52,
-            "critical_contributor_level": 2,
             "medium_large_commit_level": 0.05,
+            "medium_functional_contributors_level": 5,
             "medium_currency_level": 26,
-            "high_functional_contributors_level": 3,
             "medium_contributor_level": 5,
             "high_large_commit_level": 0.15,
+            "high_functional_contributors_level": 3,
+            "high_currency_level": 52,
             "high_contributor_level": 3,
+            "critical_large_commit_level": 0.3,
             "critical_functional_contributors_level": 2,
             "critical_currency_level": 104,
-            "critical_large_commit_level": 0.3,
-            "medium_functional_contributors_level": 5
-          },
-          "contributor_count": 1,
-          "contributor_risk": "critical",
-          "functional_contributor_names": [
-            "Kit Plummer"
-          ],
-          "functional_contributors": 1,
-          "functional_contributors_risk": "critical",
-          "large_recent_commit_risk": "low",
-          "recent_commit_size_in_percent_of_codebase": 0.003683241252302026,
-          "repo": "https://github.com/kitplummer/xmpp4rails",
-          "risk": "critical"
-        },
-        "header": {
-          "duration": 1,
-          "end_time": "2020-01-08T01:50:20.084189Z",
-          "library_version": "",
-          "source_client": "mix task",
-          "start_time": "2020-01-08T01:50:19.562877Z",
-          "uuid": "3a0ea2f2-31b9-11ea-b537-784f434ce29a"
+            "critical_contributor_level": 2
+          }
         }
       }
-    ],
-    "uuid": "3a0ed3a8-31b9-11ea-9cff-784f434ce29a"
+    ]
+  },
+  "metadata": {
+    "times": {
+      "start_time": "2020-02-23T17:18:38.523771Z",
+      "end_time": "2020-02-23T17:19:03.352096Z",
+      "duration": 25
+    },
+    "risk_counts": {
+      "low": 1
+    },
+    "repo_count": 1
   }
 }
 ```
 
-## Installation
+NOTE: that the "file://" is also supporting, but presumes that the directory provided
+is a valid Git clone.  Analysis of a file://-based repo will not conclude with the 
+directory structure being removed.
 
-NOTE: the library is not currently deployed to Hex, while awaiting approvals to
-OSS.
+## Installation
 
 [LowEndInsight available in Hex](https://hex.pm/packages/lowendinsight), the package can be installed
 by adding `lowendinsight` to your list of dependencies in `mix.exs`:
@@ -96,7 +150,7 @@ by adding `lowendinsight` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:lowendinsight, "~> 0.2.1"}
+    {:lowendinsight, "~> 0.4"}
   ]
 end
 ```
@@ -159,9 +213,15 @@ iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
  }}
 ```
 
-Possibly a tip (if you're running Docker):
+Here's the command that you would paste in to the `iex` REPL as an example:
 
-You can pass in this lib and configuration settings, into a base Elixir container.
+```
+AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
+```
+
+### Docker
+
+You can pass in this lib and configuration settings, into a base Elixir container.  From the root directory of a clone of this repo run this:
 
 ```
 docker run --rm -v $PWD:/app -w /app -it -e LEI_CRITICAL_CURRENCY_LEVEL=60 elixir:latest bash -c "mix local.hex;mix deps.get;iex -S mix"
@@ -169,22 +229,74 @@ docker run --rm -v $PWD:/app -w /app -it -e LEI_CRITICAL_CURRENCY_LEVEL=60 elixi
 
 From iex you can access to the library functions.
 
+```
+Erlang/OTP 22 [erts-10.6.3] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [hipe] [dtrace]
+
+Interactive Elixir (1.10.0) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"], "iex")
+{:ok,
+ %{
+   metadata: %{
+     repo_count: 1,
+     risk_counts: %{"critical" => 1},
+     times: %{
+       duration: 1,
+       end_time: "2020-02-08T04:35:35.109053Z",
+       start_time: "2020-02-08T04:35:34.078971Z"
+     }
+   },
+   report: %{
+     repos: [
+       %{
+...
+}
+```
+
+### Mix
+
 There is also an Elixir `mix` task that you can use to access the
-`AnalyzeModule.analyze(url, client)` function.
+`AnalyzeModule.analyze(url, client)` function.  So if have this repo cloned:
 
 ```
-mix analyze https://github.com/kitplummer/xmpp4rails, mix
+mix analyze https://github.com/kitplummer/xmpp4rails | jq
 ```
 
-## Docs?
+This will return:
 
-This is the library piece of the puzzle.  There is a brewing API/service
-interface that will expose this library to HTTP(S) POSTs.  Stay tuned,
-it'll be open sourced shortly following this library.
+```json
+{
+  "state": "complete",
+  "report": {
+    "uuid": "86ac4538-4a28-11ea-897f-82dd17abe001",
+    "repos": [
+      {
+        "header": {
+          "uuid": "86ac38f4-4a28-11ea-89c1-82dd17abe001",
+          "start_time": "2020-02-08T04:07:29.736126Z",
+          "source_client": "mix task",
+...
+}
+```
+
+### LowEndInsight REST-y API
+
+Also, there is a sister project that wraps this library and provides an HTTP-based interface.
+
+https://github.com/gtri/lowendinsight-get
+
+## Docs
+
+API available at: https://hexdocs.pm/lowendinsight/readme.html#content
+
+This is the library piece of the puzzle.  As mentioned above there is an HTTP API available as well.
 
 The library is written in Elixir.
 
-`mix docs` will generate static docs available within the project in the `docs/` subfolder.
+`mix docs` will generate static docs available locally within the repo's root, in the `docs/` subdirectory.
+
+### JSON Schema
+
+LowEndInsight makes available the API's schema in JSON form, which can be found in the `schema/` subdirectory. In addition, the schema docs are available in `schema/docs` as Markdown.
 
 ### A Note about the metrics used
 * Recent commit size: This is a measure of how large the most recent commit is in relatino to the size of the codebase. The idea being that a large recent commit is much more likely to be bug filled than a relatively small commit.
@@ -194,7 +306,7 @@ The library is written in Elixir.
 
 ### Configuration
 
-LowEndInsight allows for customization of the risk levels, to determine "low", "medium", "high" and "critical" acceptance.  The library reads this configuration from config.exs here, or as providing in environment variables.
+LowEndInsight allows for customization of the risk levels, to determine "low", "medium", "high" and "critical" acceptance.  The library reads this configuration from config.exs (or dev|test|prod.exs) as seen here, or as providing in environment variables.
 
 ```
 ## Contributor in terms of discrete users
@@ -277,6 +389,12 @@ Always write a clear log message for your commits. One-line messages are fine fo
     $ git commit -m "A brief summary of the commit
     >
     > A paragraph describing what changed and its impact."
+
+### JSON Schema
+
+The JSON schema found in `schema` is and should be used to validate the main analysis interfaces' input and expected outputs. Any modifications in implementations should also be made to the schemas and verified/validated by tests.
+
+There is an external tool used to do the schema docs conversion: `jsonschema2md -d schemas/ -o schema/docs`. If you make a modification to the schema please run the tool to update the docs with the submission.
 
 ## License
 

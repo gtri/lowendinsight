@@ -1,4 +1,4 @@
-# Copyright (C) 2018 by the Georgia Tech Research Institute (GTRI)
+# Copyright (C) 2020 by the Georgia Tech Research Institute (GTRI)
 # This software may be modified and distributed under the terms of
 # the BSD 3-Clause license. See the LICENSE file for details.
 
@@ -9,13 +9,13 @@ defmodule GithubModule.MixProject do
     [
       app: :lowendinsight,
       description: description(),
-      version: "0.3.3",
+      version: "0.4.1",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
       name: "LowEndInsight",
-      source_url: "https://bitbucket.org/kitplummer/lowendinsight",
+      source_url: "https://github.com/gtri/lowendinsight",
       docs: [
         extras: ["README.md"]
       ],
@@ -40,12 +40,13 @@ defmodule GithubModule.MixProject do
       {:ex_doc, "~> 0.21"},
       {:credo, "~> 0.10", except: :prod, runtime: false},
       {:json_xema, "~> 0.3"},
+      {:temp, "~> 0.4"},
       {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 
   defp links() do
-    %{"Bitbucket" => "https://bitbucket.org/kitplummer/lowendinsight"}
+    %{"GitHub" => "https://github.com/gtri/lowendinsight"}
   end
 
   defp description() do
