@@ -150,7 +150,7 @@ by adding `lowendinsight` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:lowendinsight, "~> 0.3"}
+    {:lowendinsight, "~> 0.4"}
   ]
 end
 ```
