@@ -182,5 +182,6 @@ defmodule Helpers do
   """
   def convert_config_to_list(config) do
     Enum.into(config, %{})
+    |> Map.delete(:jobs_per_core_max)
   end
 end

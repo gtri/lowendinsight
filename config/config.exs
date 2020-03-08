@@ -37,7 +37,12 @@ config :lowendinsight,
   high_functional_contributors_level:
     String.to_integer(System.get_env("LEI_HIGH_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "3"),
   medium_functional_contributors_level:
-    String.to_integer(System.get_env("LEI_MEDIUM_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "5")
+    String.to_integer(System.get_env("LEI_MEDIUM_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "5"),
+
+  ## Jobs per available core for defining max concurrency.  This value
+  ## will be used to set the max_concurrency value.
+  jobs_per_core_max:
+    String.to_integer(System.get_env("LEI_JOBS_PER_CORE_MAX") || "2")
 
 # JsonXema Schema Loader
 config :xema, loader: SchemaLoader
