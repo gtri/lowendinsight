@@ -55,6 +55,7 @@ defmodule GithubModule.MixProject do
 
   defp package() do
     [
+      organziation: "gtri",
       licenses: ["BSD-3"],
       links: links()
     ]
