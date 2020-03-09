@@ -152,11 +152,13 @@ defmodule AnalyzerModule do
   """
   # @defaults %{start_time: DateTime.utc_now()}
   def analyze(urls, source, start_time \\ DateTime.utc_now()) when is_list(urls) do
-    # %{start_time: start_time} = Enum.into(opts, @defaults)
-    ## Concurrency for parallelizing the analysis.  Turn the analyze/2 function into a worker.
+    ## Concurrency for parallelizing the analysis. This is the magic.
+    ## Will run two jobs per core available max...
+    max_concurrency = System.schedulers_online() * Application.get_env(:lowendinsight, :jobs_per_core_max)
+    ## https://hexdocs.pm/elixir/Task.html
     l =
       urls
-      |> Task.async_stream(__MODULE__, :analyze, [source], timeout: :infinity, max_concurrency: 10)
+      |> Task.async_stream(__MODULE__, :analyze, [source], timeout: :infinity, max_concurrency: max_concurrency)
       |> Enum.map(fn {:ok, report} -> elem(report, 1) end)
 
     report = %{

@@ -2,7 +2,7 @@
 # This software may be modified and distributed under the terms of
 # the BSD 3-Clause license. See the LICENSE file for details.
 
-defmodule Mix.Tasks.Analyze do
+defmodule Mix.Tasks.Lei.Analyze do
   use Mix.Task
   @shortdoc "Run LowEndInsight and analyze a git repository"
   @moduledoc ~S"""
