@@ -25,16 +25,19 @@ defmodule AnalyzerModule do
 
       uri = URI.parse(url)
 
-      {:ok, repo} = cond do
-        uri.scheme == "file" ->
-          GitModule.get_repo(uri.path)
-        uri.scheme == "https" or uri.scheme == "http" ->
-          if Helpers.count_forward_slashes(url) > 4 do
-            raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
-          end
-          {:ok, tmp_path} = Temp.path "lei"
-          GitModule.clone_repo(url, tmp_path)
-      end
+      {:ok, repo} =
+        cond do
+          uri.scheme == "file" ->
+            GitModule.get_repo(uri.path)
+
+          uri.scheme == "https" or uri.scheme == "http" ->
+            if Helpers.count_forward_slashes(url) > 4 do
+              raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
+            end
+
+            {:ok, tmp_path} = Temp.path("lei")
+            GitModule.clone_repo(url, tmp_path)
+        end
 
       # Get unique contributors count
       {:ok, count} = GitModule.get_contributor_count(repo)
@@ -154,11 +157,16 @@ defmodule AnalyzerModule do
   def analyze(urls, source, start_time \\ DateTime.utc_now()) when is_list(urls) do
     ## Concurrency for parallelizing the analysis. This is the magic.
     ## Will run two jobs per core available max...
-    max_concurrency = System.schedulers_online() * Application.get_env(:lowendinsight, :jobs_per_core_max)
+    max_concurrency =
+      System.schedulers_online() * Application.get_env(:lowendinsight, :jobs_per_core_max)
+
     ## https://hexdocs.pm/elixir/Task.html
     l =
       urls
-      |> Task.async_stream(__MODULE__, :analyze, [source], timeout: :infinity, max_concurrency: max_concurrency)
+      |> Task.async_stream(__MODULE__, :analyze, [source],
+        timeout: :infinity,
+        max_concurrency: max_concurrency
+      )
       |> Enum.map(fn {:ok, report} -> elem(report, 1) end)
 
     report = %{
@@ -214,7 +222,10 @@ defmodule AnalyzerModule do
   def determine_risk_counts(report) do
     count_map =
       report[:report][:repos]
-      |> Enum.map(fn repo -> repo[:data][:risk] end)
+      |> Enum.map(fn repo ->
+        # TODO: when pulling from cache transform from string to atoms - maybe a struct?
+        if repo[:data][:risk] != nil, do: repo[:data][:risk], else: repo["data"]["risk"]
+      end)
       |> Enum.reduce(%{}, fn x, acc -> Map.update(acc, x, 1, &(&1 + 1)) end)
 
     metadata = Map.put_new(report[:metadata], :risk_counts, count_map)
