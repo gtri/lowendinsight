@@ -73,7 +73,7 @@ defmodule Helpers do
   ...> |> Helpers.validate_url()
   {:error, "invalid URI path"}
 
-  iex> "http://zipbooks.com/"
+  iex> "https://github.com/"
   ...> |> Helpers.validate_url()
   :ok
 
