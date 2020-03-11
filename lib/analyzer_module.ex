@@ -222,10 +222,7 @@ defmodule AnalyzerModule do
   def determine_risk_counts(report) do
     count_map =
       report[:report][:repos]
-      |> Enum.map(fn repo ->
-        # TODO: when pulling from cache transform from string to atoms - maybe a struct?
-        if repo[:data][:risk] != nil, do: repo[:data][:risk], else: repo["data"]["risk"]
-      end)
+      |> Enum.map(fn repo -> repo.data.risk end)
       |> Enum.reduce(%{}, fn x, acc -> Map.update(acc, x, 1, &(&1 + 1)) end)
 
     metadata = Map.put_new(report[:metadata], :risk_counts, count_map)
