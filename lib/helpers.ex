@@ -146,11 +146,13 @@ defmodule Helpers do
               true -> :ok
               false -> {:error, "invalid URI path"}
             end
+
           host == "" ->
             case File.dir?(path) do
               true -> :ok
               false -> {:error, "invalid URI path"}
             end
+
           host != "" ->
             case :inet.gethostbyname(Kernel.to_charlist(host)) do
               {:ok, _} -> :ok

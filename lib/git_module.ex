@@ -12,8 +12,6 @@ defmodule GitModule do
   """
 
   def clone_repo(url, tmp_path) do
-
-
     {:ok, slug} = url |> Helpers.get_slug()
     {:ok, _, repo_name} = Helpers.split_slug(slug)
 
@@ -37,6 +35,7 @@ defmodule GitModule do
   """
   def get_repo(path) do
     repo = Git.new(path)
+
     case Git.status(repo) do
       {:ok, _} -> {:ok, repo}
       {:error, msg} -> {:error, msg}

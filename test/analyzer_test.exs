@@ -7,7 +7,7 @@ defmodule AnalyzerTest do
   doctest AnalyzerModule
 
   setup_all do
-    {:ok, tmp_path} = Temp.path "lei-analyzer-test"
+    {:ok, tmp_path} = Temp.path("lei-analyzer-test")
     {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails", tmp_path)
     {:ok, date} = GitModule.get_last_commit_date(repo)
     GitModule.delete_repo(repo)
@@ -21,7 +21,7 @@ defmodule AnalyzerTest do
     assert "complete" == report[:state]
     repo_data = List.first(report[:report][:repos])
     assert "path_test" == repo_data[:header][:source_client]
-    assert %{"mix" => ["#{cwd}/mix.exs","#{cwd}/mix.lock"]} == repo_data[:data][:project_types]
+    assert %{"mix" => ["#{cwd}/mix.exs", "#{cwd}/mix.lock"]} == repo_data[:data][:project_types]
   end
 
   test "get empty report" do
