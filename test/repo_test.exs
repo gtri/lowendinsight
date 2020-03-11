@@ -21,7 +21,8 @@ defmodule RepoTest do
         :top10_contributors => [%{"Kit Plummer" => 7}]
       },
       :risk => "critical",
-      :config => Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight))
+      :config => Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
+      :header => %{}
     }
 
     s_repo = %RepoReport{data: e_repo}
