@@ -10,12 +10,17 @@ defmodule GitModuleTest do
     # on_exit(fn ->
     # end)
 
-    {:ok, tmp_path} = Temp.path "lei"
+    {:ok, tmp_path} = Temp.path("lei")
 
     {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/xmpp4rails", tmp_path)
     {:ok, tag_repo} = GitModule.clone_repo("https://github.com/kitplummer/libconfuse", tmp_path)
-    {:ok, bitbucket_repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan", tmp_path)
-    {:ok, gitlab_repo} = GitModule.clone_repo("https://gitlab.com/kitplummer/infrastructure", tmp_path)
+
+    {:ok, bitbucket_repo} =
+      GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan", tmp_path)
+
+    {:ok, gitlab_repo} =
+      GitModule.clone_repo("https://gitlab.com/kitplummer/infrastructure", tmp_path)
+
     {:ok, kitrepo} = GitModule.clone_repo("https://github.com/kitplummer/kit", tmp_path)
 
     [
