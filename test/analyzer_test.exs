@@ -64,7 +64,7 @@ defmodule AnalyzerTest do
         :functional_contributors => 1,
         :functional_contributors_risk => "critical",
         :large_recent_commit_risk => "low",
-        :recent_commit_size_in_percent_of_codebase => 0.003683241252302026,
+        :recent_commit_size_in_percent_of_codebase => 0.00368,
         :top10_contributors => [%{"Kit Plummer" => 7}]
       },
       :project_types => %{},
