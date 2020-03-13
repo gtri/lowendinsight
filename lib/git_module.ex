@@ -134,12 +134,12 @@ defmodule GitModule do
   end
 
   @doc """
-  get_recent_changes/1: returns the fraction of changed lines in the last commit by the total lines in the repo
+  get_recent_changes/1: returns the percentage of changed lines in the last commit by the total lines in the repo
   """
   def get_recent_changes(repo) do
     {:ok, total_lines, total_files_changed} = get_total_lines(repo)
     {:ok, file_num, insertions, deletions} = get_last_2_delta(repo)
-    {:ok, (insertions + deletions) / total_lines, file_num / total_files_changed}
+    {:ok, Float.round((insertions + deletions) / total_lines, 5), Float.round(file_num / total_files_changed, 5)}
   end
 
   @doc """
