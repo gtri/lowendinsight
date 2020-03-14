@@ -127,7 +127,6 @@ defmodule AnalyzerTest do
 
     expected_data = %{
       data: %{
-        config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
         error:
           "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?",
         repo: "https://github.com/kitplummer/blah",
@@ -146,7 +145,6 @@ defmodule AnalyzerTest do
 
     expected_data = %{
       data: %{
-        config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
         error:
           "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory",
         repo: "https://github.com/kitplummer/xmpp4rails/blah",

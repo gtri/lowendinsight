@@ -21,7 +21,7 @@ defmodule AnalyzerModule do
       #  for application :lowendinsight because the application was not loaded/started.
       #  If your application depends on :lowendinsight at runtime, make sure to
       #  load/start it or list it under :extra_applications in your mix.exs file"
-      _config = Application.fetch_env!(:lowendinsight, :critical_contributor_level)
+      # _config = Application.fetch_env!(:lowendinsight, :critical_contributor_level)
 
       uri = URI.parse(url)
 
@@ -83,6 +83,11 @@ defmodule AnalyzerModule do
           do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string(),
           else: ""
 
+      config =
+        if Application.get_all_env(:lowendinsight) == [],
+          do: %{info: "no config loaded, defaults in use"},
+          else: Application.get_all_env(:lowendinsight)
+
       report = %{
         header: %{
           start_time: DateTime.to_iso8601(start_time),
@@ -93,7 +98,7 @@ defmodule AnalyzerModule do
           library_version: library_version
         },
         data: %{
-          config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
+          config: Helpers.convert_config_to_list(config),
           repo: url,
           project_types: Helpers.convert_config_to_list(project_types),
           results: %{
@@ -117,7 +122,7 @@ defmodule AnalyzerModule do
         {:ok,
          %{
            data: %{
-             config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
+             # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?",
              repo: url,
              risk: "critical",
@@ -129,7 +134,7 @@ defmodule AnalyzerModule do
         {:ok,
          %{
            data: %{
-             config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
+             # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}). #{e.message}",
              repo: url,
              risk: "N/A",
@@ -158,7 +163,8 @@ defmodule AnalyzerModule do
     ## Concurrency for parallelizing the analysis. This is the magic.
     ## Will run two jobs per core available max...
     max_concurrency =
-      System.schedulers_online() * Application.get_env(:lowendinsight, :jobs_per_core_max)
+      System.schedulers_online() *
+        (Application.get_env(:lowendinsight, :jobs_per_core_max) || "2")
 
     ## https://hexdocs.pm/elixir/Task.html
     l =

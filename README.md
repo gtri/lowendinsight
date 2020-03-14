@@ -399,3 +399,9 @@ There is an external tool used to do the schema docs conversion: `jsonschema2md 
 ## License
 
 BSD 3-Clause.  See https://opensource.org/licenses/BSD-3-Clause or LICENSE file for details.
+
+There is code in this project [`mixfile.ex` and `encoder.ex`], taken from [mix-deps-json](https://github.com/librariesio/mix-deps-json), that is copyright:
+
+Copyright (c) 2016 Andrew Nesbitt.
+
+And licensed with the MIT license.  See the [mix-deps-json](https://github.com/librariesio/mix-deps-json) for more details.
