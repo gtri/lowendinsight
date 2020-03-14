@@ -4,7 +4,7 @@
 
 LowEndInsight is a simple "bus-factor" risk analysis library for Open
 Source Software which is managed within a Git repository.  Provide the
-git URL and the library will respond with a basic Elixir Map structure report.
+git URL and the library will respond with a basic Elixir Map structure report. (There is a desire to make this a struct.)
 
 If you are at all concerned about risks associated with upstream
 dependency requirements LowEndInsight can provide valuable, and
@@ -16,14 +16,14 @@ level of risk.  Are you or your organization willing to assume ownership
 been a commit against the source repository, in some significant
 amount of time, can you assume that it is inactive, or just stable?
 
+While, in terms of DevSecOps, we are moving towards automation of vulnerability scanning, this doesn't tell the whole picture.  First problem is that not all vulnerabilities are found, nor are all reported.  So perhaps some risk reduction should be applied at the dependency inclusion steps.
+
 Again, the intent of LowEndInsight isn't to say that any upstream Open
 Source dependency is bad, just that the risks should be smartly weighed,
 and a deeper understanding of the implications should be gained during
 the decision to use.  LowEndInsight provides a simple mechanism for
-investigating and applying basic governance (based on your definition of
-the tolerance level) and responds with a useful report for integrating
-into your existing automation.  Or you can easily use LowEndInsight as
-an ad-hoc reporting tool, running it manually.
+investigating and applying basic governance (based on a definition of
+the tolerance level, which you can easily override) and responds with a useful report for integrating into your existing DevSecOps automation.  Or, you can easily use LowEndInsight as an ad-hoc reporting tool, running it manually as part of an [ADR](https://github.com/joelparkerhenderson/architecture_decision_record).
 ```
 ✗ mix analyze https://github.com/facebook/react | jq
 {
@@ -162,6 +162,49 @@ NOTE: check hex.pm for the latest version.
 You either need to have Elixir and Erlang installed locally or possibly
 a container to run stuff in.
 
+### Mix Task for Scanning in a Mix-based Project
+
+It is also possible to drop this in as a library dependency to your Mix-based Elixir project.  Simply add 
+the library to your project's dependencies:
+
+```
+defp deps do
+  [
+    {:lowendinsight, "~> 0.4", except: :prod, runtime: false}
+  ]
+end
+```
+
+Then run `mix deps.get`, and `mix lei.scan`.  This will produce a report for the dependencies
+specified in your Mix definition.
+
+You'll get a full report:
+
+```
+➜  lei_scanner_test mix lei.scan
+{
+  "state": "complete",
+  "report": {
+    "uuid": "3084c312-65ab-11ea-b49b-88e9fe666193",
+    "repos": [
+      {
+        "header": {
+          "uuid": "2fc3853a-65ab-11ea-849f-88e9fe666193",
+          "start_time": "2020-03-14T04:20:47.357888Z",
+          "source_client": "mix.scan",
+          "library_version": "",
+          "end_time": "2020-03-14T04:20:50.335877Z",
+          "duration": 3
+        },
+        "data": {
+          "risk": "low",
+...
+```
+
+#### Governance/Parameter Configuration
+
+The library uses a baseline configuration for each of the metrics calculated.  If you want to set your own, all you need to do is add the `:lowendinsight` configuration as mentioned below in the *Configuration* section.  Tuning of these defaults will likely happen over time, as analysis continues to run on a large scale.  The analysis will be made available here soon.
+
 ### REPL
 
 ```
@@ -278,37 +321,6 @@ This will return:
 }
 ```
 
-### Mix Task for Scanning in a Mix-based Project
-
-It is also possible to drop this in as a library to your Mix-based Elixir project.  Simply add 
-the library to your project's dependencies as mentioned above.
-
-Run `mix deps.get`, then `mix lei.scan`.  This will produce a report for the dependencies
-specified in your Mix definition.
-
-You'll get a full report:
-
-```
-➜  lei_scanner_test mix lei.scan
-{
-  "state": "complete",
-  "report": {
-    "uuid": "3084c312-65ab-11ea-b49b-88e9fe666193",
-    "repos": [
-      {
-        "header": {
-          "uuid": "2fc3853a-65ab-11ea-849f-88e9fe666193",
-          "start_time": "2020-03-14T04:20:47.357888Z",
-          "source_client": "mix.scan",
-          "library_version": "",
-          "end_time": "2020-03-14T04:20:50.335877Z",
-          "duration": 3
-        },
-        "data": {
-          "risk": "low",
-...
-```
-
 ### LowEndInsight REST-y API
 
 Also, there is a sister project that wraps this library and provides an HTTP-based interface.
@@ -332,6 +344,7 @@ LowEndInsight makes available the API's schema in JSON form, which can be found 
 ### A Note about the metrics used
 * Recent commit size: This is a measure of how large the most recent commit is in relatino to the size of the codebase. The idea being that a large recent commit is much more likely to be bug filled than a relatively small commit.
 * Functional Contributors: A functional contributor is one that contributes above a certain percentage of commits equal to or greater than their "fair" share. Simply put, a contributor is counted as a functional contributor if the proportion of their commits to the total commits is greater than or equal to 1 / the total number of committers.  If everyone committed the same amount, everyone would be a functional contributor.
+* Currency is a bit of insight into the activity of the source repo.  This value as a measure of risk, again, isn't to state that the repo is bad. The project simply could be stable. But, it could also mean that the project is unmaintained and that as an attribute of the decision making process around whether to not consume should be considered.
 * `risk` is a top-level key that contains the "rolled up" risk, the
   highest value pulled from any of the discrete analysis items.
 
@@ -340,9 +353,11 @@ LowEndInsight makes available the API's schema in JSON form, which can be found 
 LowEndInsight allows for customization of the risk levels, to determine "low", "medium", "high" and "critical" acceptance.  The library reads this configuration from config.exs (or dev|test|prod.exs) as seen here, or as providing in environment variables.
 
 ```
-## Contributor in terms of discrete users
+config :lowendinsight,
+  ## Contributor in terms of discrete users
   ## NOTE: this currently doesn't discern same user with different email
-  critical_contributor_level: String.to_integer(System.get_env("LEI_CRITICAL_CONTRIBUTOR_LEVEL") || "2"),
+  critical_contributor_level:
+    String.to_integer(System.get_env("LEI_CRITICAL_CONTRIBUTOR_LEVEL") || "2"),
   high_contributor_level: System.get_env("LEI_HIGH_CONTRIBUTOR_LEVEL") || 3,
   medium_contributor_level: System.get_env("LEI_CRITICAL_CONTRIBUTOR_LEVEL") || 5,
 
@@ -350,27 +365,38 @@ LowEndInsight allows for customization of the risk levels, to determine "low", "
   ## may not indicate anything other than the repo is stable. The reason
   ## we're reporting it is relative to the likelihood vulnerabilities
   ## getting fix in a timely manner
-  critical_currency_level: String.to_integer(System.get_env("LEI_CRITICAL_CURRENCY_LEVEL") || "104"),
+  critical_currency_level:
+    String.to_integer(System.get_env("LEI_CRITICAL_CURRENCY_LEVEL") || "104"),
   high_currency_level: String.to_integer(System.get_env("LEI_HIGH_CURRENCY_LEVEL") || "52"),
   medium_currency_level: String.to_integer(System.get_env("LEI_MEDIUM_CURRENCY_LEVEL") || "26"),
 
   ## Percentage of changes to repo in recent commit - is the codebase
   ## volatile in terms of quantity of source being changed
-  critical_large_commit_level: String.to_float(System.get_env("LEI_CRITICAL_LARGE_COMMIT_LEVEL") || "0.30"),
-  high_large_commit_level: String.to_float(System.get_env("LEI_HIGH_LARGE_COMMIT_LEVEL") || "0.15"),
-  medium_large_commit_level: String.to_float(System.get_env("LEI_MEDIUM_LARGE_COMMIT_LEVEL") || "0.05"),
+  critical_large_commit_level:
+    String.to_float(System.get_env("LEI_CRITICAL_LARGE_COMMIT_LEVEL") || "0.40"),
+  high_large_commit_level:
+    String.to_float(System.get_env("LEI_HIGH_LARGE_COMMIT_LEVEL") || "0.30"),
+  medium_large_commit_level:
+    String.to_float(System.get_env("LEI_MEDIUM_LARGE_COMMIT_LEVEL") || "0.20"),
 
   ## Bell curve contributions - if there are 30 contributors
   ## but 90% of the contributions are from 2...
-  critical_functional_contributors_level: String.to_integer(System.get_env("LEI_CRITICAL_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "2"),
-  high_functional_contributors_level: String.to_integer(System.get_env("LEI_HIGH_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "3"),
-  medium_functional_contributors_level: String.to_integer(System.get_env("LEI_MEDIUM_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "5")
+  critical_functional_contributors_level:
+    String.to_integer(System.get_env("LEI_CRITICAL_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "2"),
+  high_functional_contributors_level:
+    String.to_integer(System.get_env("LEI_HIGH_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "3"),
+  medium_functional_contributors_level:
+    String.to_integer(System.get_env("LEI_MEDIUM_FUNCTIONAL_CONTRIBUTORS_LEVEL") || "5"),
+
+  ## Jobs per available core for defining max concurrency.  This value
+  ## will be used to set the max_concurrency value.
+  jobs_per_core_max: String.to_integer(System.get_env("LEI_JOBS_PER_CORE_MAX") || "2")
 ```
 
 To override with an environment variable you just need to have it set:
 
 ```
-LEI_CRITICAL_CURRENCY_PAR_LEVEL=60 mix analyze https://github.com/kitplummer/xmpp4rails
+LEI_CRITICAL_CURRENCY_PAR_LEVEL=60 mix lei.scan
 ```
 
 If you receive an error in the report with the following (or similar missing environment configuration variable) - the required configuration for LowEndInsight hasn't been made available:
@@ -433,6 +459,12 @@ BSD 3-Clause.  See https://opensource.org/licenses/BSD-3-Clause or LICENSE file 
 
 There is code in this project [`mixfile.ex` and `encoder.ex`], taken from [mix-deps-json](https://github.com/librariesio/mix-deps-json), that is copyright:
 
-Copyright (c) 2016 Andrew Nesbitt.
+Copyright (c) 2016 Andrew Nesbitt. 
+
+Blatant attribution: https://github.com/andrew
 
 And licensed with the MIT license.  See the [mix-deps-json](https://github.com/librariesio/mix-deps-json) for more details.
+
+For a bit of insight into the licensing part of inclusion within another licensed repo, there's [this](https://softwareengineering.stackexchange.com/questions/121998/mit-vs-bsd-vs-dual-license), which is really interesting.
+
+The logic for pulling the code in versus the project as a dependency is that `mix-deps-json` is really a server I the transitive dependencies aren't worth the weight.  
