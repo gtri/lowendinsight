@@ -252,7 +252,7 @@ iex(1)> AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"], "ie
 }
 ```
 
-### Mix
+### Mix Task for Analyzing Repo
 
 There is also an Elixir `mix` task that you can use to access the
 `AnalyzeModule.analyze(url, client)` function.  So if have this repo cloned:
@@ -276,6 +276,37 @@ This will return:
           "source_client": "mix task",
 ...
 }
+```
+
+### Mix Task for Scanning in a Mix-based Project
+
+It is also possible to drop this in as a library to your Mix-based Elixir project.  Simply add 
+the library to your project's dependencies as mentioned above.
+
+Run `mix deps.get`, then `mix lei.scan`.  This will produce a report for the dependencies
+specified in your Mix definition.
+
+You'll get a full report:
+
+```
+➜  lei_scanner_test mix lei.scan
+{
+  "state": "complete",
+  "report": {
+    "uuid": "3084c312-65ab-11ea-b49b-88e9fe666193",
+    "repos": [
+      {
+        "header": {
+          "uuid": "2fc3853a-65ab-11ea-849f-88e9fe666193",
+          "start_time": "2020-03-14T04:20:47.357888Z",
+          "source_client": "mix.scan",
+          "library_version": "",
+          "end_time": "2020-03-14T04:20:50.335877Z",
+          "duration": 3
+        },
+        "data": {
+          "risk": "low",
+...
 ```
 
 ### LowEndInsight REST-y API

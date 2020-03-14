@@ -7,6 +7,7 @@ defmodule ScannerModule do
   Scanner scans.
   """
   def scan() do
+    start_time = DateTime.utc_now()
     mixfile =
       File.read!("./mix.exs")
       |> Mixfile.parse()
@@ -15,10 +16,27 @@ defmodule ScannerModule do
 
     result_map =
       Enum.map(lib_map, fn {key, _value} ->
-        %{"#{key}" => query_hex(key)}
+        query_hex(key)
       end)
 
-    Poison.encode!(result_map, pretty: true)
+    result = %{
+      :state => :complete,
+      :metadata => %{repo_count: length(result_map)},
+      :report => %{:uuid => UUID.uuid1(), :repos => result_map}
+    }
+    result = AnalyzerModule.determine_risk_counts(result)
+
+    end_time = DateTime.utc_now()
+    duration = DateTime.diff(end_time, start_time)
+    times = %{
+      start_time: DateTime.to_iso8601(start_time),
+      end_time: DateTime.to_iso8601(end_time),
+      duration: duration
+    }
+
+    metadata = Map.put_new(result[:metadata], :times, times)
+    result = result |> Map.put(:metadata, metadata)
+    Poison.encode!(result, pretty: true)
     # Encoder.mixfile_json(mixfile)
   end
 
