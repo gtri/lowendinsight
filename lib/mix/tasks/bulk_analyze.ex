@@ -37,13 +37,29 @@ defmodule Mix.Tasks.Lei.BulkAnalyze do
   ...
   ```
   """
-  def run(_args) do
-    {:ok, report} =
-      IO.read(:all)
-      |> String.split("\n", trim: true)
-      |> AnalyzerModule.analyze("mix task")
 
-    Poison.encode!(report)
-    |> Mix.shell().info()
+  def run(args) do
+    file = List.first(args)
+
+    case File.exists?(file) do
+      false ->
+        Mix.shell().info("\ninvalid file provided")
+
+      true ->
+        urls =
+          File.read!(file)
+          |> String.split("\n", trim: true)
+
+        case Helpers.validate_urls(urls) do
+          :ok ->
+            {:ok, report} = AnalyzerModule.analyze(urls, "mix task")
+
+            Poison.encode!(report)
+            |> Mix.shell().info()
+
+          {:error, _} ->
+            Mix.shell().info("\ninvalid file contents")
+        end
+    end
   end
 end

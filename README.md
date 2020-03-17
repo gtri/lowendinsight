@@ -295,13 +295,15 @@ iex(1)> AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"], "ie
 }
 ```
 
-### Mix Task for Analyzing Repo
+### Mix Tasks for Analyzing Repos
 
 There is also an Elixir `mix` task that you can use to access the
 `AnalyzeModule.analyze(url, client)` function.  So if have this repo cloned:
 
+*mix lei.analyze*
+
 ```
-mix analyze https://github.com/kitplummer/xmpp4rails | jq
+mix lei.analyze https://github.com/kitplummer/xmpp4rails | jq
 ```
 
 This will return:
@@ -319,6 +321,21 @@ This will return:
           "source_client": "mix task",
 ...
 }
+```
+
+There also is a batch/bulk processor:
+
+*mix lei.bulk_analyze*
+
+```
+mix lei.bulk_analyze "./test/scan_list_test" | jq
+```
+
+The expected file is a simple list of URLs, one per line like this:
+
+```
+https://github.com/gtri/lowendinsight
+https://github.com/gtri/lowendinsight-get
 ```
 
 ### LowEndInsight REST-y API
