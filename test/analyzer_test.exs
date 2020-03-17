@@ -68,6 +68,7 @@ defmodule AnalyzerTest do
         :top10_contributors => [%{"Kit Plummer" => 7}]
       },
       :project_types => %{},
+      :repo_size => "292K",
       :risk => "critical",
       :config => Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight))
     }
@@ -131,7 +132,8 @@ defmodule AnalyzerTest do
           "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?",
         repo: "https://github.com/kitplummer/blah",
         risk: "critical",
-        project_types: %{"undetermined" => "undetermined"}
+        project_types: %{"undetermined" => "undetermined"},
+        repo_size: "N/A"
       }
     }
 
@@ -149,7 +151,8 @@ defmodule AnalyzerTest do
           "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory",
         repo: "https://github.com/kitplummer/xmpp4rails/blah",
         risk: "N/A",
-        project_types: %{"undetermined" => "undetermined"}
+        project_types: %{"undetermined" => "undetermined"},
+        repo_size: "N/A"
       }
     }
 
