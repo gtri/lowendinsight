@@ -30,7 +30,7 @@ jobs:
     - name: Run Tests
       run: |
         MIX_ENV=test mix coveralls.github
-        mix docs
+        MIX_ENV=test mix docs
   audit:      
     runs-on: ubuntu-latest
 

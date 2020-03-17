@@ -55,16 +55,6 @@ defmodule Helpers do
     url |> String.graphemes() |> Enum.count(&(&1 == "/"))
   end
 
-  # def have_config() do
-  #   try do
-  #     config = Application.fetch_env!(:lowendinsight, :critical_contributor_level)
-  #     IO.puts "CONFIG: "
-
-  #   rescue
-  #     RuntimeError -> raise ArgumentError, message: "No LoweEndInsight configuration found."
-  #   end
-  # end
-
   @doc """
   validates field is a valid url
 
