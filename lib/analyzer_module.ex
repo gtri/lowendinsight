@@ -162,11 +162,11 @@ defmodule AnalyzerModule do
   def analyze(urls, source, start_time \\ DateTime.utc_now()) when is_list(urls) do
     ## Concurrency for parallelizing the analysis. This is the magic.
     ## Will run two jobs per core available max...
+
     max_concurrency =
       System.schedulers_online() *
-        (Application.get_env(:lowendinsight, :jobs_per_core_max) || "2")
+        (Application.get_env(:lowendinsight, :jobs_per_core_max) || 1)
 
-    ## https://hexdocs.pm/elixir/Task.html
     l =
       urls
       |> Task.async_stream(__MODULE__, :analyze, [source],

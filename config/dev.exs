@@ -45,4 +45,3 @@ config :lowendinsight,
 
 # JsonXema Schema Loader
 config :xema, loader: SchemaLoader
-

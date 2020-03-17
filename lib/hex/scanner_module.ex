@@ -8,6 +8,7 @@ defmodule ScannerModule do
   """
   def scan() do
     start_time = DateTime.utc_now()
+
     mixfile =
       File.read!("./mix.exs")
       |> Mixfile.parse()
@@ -24,10 +25,12 @@ defmodule ScannerModule do
       :metadata => %{repo_count: length(result_map)},
       :report => %{:uuid => UUID.uuid1(), :repos => result_map}
     }
+
     result = AnalyzerModule.determine_risk_counts(result)
 
     end_time = DateTime.utc_now()
     duration = DateTime.diff(end_time, start_time)
+
     times = %{
       start_time: DateTime.to_iso8601(start_time),
       end_time: DateTime.to_iso8601(end_time),

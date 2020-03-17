@@ -46,5 +46,4 @@ defmodule Mix.Tasks.Lei.BulkAnalyze do
     Poison.encode!(report)
     |> Mix.shell().info()
   end
-
 end
