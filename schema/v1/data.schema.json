@@ -68,6 +68,10 @@
           "title": "Source Git Repo",
           "type": "string"
         },
+        "repo_size": {
+          "description": "Space consumed by the source repo.",
+          "type": "string"
+        },
         "project_types": {
           "description": "Enumeration of project types within the repo, based on build tooling configuration found.",
           "title": "Project Types",
@@ -145,7 +149,8 @@
       "required": [
         "risk",
         "repo",
-        "project_types"
+        "project_types",
+        "repo_size"
       ],
       "anyOf": [
         {

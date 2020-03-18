@@ -67,7 +67,9 @@ defmodule AnalyzerModule do
 
       {:ok, top10_contributors} = GitModule.get_top10_contributors_map(repo)
 
+      ## Non-metric data about repo
       project_types = ProjectIdent.project_types?(repo)
+      {:ok, repo_size} = GitModule.get_repo_size(repo)
 
       if uri.scheme == "https" or uri.scheme == "http" do
         GitModule.delete_repo(repo)
@@ -101,6 +103,7 @@ defmodule AnalyzerModule do
           config: Helpers.convert_config_to_list(config),
           repo: url,
           project_types: Helpers.convert_config_to_list(project_types),
+          repo_size: repo_size,
           results: %{
             contributor_count: count,
             contributor_risk: count_risk,
@@ -126,7 +129,8 @@ defmodule AnalyzerModule do
              error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?",
              repo: url,
              risk: "critical",
-             project_types: %{"undetermined" => "undetermined"}
+             project_types: %{"undetermined" => "undetermined"},
+             repo_size: "N/A"
            }
          }}
 
@@ -138,7 +142,8 @@ defmodule AnalyzerModule do
              error: "Unable to analyze the repo (#{url}). #{e.message}",
              repo: url,
              risk: "N/A",
-             project_types: %{"undetermined" => "undetermined"}
+             project_types: %{"undetermined" => "undetermined"},
+             repo_size: "N/A"
            }
          }}
     end

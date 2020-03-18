@@ -153,6 +153,7 @@ defmodule GitModule do
     GitHelper.parse_diff(diffs)
   end
 
+  @spec get_contributor_distribution(Git.Repository.t()) :: {:ok, map, non_neg_integer}
   def get_contributor_distribution(repo) do
     contributors = Git.log!(repo, ["--pretty=format:%an"])
     contributors_list = String.split(contributors, "\n")
@@ -161,6 +162,7 @@ defmodule GitModule do
     {:ok, counts, total_contributions}
   end
 
+  @spec get_functional_contributors(Git.Repository.t()) :: {:ok, non_neg_integer, [any]}
   def get_functional_contributors(repo) do
     {:ok, counts, total} = get_contributor_distribution(repo)
     {:ok, length, filtered_list} = GitHelper.get_filtered_contributor_count(counts, total)
@@ -189,9 +191,21 @@ defmodule GitModule do
     {:ok, map}
   end
 
+  @spec get_top10_contributors_map(Git.Repository.t()) :: {:ok, [any]}
   def get_top10_contributors_map(repo) do
     {:ok, map} = get_contributions_map(repo)
     map10 = Enum.take(map, 10)
     {:ok, map10}
+  end
+
+  @spec get_repo_size(atom | %{path: any}) :: {:ok, binary}
+  def get_repo_size(repo) do
+    space =
+      elem(System.cmd("du", ["-sh", "#{repo.path}"]), 0)
+      |> String.split("\t")
+      |> List.first()
+      |> String.trim()
+
+    {:ok, space}
   end
 end

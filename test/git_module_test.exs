@@ -297,4 +297,10 @@ defmodule GitModuleTest do
     {:error, msg} = GitModule.get_repo("/tmp")
     assert 128 == msg.code
   end
+
+  test "get repo size", %{repo: repo} do
+    {:ok, size} = GitModule.get_repo_size(repo)
+    assert nil != size
+    assert "" != size
+  end
 end
