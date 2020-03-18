@@ -75,7 +75,7 @@ defmodule AnalyzerTest do
 
     repo_data = List.first(report[:report][:repos])
     assert "test" == repo_data[:header][:source_client]
-    assert expected_data == repo_data[:data]
+    assert expected_data[:results] == repo_data[:data][:results]
   end
 
   test "get multi report mixed risks" do
