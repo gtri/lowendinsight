@@ -25,7 +25,7 @@ the decision to use.  LowEndInsight provides a simple mechanism for
 investigating and applying basic governance (based on a definition of
 the tolerance level, which you can easily override) and responds with a useful report for integrating into your existing DevSecOps automation.  Or, you can easily use LowEndInsight as an ad-hoc reporting tool, running it manually as part of an [ADR](https://github.com/joelparkerhenderson/architecture_decision_record).
 ```
-✗ mix analyze https://github.com/facebook/react | jq
+✗ mix lei.analyze https://github.com/facebook/react | jq
 {
   "state": "complete",
   "report": {
@@ -201,7 +201,14 @@ You'll get a full report:
 ...
 ```
 
-#### Governance/Parameter Configuration
+It is also possible to scan against a different repo locally by
+passing the absolute path to the directory where it is cloned:
+
+```
+mix lei.scan /some/path/to/a/git/repo
+```
+
+### Governance/Parameter Configuration
 
 The library uses a baseline configuration for each of the metrics calculated.  If you want to set your own, all you need to do is add the `:lowendinsight` configuration as mentioned below in the *Configuration* section.  Tuning of these defaults will likely happen over time, as analysis continues to run on a large scale.  The analysis will be made available here soon.
 

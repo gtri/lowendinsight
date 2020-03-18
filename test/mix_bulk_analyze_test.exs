@@ -17,5 +17,19 @@ defmodule Mix.Tasks.BulkAnalyzeTest do
       report_data = Poison.decode!(report)
       assert 2 == report_data["metadata"]["repo_count"]
     end
+
+    test "run scan against non-existent file" do
+      args = ["/blah" | []]
+      BulkAnalyze.run(args)
+      assert_received {:mix_shell, :info, [report]}
+      assert report == "\ninvalid file provided"
+    end
+
+    test "run scan against invalid file" do
+      args = ["./mix.exs" | []]
+      BulkAnalyze.run(args)
+      assert_received {:mix_shell, :info, [report]}
+      assert report == "\ninvalid file contents"
+    end
   end
 end
