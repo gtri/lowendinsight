@@ -41,7 +41,10 @@ config :lowendinsight,
 
   ## Jobs per available core for defining max concurrency.  This value
   ## will be used to set the max_concurrency value.
-  jobs_per_core_max: String.to_integer(System.get_env("LEI_JOBS_PER_CORE_MAX") || "2")
+  jobs_per_core_max: String.to_integer(System.get_env("LEI_JOBS_PER_CORE_MAX") || "2"),
+
+  ## Base directory structure for temp clones
+  base_temp_dir: System.get_env("LEI_BASE_TEMP_DIR" || "/tmp")
 
 # JsonXema Schema Loader
 config :xema, loader: SchemaLoader

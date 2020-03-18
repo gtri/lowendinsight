@@ -18,10 +18,28 @@ defmodule Mix.Tasks.Lei.Scan do
   the scanner passes that URL to LowEndInsight which does a temporary clone
   to perform its analysis of each dependency.
   """
-  def run(_) do
+  def run(args) do
+    path =
+      cond do
+        length(args) == 0 ->
+          "."
+
+        length(args) == 1 ->
+          dir = List.first(args)
+
+          case File.exists?(dir) do
+            false ->
+              exit({:shutdown, 15})
+
+            true ->
+              {:ok, repo} = GitModule.get_repo(dir)
+              repo.path
+          end
+      end
+
     Application.load(:lowendinsight)
 
-    ScannerModule.scan()
+    ScannerModule.scan(path)
     |> Mix.shell().info()
   end
 end

@@ -6,7 +6,10 @@ defmodule ScannerModule do
   @moduledoc """
   Scanner scans.
   """
-  def scan() do
+  def scan(path) do
+    cwd = File.cwd!()
+
+    File.cd!(path)
     start_time = DateTime.utc_now()
 
     mixfile =
@@ -39,6 +42,9 @@ defmodule ScannerModule do
 
     metadata = Map.put_new(result[:metadata], :times, times)
     result = result |> Map.put(:metadata, metadata)
+
+    File.cd!(cwd)
+
     Poison.encode!(result, pretty: true)
     # Encoder.mixfile_json(mixfile)
   end

@@ -17,4 +17,22 @@ defmodule Mix.Tasks.ScanTest do
       assert 10 == report_data["metadata"]["repo_count"]
     end
   end
+
+  describe "bitbucket based run/1" do
+    test "run scan and report against a package that has a known reference to Bitbucket" do
+      # Get the repo
+      # https://bitbucket.org/npa_io/ueberauth_bitbucket.git
+      {:ok, tmp_path} = Temp.path("lei-analyzer-test")
+
+      {:ok, repo} =
+        GitModule.clone_repo("https://bitbucket.org/npa_io/ueberauth_bitbucket", tmp_path)
+
+      IO.inspect(repo.path)
+      Scan.run([repo.path])
+      assert_received {:mix_shell, :info, [report]}
+
+      report_data = Poison.decode!(report)
+      assert 4 == report_data["metadata"]["repo_count"]
+    end
+  end
 end

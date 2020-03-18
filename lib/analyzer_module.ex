@@ -35,7 +35,12 @@ defmodule AnalyzerModule do
               raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
             end
 
-            {:ok, tmp_path} = Temp.path("lei")
+            {:ok, tmp_path} =
+              Temp.path(%{
+                prefix: "lei",
+                basedir: Application.fetch_env!(:lowendinsight, :base_temp_dir) || "/tmp"
+              })
+
             GitModule.clone_repo(url, tmp_path)
         end
 
