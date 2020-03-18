@@ -19,27 +19,27 @@ defmodule Mix.Tasks.Lei.Scan do
   to perform its analysis of each dependency.
   """
   def run(args) do
-    path =
-      cond do
-        length(args) == 0 ->
-          "."
-
-        length(args) == 1 ->
-          dir = List.first(args)
-
-          case File.exists?(dir) do
-            false ->
-              exit({:shutdown, 15})
-
-            true ->
-              {:ok, repo} = GitModule.get_repo(dir)
-              repo.path
-          end
-      end
-
     Application.load(:lowendinsight)
 
-    ScannerModule.scan(path)
-    |> Mix.shell().info()
+    cond do
+      length(args) == 0 ->
+        ScannerModule.scan(".")
+        |> Mix.shell().info()
+
+      length(args) == 1 ->
+        dir = List.first(args)
+
+        case File.exists?(dir) do
+          false ->
+            "Invalid path"
+            |> Mix.shell().info()
+
+          true ->
+            {:ok, repo} = GitModule.get_repo(dir)
+            repo.path
+            |> ScannerModule.scan()
+            |> Mix.shell().info()
+        end
+    end
   end
 end

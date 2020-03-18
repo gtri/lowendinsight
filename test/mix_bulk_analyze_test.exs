@@ -26,7 +26,7 @@ defmodule Mix.Tasks.BulkAnalyzeTest do
     end
 
     test "run scan against invalid file" do
-      args = ["#{File.cwd!()}/test/mix_bulk_analyze_test.exs" | []]
+      args = ["./mix.exs" | []]
       BulkAnalyze.run(args)
       assert_received {:mix_shell, :info, [report]}
       assert report == "\ninvalid file contents"
