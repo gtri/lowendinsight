@@ -36,6 +36,7 @@ defmodule Mix.Tasks.Lei.Scan do
 
           true ->
             {:ok, repo} = GitModule.get_repo(dir)
+
             repo.path
             |> ScannerModule.scan()
             |> Mix.shell().info()
