@@ -97,6 +97,7 @@ defmodule AnalyzerModule do
 
       report = %{
         header: %{
+          repo: url,
           start_time: DateTime.to_iso8601(start_time),
           end_time: DateTime.to_iso8601(end_time),
           duration: duration,

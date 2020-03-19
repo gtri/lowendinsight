@@ -169,6 +169,10 @@
       "title": "LowEndInsight Per-Repo Analsyis Metadata",
       "type": "object",
       "properties": {
+        "repo": {
+          "description": "Git repository URL to be used as the identifier for the report",
+          "type": "string"
+        },
         "duration": {
           "description": "Time it took to complete the analysis of this repo (in seconds).",
           "type": "number"
@@ -196,6 +200,7 @@
         }
       },
       "required": [
+        "repo",
         "uuid",
         "library_version",
         "duration",

@@ -75,6 +75,7 @@ defmodule AnalyzerTest do
 
     repo_data = List.first(report[:report][:repos])
     assert "test" == repo_data[:header][:source_client]
+    assert "https://github.com/kitplummer/xmpp4rails" == repo_data[:header][:repo]
     assert expected_data[:results] == repo_data[:data][:results]
   end
 
