@@ -198,7 +198,6 @@ defmodule GitModule do
     {:ok, map10}
   end
 
-  @spec get_repo_size(atom | %{path: any}) :: {:ok, binary}
   def get_repo_size(repo) do
     space =
       elem(System.cmd("du", ["-sh", "#{repo.path}"]), 0)
