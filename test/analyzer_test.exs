@@ -111,6 +111,17 @@ defmodule AnalyzerTest do
     assert 2 == report[:metadata][:repo_count]
   end
 
+  ## Captured in issue #28 - this is a 'deleted contents' in Chinese censorship kindaway repo.
+  test "analyze a repo with a single commit" do
+    {:ok, report} =
+      AnalyzerModule.analyze(
+        ["https://github.com/shadowsocks/shadowsocks"],
+        "test_single_commit"
+      )
+
+    assert 1 == report[:metadata][:repo_count]
+  end
+
   test "input of optional start time" do
     start_time = DateTime.utc_now()
 

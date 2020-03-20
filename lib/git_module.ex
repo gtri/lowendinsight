@@ -117,8 +117,11 @@ defmodule GitModule do
   get_last_n_commits/2: returns a list of lines generated from the diff of two commits
   """
   def get_diff_2_commits(repo, [commit1 | [commit2 | []]]) do
-    {:ok, diff} = Git.diff(repo, ["--stat", commit1, commit2])
-    {:ok, String.split(String.trim_trailing(diff, "\n"), "\n")}
+    with {:ok, diff} <- Git.diff(repo, ["--stat", commit1, commit2]) do
+      {:ok, String.split(String.trim_trailing(diff, "\n"), "\n")}
+    else
+      _ -> []
+    end
   end
 
   @doc """
@@ -149,8 +152,15 @@ defmodule GitModule do
   """
   def get_last_2_delta(repo) do
     {:ok, commits} = get_last_n_commits(repo, 2)
-    {:ok, diffs} = get_diff_2_commits(repo, commits)
-    GitHelper.parse_diff(diffs)
+
+    cond do
+      length(commits) >= 2 ->
+        {:ok, diffs} = get_diff_2_commits(repo, commits)
+        GitHelper.parse_diff(diffs)
+
+      length(commits) < 2 ->
+        {:ok, 0, 0, 0}
+    end
   end
 
   @spec get_contributor_distribution(Git.Repository.t()) :: {:ok, map, non_neg_integer}
