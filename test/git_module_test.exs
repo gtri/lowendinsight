@@ -38,6 +38,14 @@ defmodule GitModuleTest do
     :ok
   end
 
+  test "get current hash", %{repo: repo} do
+    assert {:ok, "f47ee5f5ef7fb4dbe3d5d5f54e278ea941cb0332"} == GitModule.get_hash(repo)
+  end
+
+  test "get default branch", %{repo: repo} do
+    assert {:ok, "refs/remotes/origin/master"} = GitModule.get_default_branch(repo)
+  end
+
   test "get contributor list 1", %{repo: repo} do
     count = GitModule.get_contributor_count(repo)
     assert {:ok, 1} == count

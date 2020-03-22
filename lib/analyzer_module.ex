@@ -75,6 +75,8 @@ defmodule AnalyzerModule do
       ## Non-metric data about repo
       project_types = ProjectIdent.project_types?(repo)
       {:ok, repo_size} = GitModule.get_repo_size(repo)
+      {:ok, git_hash} = GitModule.get_hash(repo)
+      {:ok, default_branch} = GitModule.get_default_branch(repo)
 
       if uri.scheme == "https" or uri.scheme == "http" do
         GitModule.delete_repo(repo)
@@ -108,6 +110,10 @@ defmodule AnalyzerModule do
         data: %{
           config: Helpers.convert_config_to_list(config),
           repo: url,
+          git: %{
+            hash: git_hash,
+            default_branch: default_branch
+          },
           project_types: Helpers.convert_config_to_list(project_types),
           repo_size: repo_size,
           results: %{
@@ -134,6 +140,7 @@ defmodule AnalyzerModule do
              # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?",
              repo: url,
+             git: %{},
              risk: "critical",
              project_types: %{"undetermined" => "undetermined"},
              repo_size: "N/A"
@@ -147,6 +154,7 @@ defmodule AnalyzerModule do
              # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}). #{e.message}",
              repo: url,
+             git: %{},
              risk: "N/A",
              project_types: %{"undetermined" => "undetermined"},
              repo_size: "N/A"
