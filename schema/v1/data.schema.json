@@ -63,6 +63,23 @@
             "Unable to analyze the repo (https://github.com/kitplummer/blah), LowEndInsight configuration not found."
           ]
         },
+        "git": {
+          "description": "Collection of git-centric data",
+          "title": "Git data",
+          "type": "object",
+          "properties": {
+            "default_branch": {
+              "description": "The remote repository's default branch",
+              "title": "Default branch",
+              "type": "string"
+            },
+            "hash": {
+              "description": "The repository's current hash",
+              "title": "Current hash",
+              "type": "string"
+            }
+          }
+        },
         "repo": {
           "description": "The git repo url being analyzed by LowEndInsight.",
           "title": "Source Git Repo",
@@ -149,6 +166,7 @@
       "required": [
         "risk",
         "repo",
+        "git",
         "project_types",
         "repo_size"
       ],

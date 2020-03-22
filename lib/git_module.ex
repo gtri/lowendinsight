@@ -71,6 +71,26 @@ defmodule GitModule do
   end
 
   @doc """
+  get_current_hash/1: returns the hash of the repo's HEAD
+  """
+  def get_hash(repo) do
+    hash = Git.rev_parse!(repo, "HEAD") |> String.trim()
+    {:ok, hash}
+  end
+
+  @doc """
+  get_default_branch/1: returns the default branch of the remote repo
+  """
+  def get_default_branch(repo) do
+    try do
+      default_branch = Git.symbolic_ref!(repo, "refs/remotes/origin/HEAD") |> String.trim()
+      {:ok, default_branch}
+    rescue
+      _e in Git.Error -> {:ok, "undeterminable, not at HEAD"}
+    end
+  end
+
+  @doc """
   get_commit_dates/1: returns a list of unix timestamps representing commit times
   """
   def get_commit_dates(repo) do

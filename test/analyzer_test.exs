@@ -145,7 +145,8 @@ defmodule AnalyzerTest do
         repo: "https://github.com/kitplummer/blah",
         risk: "critical",
         project_types: %{"undetermined" => "undetermined"},
-        repo_size: "N/A"
+        repo_size: "N/A",
+        git: %{}
       }
     }
 
@@ -164,7 +165,8 @@ defmodule AnalyzerTest do
         repo: "https://github.com/kitplummer/xmpp4rails/blah",
         risk: "N/A",
         project_types: %{"undetermined" => "undetermined"},
-        repo_size: "N/A"
+        repo_size: "N/A",
+        git: %{}
       }
     }
 

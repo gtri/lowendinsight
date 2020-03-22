@@ -475,7 +475,9 @@ Always write a clear log message for your commits. One-line messages are fine fo
 
 The JSON schema found in `schema` is and should be used to validate the main analysis interfaces' input and expected outputs. Any modifications in implementations should also be made to the schemas and verified/validated by tests.
 
-There is an external tool used to do the schema docs conversion: `jsonschema2md -d schemas/ -o schema/docs`. If you make a modification to the schema please run the tool to update the docs with the submission.
+There is an external tool used to do the schema docs conversion: `jsonschema2md -d schema/ -o schema/docs`. If you make a modification to the schema please run the tool to update the docs with the submission.
+
+`jsonschema2md` is a Node.js tool. 
 
 ## License
 

@@ -24,9 +24,11 @@ any of
 
 | Property                        | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                             |
 | :------------------------------ | -------- | -------- | -------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [config](#config)               | `object` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-configuration-inputs.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/config")       |
+| [config](#config)               | `object` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-configuration-inputs.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/config")       |
 | [error](#error)                 | `string` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-error-message.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/error")                             |
+| [git](#git)                     | `object` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-git-data.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/git")                                    |
 | [repo](#repo)                   | `string` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-source-git-repo.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/repo")                            |
+| [repo_size](#repo_size)         | `string` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-repo_size.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/repo_size")                             |
 | [project_types](#project_types) | `object` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-project-types.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/project_types")                     |
 | [results](#results)             | `object` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-per-repo-analysis-results.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/results") |
 | [risk](#risk)                   | `string` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-rolled-up-risk-for-a-repo.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/risk")    |
@@ -38,7 +40,7 @@ Configuration criteria for LowEndInsight to use in defining analysis levels.
 
 `config`
 
--   is required
+-   is optional
 -   Type: `object` ([LowEndInsight Configuration Inputs](data-properties-lowendinsight-analysis-data-properties-lowendinsight-configuration-inputs.md))
 -   cannot be null
 -   defined in: [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-lowendinsight-configuration-inputs.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/config")
@@ -73,6 +75,22 @@ If LowEndInsight is unable to analyze a repo, it will respond with this error fi
 "Unable to analyze the repo (https://github.com/kitplummer/blah), LowEndInsight configuration not found."
 ```
 
+## git
+
+Collection of git-centric data
+
+
+`git`
+
+-   is required
+-   Type: `object` ([Git data](data-properties-lowendinsight-analysis-data-properties-git-data.md))
+-   cannot be null
+-   defined in: [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-git-data.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/git")
+
+### git Type
+
+`object` ([Git data](data-properties-lowendinsight-analysis-data-properties-git-data.md))
+
 ## repo
 
 The git repo url being analyzed by LowEndInsight.
@@ -88,6 +106,22 @@ The git repo url being analyzed by LowEndInsight.
 ### repo Type
 
 `string` ([Source Git Repo](data-properties-lowendinsight-analysis-data-properties-source-git-repo.md))
+
+## repo_size
+
+Space consumed by the source repo.
+
+
+`repo_size`
+
+-   is required
+-   Type: `string`
+-   cannot be null
+-   defined in: [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-analysis-data-properties-repo_size.md "http&#x3A;//example.com/data.schema.json#/properties/data/properties/repo_size")
+
+### repo_size Type
+
+`string`
 
 ## project_types
 
