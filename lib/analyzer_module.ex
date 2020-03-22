@@ -73,7 +73,33 @@ defmodule AnalyzerModule do
       {:ok, top10_contributors} = GitModule.get_top10_contributors_map(repo)
 
       ## Non-metric data about repo
-      project_types = ProjectIdent.project_types?(repo)
+      mix_type = %ProjectType{name: :mix, path: "", files: ["mix.exs,mix.lock"]}
+
+      python_type = %ProjectType{
+        name: :python,
+        path: "**",
+        files: ["setup.py,*requirements.txt*"]
+      }
+
+      node_type = %ProjectType{name: :node, path: "**", files: ["package*.json"]}
+      go_type = %ProjectType{name: :go_mod, path: "**", files: ["go.mod"]}
+      cargo_type = %ProjectType{name: :cargo, path: "**", files: ["Cargo.toml"]}
+      rubygem_type = %ProjectType{name: :rubygem, path: "**", files: ["Gemfile*,*.gemspec"]}
+      maven_type = %ProjectType{name: :maven, path: "**", files: ["pom.xml"]}
+      gradle_type = %ProjectType{name: :gradle, path: "**", files: ["build.gradle*"]}
+
+      project_types = [
+        mix_type,
+        python_type,
+        node_type,
+        go_type,
+        cargo_type,
+        rubygem_type,
+        maven_type,
+        gradle_type
+      ]
+
+      project_types_identified = ProjectIdent.categorize_repo(repo, project_types)
       {:ok, repo_size} = GitModule.get_repo_size(repo)
       {:ok, git_hash} = GitModule.get_hash(repo)
       {:ok, default_branch} = GitModule.get_default_branch(repo)
@@ -114,7 +140,7 @@ defmodule AnalyzerModule do
             hash: git_hash,
             default_branch: default_branch
           },
-          project_types: Helpers.convert_config_to_list(project_types),
+          project_types: Helpers.convert_config_to_list(project_types_identified),
           repo_size: repo_size,
           results: %{
             contributor_count: count,
