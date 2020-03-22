@@ -83,6 +83,11 @@ defmodule GitModuleTest do
   #   assert [] == maps
   # end
 
+  test "get commit dates", context do
+    dates = GitModule.get_commit_dates(context[:repo])
+    assert {:ok, [1231298600, 1208905906, 1208905647, 1208902657, 1208902186, 1208898811, 1208896913]} == dates
+  end
+
   test "get last commit date", context do
     date = GitModule.get_last_commit_date(context[:repo])
     assert {:ok, "2009-01-06T20:23:20-07:00"} == date

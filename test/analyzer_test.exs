@@ -21,7 +21,7 @@ defmodule AnalyzerTest do
     assert "complete" == report[:state]
     repo_data = List.first(report[:report][:repos])
     assert "path_test" == repo_data[:header][:source_client]
-    assert %{"mix" => ["#{cwd}/mix.exs", "#{cwd}/mix.lock"]} == repo_data[:data][:project_types]
+    assert %{mix: ["#{cwd}/mix.exs", "#{cwd}/mix.lock"]} == repo_data[:data][:project_types]
   end
 
   test "get empty report" do
