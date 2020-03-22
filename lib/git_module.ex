@@ -82,8 +82,12 @@ defmodule GitModule do
   get_default_branch/1: returns the default branch of the remote repo
   """
   def get_default_branch(repo) do
-    default_branch = Git.symbolic_ref!(repo, "refs/remotes/origin/HEAD") |> String.trim()
-    {:ok, default_branch}
+    try do
+      default_branch = Git.symbolic_ref!(repo, "refs/remotes/origin/HEAD") |> String.trim()
+      {:ok, default_branch}
+    rescue
+      _e in Git.Error -> {:ok, "undeterminable, not at HEAD"}
+    end
   end
 
   @doc """
