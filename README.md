@@ -29,16 +29,17 @@ the tolerance level, which you can easily override) and responds with a useful r
 {
   "state": "complete",
   "report": {
-    "uuid": "96b516a0-5660-11ea-a1fa-784f434ce29a",
+    "uuid": "e62f19a0-6c96-11ea-93bc-88e9fe666193",
     "repos": [
       {
         "header": {
-          "uuid": "96b4e202-5660-11ea-81d3-784f434ce29a",
-          "start_time": "2020-02-23T17:18:38.532966Z",
+          "uuid": "e62f01d6-6c96-11ea-9ccf-88e9fe666193",
+          "start_time": "2020-03-22T23:43:00.313299Z",
           "source_client": "mix task",
+          "repo": "https://github.com/facebook/react",
           "library_version": "",
-          "end_time": "2020-02-23T17:19:03.321647Z",
-          "duration": 25
+          "end_time": "2020-03-22T23:43:15.087596Z",
+          "duration": 15
         },
         "data": {
           "risk": "low",
@@ -48,34 +49,34 @@ the tolerance level, which you can easily override) and responds with a useful r
                 "Paul O’Shannessy": 1777
               },
               {
-                "Dan Abramov": 1351
+                "Dan Abramov": 1364
               },
               {
-                "Brian Vaughn": 1326
+                "Brian Vaughn": 1341
               },
               {
-                "Sophie Alpert": 1265
+                "Sophie Alpert": 1266
               },
               {
-                "Sebastian Markbåge": 753
+                "Sebastian Markbåge": 778
               },
               {
-                "Andrew Clark": 691
+                "Andrew Clark": 705
               },
               {
                 "Jim Sproch": 456
               },
               {
-                "Pete Hunt": 332
+                "Dominic Gannaway": 350
               },
               {
-                "Dominic Gannaway": 319
+                "Pete Hunt": 332
               },
               {
                 "Cheng Lou": 222
               }
             ],
-            "recent_commit_size_in_percent_of_codebase": 1.4611978900302468e-05,
+            "recent_commit_size_in_percent_of_codebase": 5e-05,
             "large_recent_commit_risk": "low",
             "functional_contributors_risk": "low",
             "functional_contributors": 83,
@@ -88,37 +89,171 @@ the tolerance level, which you can easily override) and responds with a useful r
               "Edvin Erikson",
               "Mateusz Burzyński",
               "Pete Hunt",
-              ...
+              "petehunt",
+              "Ingvar Stepanyan",
+              "Jordan Walke",
+              "Jim",
+              "chico",
+              "Rauno Freiberg",
+              "Stefan Dombrowski",
+              "Keyan Zhang",
+              "Benjamin Woodruff",
+              "Nicolas Gallagher",
+              "CommitSyncScript",
+              "Joe Critchley",
+              "Simen Bekkhus",
+              "fisherwebdev",
+              "Andrey Popp",
+              "Lee Byron",
+              "Shim Won",
+              "Christoph Pojer",
+              "Lucas Cordeiro",
+              "Bartosz Kaszubowski",
+              "Sasha Aickin",
+              "Heaven",
+              "Charles Marsh",
+              "Kohei TAKATA",
+              "Cheng Lou",
+              "Dustan Kasten",
+              "Dominic Gannaway",
+              "Ivan Zotov",
+              "Sophie Alpert",
+              "Josh Duck",
+              "Tim Yung",
+              "Sunil Pai",
+              "Timothy Yung",
+              "Thomas Aylott",
+              "Isaac Salier-Hellendag",
+              "iamchenxin",
+              "Raphael Amorim",
+              "Brian Vaughn",
+              "Jinwoo Oh",
+              "Ivan Babak",
+              "Nathan Hunzaker",
+              "Paul O’Shannessy",
+              "Alex Smith",
+              "Paul O'Shannessy",
+              "Sebastian Markbage",
+              "Tom Occhino",
+              "Jan Kassens",
+              "Kunal Mehta",
+              "Luna Ruan",
+              "Baraa Hamodi",
+              "Christopher Chedeau",
+              "Ben Newman",
+              "jim",
+              "Clement Hoang",
+              "Scott Feeney",
+              "Connor McSheffrey",
+              "Brandon Dail",
+              "Paul Shen",
+              "Nate Hunzaker",
+              "Vjeux",
+              "Jared Forsyth",
+              "Eli White",
+              "cpojer",
+              "Andrew Clark",
+              "Toru Kobayashi",
+              "Dan",
+              "Jeff Morrison",
+              "Sebastian Markbåge",
+              "Dan Abramov",
+              "Rick Beerendonk",
+              "Andreas Svensson",
+              "Fabio M. Costa",
+              "yungsters",
+              "Ben Alpert",
+              "Jason Quense"
             ],
             "contributor_risk": "low",
-            "contributor_count": 1488,
+            "contributor_count": 1497,
             "commit_currency_weeks": 0,
             "commit_currency_risk": "low"
           },
+          "repo_size": "185M",
           "repo": "https://github.com/facebook/react",
           "project_types": {
             "node": [
-              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/art/package.json",
-              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/attribute-behavior/package.json",
-              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/concurrent/time-slicing/package.json",
-              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/dom/package.json",
-              "/var/folders/lm/dv8hd46901j00z5mj97jsj9r0000gn/T/lei-1582478318-32287-14ntgii/react/fixtures/eslint/package.json",
-              ...
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/art/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/attribute-behavior/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/concurrent/time-slicing/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/dom/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/eslint/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/eslint/proxy/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/expiration/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/fiber-debugger/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/flight/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/browserify/dev/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/browserify/prod/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/brunch/dev/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/brunch/prod/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/rjs/dev/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/rjs/prod/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/systemjs-builder/dev/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/systemjs-builder/prod/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/webpack-alias/dev/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/webpack-alias/prod/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/webpack/dev/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/webpack/prod/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/ssr/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/babel-plugin-react-jsx/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/create-subscription/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/dom-event-testing-library/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/eslint-plugin-react-hooks/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/jest-mock-scheduler/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/jest-react/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/legacy-events/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-art/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-cache/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-client/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-debug-tools/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools-core/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools-extensions/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools-inline/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools-shared/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools-shared/src/node_modules/react-window/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools-shell/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-dom/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-flight-dom-relay/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-flight-dom-webpack/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-interactions/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-is/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-native-renderer/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-noop-renderer/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-reconciler/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-refresh/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-server/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-test-renderer/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/scheduler/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/shared/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/use-subscription/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/scripts/bench/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/scripts/eslint-rules/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/scripts/perf-counters/package.json",
+              "/tmp/lei-1584920580-16886-1fl4zpz/react/scripts/release/package.json"
             ]
           },
+          "git": {
+            "hash": "31a9e391f757d374ce0065da6735f08137151507",
+            "default_branch": "refs/remotes/origin/master"
+          },
           "config": {
-            "medium_large_commit_level": 0.05,
+            "medium_large_commit_level": 0.2,
             "medium_functional_contributors_level": 5,
             "medium_currency_level": 26,
             "medium_contributor_level": 5,
-            "high_large_commit_level": 0.15,
+            "high_large_commit_level": 0.3,
             "high_functional_contributors_level": 3,
             "high_currency_level": 52,
             "high_contributor_level": 3,
-            "critical_large_commit_level": 0.3,
+            "critical_large_commit_level": 0.4,
             "critical_functional_contributors_level": 2,
             "critical_currency_level": 104,
-            "critical_contributor_level": 2
+            "critical_contributor_level": 2,
+            "base_temp_dir": "/tmp"
           }
         }
       }
@@ -126,9 +261,9 @@ the tolerance level, which you can easily override) and responds with a useful r
   },
   "metadata": {
     "times": {
-      "start_time": "2020-02-23T17:18:38.523771Z",
-      "end_time": "2020-02-23T17:19:03.352096Z",
-      "duration": 25
+      "start_time": "2020-03-22T23:43:00.307871Z",
+      "end_time": "2020-03-22T23:43:15.096216Z",
+      "duration": 15
     },
     "risk_counts": {
       "low": 1
@@ -221,44 +356,57 @@ iex -S mix
 This will get you the `iex` prompt:
 
 ```
-Interactive Elixir (1.9.4) - press Ctrl+C to exit (type h() ENTER for help)
+Erlang/OTP 22 [erts-10.6.4] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [hipe] [dtrace]
+
+Interactive Elixir (1.10.2) - press Ctrl+C to exit (type h() ENTER for help)
 iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
 {:ok,
  %{
    data: %{
-     commit_currency_risk: "critical",
-     commit_currency_weeks: 573,
-     config: [
-       high_contributor_level: 3,
-       medium_currency_level: 26,
-       medium_contributor_level: 5,
-       medium_large_commit_level: 0.05,
-       critical_large_commit_level: 0.3,
-       medium_functional_contributors_level: 5,
-       critical_functional_contributors_level: 2,
-       high_functional_contributors_level: 3,
-       high_large_commit_level: 0.15,
-       critical_currency_level: 104,
+     config: %{
+       base_temp_dir: "/tmp",
        critical_contributor_level: 2,
-       high_currency_level: 52
-     ],
-     contributor_count: 1,
-     contributor_risk: "critical",
-     functional_contributor_names: ["Kit Plummer"],
-     functional_contributors: 1,
-     functional_contributors_risk: "critical",
-     large_recent_commit_risk: "low",
-     recent_commit_size_in_percent_of_codebase: 0.003683241252302026,
+       critical_currency_level: 104,
+       critical_functional_contributors_level: 2,
+       critical_large_commit_level: 0.4,
+       high_contributor_level: 3,
+       high_currency_level: 52,
+       high_functional_contributors_level: 3,
+       high_large_commit_level: 0.3,
+       medium_contributor_level: 5,
+       medium_currency_level: 26,
+       medium_functional_contributors_level: 5,
+       medium_large_commit_level: 0.2
+     },
+     git: %{
+       default_branch: "refs/remotes/origin/master",
+       hash: "f47ee5f5ef7fb4dbe3d5d5f54e278ea941cb0332"
+     },
+     project_types: %{},
      repo: "https://github.com/kitplummer/xmpp4rails",
+     repo_size: "292K",
+     results: %{
+       commit_currency_risk: "critical",
+       commit_currency_weeks: 584,
+       contributor_count: 1,
+       contributor_risk: "critical",
+       functional_contributor_names: ["Kit Plummer"],
+       functional_contributors: 1,
+       functional_contributors_risk: "critical",
+       large_recent_commit_risk: "low",
+       recent_commit_size_in_percent_of_codebase: 0.00368,
+       top10_contributors: [%{"Kit Plummer" => 7}]
+     },
      risk: "critical"
    },
    header: %{
      duration: 0,
-     end_time: "2020-01-08T01:51:54.633837Z",
+     end_time: "2020-03-22T23:45:06.563532Z",
      library_version: "",
+     repo: "https://github.com/kitplummer/xmpp4rails",
      source_client: "iex",
-     start_time: "2020-01-08T01:51:54.069485Z",
-     uuid: "726a728e-31b9-11ea-bfa9-784f434ce29a"
+     start_time: "2020-03-22T23:45:06.078198Z",
+     uuid: "28a109ba-6c97-11ea-be3d-88e9fe666193"
    }
  }}
 ```
