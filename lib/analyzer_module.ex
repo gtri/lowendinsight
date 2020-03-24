@@ -12,7 +12,7 @@ defmodule AnalyzerModule do
   @spec analyze(String.t() | list(), String.t()) :: tuple()
   def analyze(url, source) when is_binary(url) do
     start_time = DateTime.utc_now()
-
+    Temp.track!
     try do
       url = URI.decode(url)
 
@@ -36,7 +36,7 @@ defmodule AnalyzerModule do
             end
 
             {:ok, tmp_path} =
-              Temp.path(%{
+              Temp.mkdir(%{
                 prefix: "lei",
                 basedir: Application.fetch_env!(:lowendinsight, :base_temp_dir) || "/tmp"
               })
@@ -107,6 +107,8 @@ defmodule AnalyzerModule do
       if uri.scheme == "https" or uri.scheme == "http" do
         GitModule.delete_repo(repo)
       end
+
+      Temp.cleanup
 
       end_time = DateTime.utc_now()
       duration = DateTime.diff(end_time, start_time)
