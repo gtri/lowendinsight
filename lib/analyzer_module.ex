@@ -9,9 +9,20 @@ defmodule AnalyzerModule do
   or "file".  Note, that the latter scheme will only work an existing clone
   and won't remove the directory structure upon completion of analysis.
   """
+
+  require Logger
+
   @spec analyze(String.t() | list(), String.t()) :: tuple()
   def analyze(url, source) when is_binary(url) do
     start_time = DateTime.utc_now()
+
+    Temp.track!
+
+    {:ok, tmp_path} =
+      Temp.mkdir(%{
+        prefix: "lei",
+        basedir: Application.fetch_env!(:lowendinsight, :base_temp_dir) || "/tmp"
+    })
 
     try do
       url = URI.decode(url)
@@ -35,15 +46,11 @@ defmodule AnalyzerModule do
               raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
             end
 
-            {:ok, tmp_path} =
-              Temp.path(%{
-                prefix: "lei",
-                basedir: Application.fetch_env!(:lowendinsight, :base_temp_dir) || "/tmp"
-              })
-
             GitModule.clone_repo(url, tmp_path)
         end
 
+      Logger.info("Cloned -> #{url}")
+      
       # Get unique contributors count
       {:ok, count} = GitModule.get_contributor_count(repo)
 
@@ -107,6 +114,9 @@ defmodule AnalyzerModule do
       if uri.scheme == "https" or uri.scheme == "http" do
         GitModule.delete_repo(repo)
       end
+
+      IO.inspect Temp.tracked
+      Temp.cleanup
 
       end_time = DateTime.utc_now()
       duration = DateTime.diff(end_time, start_time)
