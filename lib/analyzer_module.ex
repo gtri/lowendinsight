@@ -11,8 +11,9 @@ defmodule AnalyzerModule do
   """
   @spec analyze(String.t() | list(), String.t()) :: tuple()
   def analyze(url, source) when is_binary(url) do
-    start_time = DateTime.utc_now()
     Temp.track!
+
+    start_time = DateTime.utc_now()
     try do
       url = URI.decode(url)
 
@@ -108,7 +109,6 @@ defmodule AnalyzerModule do
         GitModule.delete_repo(repo)
       end
 
-      Temp.cleanup
 
       end_time = DateTime.utc_now()
       duration = DateTime.diff(end_time, start_time)
@@ -188,6 +188,8 @@ defmodule AnalyzerModule do
              repo_size: "N/A"
            }
          }}
+    after
+      Temp.cleanup
     end
   end
 
@@ -209,7 +211,6 @@ defmodule AnalyzerModule do
   def analyze(urls, source, start_time \\ DateTime.utc_now()) when is_list(urls) do
     ## Concurrency for parallelizing the analysis. This is the magic.
     ## Will run two jobs per core available max...
-
     max_concurrency =
       System.schedulers_online() *
         (Application.get_env(:lowendinsight, :jobs_per_core_max) || 1)
@@ -240,6 +241,7 @@ defmodule AnalyzerModule do
 
     metadata = Map.put_new(report[:metadata], :times, times)
     report = report |> Map.put(:metadata, metadata)
+
     {:ok, report}
   end
 
