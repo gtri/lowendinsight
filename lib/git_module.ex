@@ -176,7 +176,12 @@ defmodule GitModule do
     cond do
       length(commits) >= 2 ->
         {:ok, diffs} = get_diff_2_commits(repo, commits)
-        GitHelper.parse_diff(diffs)
+
+        if diffs == [""] do
+          {:ok, 0, 0, 0}
+        else
+          GitHelper.parse_diff(diffs)
+        end
 
       length(commits) < 2 ->
         {:ok, 0, 0, 0}

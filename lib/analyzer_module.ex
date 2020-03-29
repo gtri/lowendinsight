@@ -11,9 +11,10 @@ defmodule AnalyzerModule do
   """
   @spec analyze(String.t() | list(), String.t()) :: tuple()
   def analyze(url, source) when is_binary(url) do
-    Temp.track!
+    Temp.track!()
 
     start_time = DateTime.utc_now()
+
     try do
       url = URI.decode(url)
 
@@ -109,7 +110,6 @@ defmodule AnalyzerModule do
         GitModule.delete_repo(repo)
       end
 
-
       end_time = DateTime.utc_now()
       duration = DateTime.diff(end_time, start_time)
 
@@ -189,7 +189,7 @@ defmodule AnalyzerModule do
            }
          }}
     after
-      Temp.cleanup
+      Temp.cleanup()
     end
   end
 
