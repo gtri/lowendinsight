@@ -61,6 +61,5 @@ defmodule Mix.Tasks.Lei.BulkAnalyze do
             Mix.shell().info("\ninvalid file contents")
         end
     end
-
   end
 end
