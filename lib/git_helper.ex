@@ -133,6 +133,7 @@ defmodule GitHelper do
       get_contributor_counts(tail, accumulator)
     else
       maybe_new_key = Map.put_new(accumulator, String.trim(head), 0)
+
       {_num, new_value} =
         Map.get_and_update(maybe_new_key, head, fn current_value ->
           if current_value == nil do

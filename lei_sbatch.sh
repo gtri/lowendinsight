@@ -1,6 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=lei
-#SBATCH -c 12
+#SBATCH -c 16
+#SBATCH -t 0-08:00
+
 
 module load elixir
 module load git
