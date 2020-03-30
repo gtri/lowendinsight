@@ -13,7 +13,11 @@ defmodule AnalyzerModule do
   require Logger
 
   @spec analyze(String.t() | list(), String.t()) :: tuple()
-  def analyze(url, source) when is_binary(url) do
+  def analyze(url, source, counter, node) when is_binary(url) do
+
+    CounterAgent.click(counter)
+    count = CounterAgent.get(counter)
+
     Temp.track!
 
     start_time = DateTime.utc_now()
@@ -47,8 +51,7 @@ defmodule AnalyzerModule do
 
             GitModule.clone_repo(url, tmp_path)
         end
-
-      Logger.info("Cloned -> #{url}")
+      Logger.info("Cloned -> #{count}: #{url}")
       
       # Get unique contributors count
       {:ok, count} = GitModule.get_contributor_count(repo)
@@ -163,7 +166,7 @@ defmodule AnalyzerModule do
           }
         }
       }
-
+      Temp.cleanup
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
@@ -216,13 +219,16 @@ defmodule AnalyzerModule do
   def analyze(urls, source, start_time \\ DateTime.utc_now()) when is_list(urls) do
     ## Concurrency for parallelizing the analysis. This is the magic.
     ## Will run two jobs per core available max...
+
+    {:ok, counter} = CounterAgent.new()
+
     max_concurrency =
       System.schedulers_online() *
         (Application.get_env(:lowendinsight, :jobs_per_core_max) || 1)
 
     l =
       urls
-      |> Task.async_stream(__MODULE__, :analyze, [source],
+      |> Task.async_stream(__MODULE__, :analyze, [source, counter, "blah"],
         timeout: :infinity,
         max_concurrency: max_concurrency
       )
