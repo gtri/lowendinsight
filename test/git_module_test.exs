@@ -61,14 +61,14 @@ defmodule GitModuleTest do
     {:ok, maps} = GitModule.get_contributions_map(kitrepo)
 
     expected_array = [
-      %{"Ben Morris" => 358},
-      %{"Kit Plummer" => 64},
-      %{"Tyler Bezera" => 6},
-      %{"Jakub Stasiak" => 4},
-      %{"0verse" => 2},
-      %{"pixeljoelson" => 2},
-      %{"degussa" => 1},
-      %{"MIURA Masahiro" => 1}
+      %{name: "Ben Morris", contributions: 358},
+      %{name: "Kit Plummer", contributions: 64},
+      %{name: "Tyler Bezera", contributions: 6},
+      %{name: "Jakub Stasiak", contributions: 4},
+      %{name: "0verse", contributions: 2},
+      %{name: "pixeljoelson", contributions: 2},
+      %{name: "degussa", contributions: 1},
+      %{name: "MIURA Masahiro", contributions: 1}
     ]
 
     assert Enum.at(expected_array, 0) == Enum.at(maps, 0)
