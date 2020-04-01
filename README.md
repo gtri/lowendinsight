@@ -29,54 +29,64 @@ the tolerance level, which you can easily override) and responds with a useful r
 {
   "state": "complete",
   "report": {
-    "uuid": "e62f19a0-6c96-11ea-93bc-88e9fe666193",
+    "uuid": "c3baa0fe-7463-11ea-9b27-acde48001122",
     "repos": [
       {
         "header": {
-          "uuid": "e62f01d6-6c96-11ea-9ccf-88e9fe666193",
-          "start_time": "2020-03-22T23:43:00.313299Z",
+          "uuid": "c3ba45be-7463-11ea-a2a8-acde48001122",
+          "start_time": "2020-04-01T21:57:09.307791Z",
           "source_client": "mix task",
           "repo": "https://github.com/facebook/react",
           "library_version": "",
-          "end_time": "2020-03-22T23:43:15.087596Z",
-          "duration": 15
+          "end_time": "2020-04-01T21:57:22.245416Z",
+          "duration": 13
         },
         "data": {
           "risk": "low",
           "results": {
             "top10_contributors": [
               {
-                "Paul O’Shannessy": 1777
+                "name": "Paul O’Shannessy",
+                "contributions": 1777
               },
               {
-                "Dan Abramov": 1364
+                "name": "Dan Abramov",
+                "contributions": 1377
               },
               {
-                "Brian Vaughn": 1341
+                "name": "Brian Vaughn",
+                "contributions": 1350
               },
               {
-                "Sophie Alpert": 1266
+                "name": "Sophie Alpert",
+                "contributions": 1266
               },
               {
-                "Sebastian Markbåge": 778
+                "name": "Sebastian Markbåge",
+                "contributions": 790
               },
               {
-                "Andrew Clark": 705
+                "name": "Andrew Clark",
+                "contributions": 711
               },
               {
-                "Jim Sproch": 456
+                "name": "Jim Sproch",
+                "contributions": 456
               },
               {
-                "Dominic Gannaway": 350
+                "name": "Dominic Gannaway",
+                "contributions": 355
               },
               {
-                "Pete Hunt": 332
+                "name": "Pete Hunt",
+                "contributions": 332
               },
               {
-                "Cheng Lou": 222
+                "name": "Cheng Lou",
+                "contributions": 222
               }
             ],
-            "recent_commit_size_in_percent_of_codebase": 5e-05,
+            "recent_commit_size_in_percent_of_codebase": 3e-05,
             "large_recent_commit_risk": "low",
             "functional_contributors_risk": "low",
             "functional_contributors": 83,
@@ -166,7 +176,7 @@ the tolerance level, which you can easily override) and responds with a useful r
               "Jason Quense"
             ],
             "contributor_risk": "low",
-            "contributor_count": 1497,
+            "contributor_count": 1502,
             "commit_currency_weeks": 0,
             "commit_currency_risk": "low"
           },
@@ -174,70 +184,70 @@ the tolerance level, which you can easily override) and responds with a useful r
           "repo": "https://github.com/facebook/react",
           "project_types": {
             "node": [
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/art/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/attribute-behavior/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/concurrent/time-slicing/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/dom/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/eslint/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/eslint/proxy/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/expiration/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/fiber-debugger/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/flight/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/browserify/dev/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/browserify/prod/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/brunch/dev/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/brunch/prod/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/rjs/dev/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/rjs/prod/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/systemjs-builder/dev/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/systemjs-builder/prod/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/webpack-alias/dev/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/webpack-alias/prod/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/webpack/dev/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/packaging/webpack/prod/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/fixtures/ssr/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/babel-plugin-react-jsx/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/create-subscription/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/dom-event-testing-library/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/eslint-plugin-react-hooks/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/jest-mock-scheduler/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/jest-react/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/legacy-events/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-art/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-cache/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-client/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-debug-tools/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools-core/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools-extensions/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools-inline/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools-shared/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools-shared/src/node_modules/react-window/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools-shell/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-devtools/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-dom/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-flight-dom-relay/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-flight-dom-webpack/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-interactions/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-is/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-native-renderer/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-noop-renderer/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-reconciler/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-refresh/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-server/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react-test-renderer/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/react/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/scheduler/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/shared/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/packages/use-subscription/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/scripts/bench/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/scripts/eslint-rules/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/scripts/perf-counters/package.json",
-              "/tmp/lei-1584920580-16886-1fl4zpz/react/scripts/release/package.json"
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/art/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/attribute-behavior/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/concurrent/time-slicing/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/dom/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/eslint/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/eslint/proxy/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/expiration/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/fiber-debugger/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/flight/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/browserify/dev/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/browserify/prod/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/brunch/dev/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/brunch/prod/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/rjs/dev/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/rjs/prod/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/systemjs-builder/dev/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/systemjs-builder/prod/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/webpack-alias/dev/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/webpack-alias/prod/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/webpack/dev/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/webpack/prod/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/ssr/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/babel-plugin-react-jsx/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/create-subscription/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/dom-event-testing-library/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/eslint-plugin-react-hooks/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/jest-mock-scheduler/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/jest-react/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/legacy-events/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-art/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-cache/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-client/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-debug-tools/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools-core/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools-extensions/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools-inline/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools-shared/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools-shared/src/node_modules/react-window/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools-shell/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-dom/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-flight-dom-relay/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-flight-dom-webpack/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-interactions/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-is/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-native-renderer/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-noop-renderer/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-reconciler/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-refresh/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-server/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-test-renderer/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/react/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/scheduler/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/shared/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/packages/use-subscription/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/scripts/bench/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/scripts/eslint-rules/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/scripts/perf-counters/package.json",
+              "/tmp/lei-1585778229-6206-23kw46/react/scripts/release/package.json"
             ]
           },
           "git": {
-            "hash": "31a9e391f757d374ce0065da6735f08137151507",
+            "hash": "c80cd8ee27d24bb5b9a6136ede6875d13b9f1ba4",
             "default_branch": "refs/remotes/origin/master"
           },
           "config": {
@@ -261,16 +271,16 @@ the tolerance level, which you can easily override) and responds with a useful r
   },
   "metadata": {
     "times": {
-      "start_time": "2020-03-22T23:43:00.307871Z",
-      "end_time": "2020-03-22T23:43:15.096216Z",
-      "duration": 15
+      "start_time": "2020-04-01T21:57:09.298319Z",
+      "end_time": "2020-04-01T21:57:22.259390Z",
+      "duration": 13
     },
     "risk_counts": {
       "low": 1
     },
     "repo_count": 1
   }
-}
+} 
 ```
 
 NOTE: that the "file://" is also supporting, but presumes that the directory provided
