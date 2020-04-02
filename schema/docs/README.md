@@ -9,6 +9,7 @@
 
 ### Objects
 
+-   [Git data](./data-properties-lowendinsight-analysis-data-properties-git-data.md "Collection of git-centric data") – `http://example.com/data.schema.json#/properties/data/properties/git`
 -   [LowEndInsight Analysis Data](./data-properties-lowendinsight-analysis-data.md "The report data") – `http://example.com/data.schema.json#/properties/data`
 -   [LowEndInsight Analysis Times](./report-properties-lowendinsight-report-metadata-properties-lowendinsight-analysis-times.md "Start, End and Duration times for LowEndInsight times") – `http://example.com/report.schema.json#/properties/metadata/properties/times`
 -   [LowEndInsight Configuration Inputs](./data-properties-lowendinsight-analysis-data-properties-lowendinsight-configuration-inputs.md "Configuration criteria for LowEndInsight to use in defining analysis levels") – `http://example.com/data.schema.json#/properties/data/properties/config`

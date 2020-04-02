@@ -21,7 +21,7 @@ defmodule AnalyzerTest do
     assert "complete" == report[:state]
     repo_data = List.first(report[:report][:repos])
     assert "path_test" == repo_data[:header][:source_client]
-    assert %{"mix" => ["#{cwd}/mix.exs", "#{cwd}/mix.lock"]} == repo_data[:data][:project_types]
+    assert %{mix: ["#{cwd}/mix.exs", "#{cwd}/mix.lock"]} == repo_data[:data][:project_types]
   end
 
   test "get empty report" do
@@ -64,17 +64,19 @@ defmodule AnalyzerTest do
         :functional_contributors => 1,
         :functional_contributors_risk => "critical",
         :large_recent_commit_risk => "low",
-        :recent_commit_size_in_percent_of_codebase => 0.003683241252302026,
-        :top10_contributors => [%{"Kit Plummer" => 7}]
+        :recent_commit_size_in_percent_of_codebase => 0.00368,
+        :top10_contributors => [%{contributions: 7, name: "Kit Plummer"}]
       },
       :project_types => %{},
+      :repo_size => "292K",
       :risk => "critical",
       :config => Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight))
     }
 
     repo_data = List.first(report[:report][:repos])
     assert "test" == repo_data[:header][:source_client]
-    assert expected_data == repo_data[:data]
+    assert "https://github.com/kitplummer/xmpp4rails" == repo_data[:header][:repo]
+    assert expected_data[:results] == repo_data[:data][:results]
   end
 
   test "get multi report mixed risks" do
@@ -109,6 +111,17 @@ defmodule AnalyzerTest do
     assert 2 == report[:metadata][:repo_count]
   end
 
+  ## Captured in issue #28 - this is a 'deleted contents' in Chinese censorship kindaway repo.
+  test "analyze a repo with a single commit" do
+    {:ok, report} =
+      AnalyzerModule.analyze(
+        ["https://github.com/shadowsocks/shadowsocks"],
+        "test_single_commit"
+      )
+
+    assert 1 == report[:metadata][:repo_count]
+  end
+
   test "input of optional start time" do
     start_time = DateTime.utc_now()
 
@@ -127,12 +140,13 @@ defmodule AnalyzerTest do
 
     expected_data = %{
       data: %{
-        config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
         error:
           "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?",
         repo: "https://github.com/kitplummer/blah",
         risk: "critical",
-        project_types: %{"undetermined" => "undetermined"}
+        project_types: %{"undetermined" => "undetermined"},
+        repo_size: "N/A",
+        git: %{}
       }
     }
 
@@ -146,12 +160,13 @@ defmodule AnalyzerTest do
 
     expected_data = %{
       data: %{
-        config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
         error:
           "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory",
         repo: "https://github.com/kitplummer/xmpp4rails/blah",
         risk: "N/A",
-        project_types: %{"undetermined" => "undetermined"}
+        project_types: %{"undetermined" => "undetermined"},
+        repo_size: "N/A",
+        git: %{}
       }
     }
 

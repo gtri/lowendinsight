@@ -11,6 +11,8 @@ defmodule AnalyzerModule do
   """
   @spec analyze(String.t() | list(), String.t()) :: tuple()
   def analyze(url, source) when is_binary(url) do
+    Temp.track!()
+
     start_time = DateTime.utc_now()
 
     try do
@@ -21,7 +23,7 @@ defmodule AnalyzerModule do
       #  for application :lowendinsight because the application was not loaded/started.
       #  If your application depends on :lowendinsight at runtime, make sure to
       #  load/start it or list it under :extra_applications in your mix.exs file"
-      _config = Application.fetch_env!(:lowendinsight, :critical_contributor_level)
+      # _config = Application.fetch_env!(:lowendinsight, :critical_contributor_level)
 
       uri = URI.parse(url)
 
@@ -35,7 +37,12 @@ defmodule AnalyzerModule do
               raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
             end
 
-            {:ok, tmp_path} = Temp.path("lei")
+            {:ok, tmp_path} =
+              Temp.mkdir(%{
+                prefix: "lei",
+                basedir: Application.fetch_env!(:lowendinsight, :base_temp_dir) || "/tmp"
+              })
+
             GitModule.clone_repo(url, tmp_path)
         end
 
@@ -67,7 +74,37 @@ defmodule AnalyzerModule do
 
       {:ok, top10_contributors} = GitModule.get_top10_contributors_map(repo)
 
-      project_types = ProjectIdent.project_types?(repo)
+      ## Non-metric data about repo
+      mix_type = %ProjectType{name: :mix, path: "", files: ["mix.exs,mix.lock"]}
+
+      python_type = %ProjectType{
+        name: :python,
+        path: "**",
+        files: ["setup.py,*requirements.txt*"]
+      }
+
+      node_type = %ProjectType{name: :node, path: "**", files: ["package*.json"]}
+      go_type = %ProjectType{name: :go_mod, path: "**", files: ["go.mod"]}
+      cargo_type = %ProjectType{name: :cargo, path: "**", files: ["Cargo.toml"]}
+      rubygem_type = %ProjectType{name: :rubygem, path: "**", files: ["Gemfile*,*.gemspec"]}
+      maven_type = %ProjectType{name: :maven, path: "**", files: ["pom.xml"]}
+      gradle_type = %ProjectType{name: :gradle, path: "**", files: ["build.gradle*"]}
+
+      project_types = [
+        mix_type,
+        python_type,
+        node_type,
+        go_type,
+        cargo_type,
+        rubygem_type,
+        maven_type,
+        gradle_type
+      ]
+
+      project_types_identified = ProjectIdent.categorize_repo(repo, project_types)
+      {:ok, repo_size} = GitModule.get_repo_size(repo)
+      {:ok, git_hash} = GitModule.get_hash(repo)
+      {:ok, default_branch} = GitModule.get_default_branch(repo)
 
       if uri.scheme == "https" or uri.scheme == "http" do
         GitModule.delete_repo(repo)
@@ -83,8 +120,14 @@ defmodule AnalyzerModule do
           do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string(),
           else: ""
 
+      config =
+        if Application.get_all_env(:lowendinsight) == [],
+          do: %{info: "no config loaded, defaults in use"},
+          else: Application.get_all_env(:lowendinsight)
+
       report = %{
         header: %{
+          repo: url,
           start_time: DateTime.to_iso8601(start_time),
           end_time: DateTime.to_iso8601(end_time),
           duration: duration,
@@ -93,9 +136,14 @@ defmodule AnalyzerModule do
           library_version: library_version
         },
         data: %{
-          config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
+          config: Helpers.convert_config_to_list(config),
           repo: url,
-          project_types: Helpers.convert_config_to_list(project_types),
+          git: %{
+            hash: git_hash,
+            default_branch: default_branch
+          },
+          project_types: Helpers.convert_config_to_list(project_types_identified),
+          repo_size: repo_size,
           results: %{
             contributor_count: count,
             contributor_risk: count_risk,
@@ -117,11 +165,13 @@ defmodule AnalyzerModule do
         {:ok,
          %{
            data: %{
-             config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
+             # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?",
              repo: url,
+             git: %{},
              risk: "critical",
-             project_types: %{"undetermined" => "undetermined"}
+             project_types: %{"undetermined" => "undetermined"},
+             repo_size: "N/A"
            }
          }}
 
@@ -129,13 +179,17 @@ defmodule AnalyzerModule do
         {:ok,
          %{
            data: %{
-             config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
+             # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}). #{e.message}",
              repo: url,
+             git: %{},
              risk: "N/A",
-             project_types: %{"undetermined" => "undetermined"}
+             project_types: %{"undetermined" => "undetermined"},
+             repo_size: "N/A"
            }
          }}
+    after
+      Temp.cleanup()
     end
   end
 
@@ -158,9 +212,9 @@ defmodule AnalyzerModule do
     ## Concurrency for parallelizing the analysis. This is the magic.
     ## Will run two jobs per core available max...
     max_concurrency =
-      System.schedulers_online() * Application.get_env(:lowendinsight, :jobs_per_core_max)
+      System.schedulers_online() *
+        (Application.get_env(:lowendinsight, :jobs_per_core_max) || 1)
 
-    ## https://hexdocs.pm/elixir/Task.html
     l =
       urls
       |> Task.async_stream(__MODULE__, :analyze, [source],
@@ -187,6 +241,7 @@ defmodule AnalyzerModule do
 
     metadata = Map.put_new(report[:metadata], :times, times)
     report = report |> Map.put(:metadata, metadata)
+
     {:ok, report}
   end
 

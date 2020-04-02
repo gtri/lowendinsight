@@ -11,7 +11,7 @@ defmodule Mix.Tasks.Lei.Analyze do
 
   #Usage
   ```
-  mix analyze "https://github.com/kitplummer/xmpp4rails" | jq
+  mix lei.analyze "https://github.com/kitplummer/xmpp4rails" | jq
   ```
   This will return a basic report (prettied by jq) as an Elixir Map.
   ```
@@ -44,8 +44,9 @@ defmodule Mix.Tasks.Lei.Analyze do
   ```
   """
   def run(url) do
-    report = AnalyzerModule.analyze(url, "mix task")
-    report = elem(Poison.encode(elem(report, 1)), 1)
-    Mix.shell().info(report)
+    {:ok, report} = AnalyzerModule.analyze(url, "mix task")
+
+    Poison.encode!(report)
+    |> Mix.shell().info()
   end
 end

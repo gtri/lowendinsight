@@ -136,7 +136,11 @@ defmodule GitHelper do
 
       {_num, new_value} =
         Map.get_and_update(maybe_new_key, head, fn current_value ->
-          {current_value, current_value + 1}
+          if current_value == nil do
+            {0, 1}
+          else
+            {current_value, current_value + 1}
+          end
         end)
 
       get_contributor_counts(tail, new_value)

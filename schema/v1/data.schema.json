@@ -63,9 +63,30 @@
             "Unable to analyze the repo (https://github.com/kitplummer/blah), LowEndInsight configuration not found."
           ]
         },
+        "git": {
+          "description": "Collection of git-centric data",
+          "title": "Git data",
+          "type": "object",
+          "properties": {
+            "default_branch": {
+              "description": "The remote repository's default branch",
+              "title": "Default branch",
+              "type": "string"
+            },
+            "hash": {
+              "description": "The repository's current hash",
+              "title": "Current hash",
+              "type": "string"
+            }
+          }
+        },
         "repo": {
           "description": "The git repo url being analyzed by LowEndInsight.",
           "title": "Source Git Repo",
+          "type": "string"
+        },
+        "repo_size": {
+          "description": "Space consumed by the source repo.",
           "type": "string"
         },
         "project_types": {
@@ -143,10 +164,11 @@
         }
       },
       "required": [
-        "config",
         "risk",
         "repo",
-        "project_types"
+        "git",
+        "project_types",
+        "repo_size"
       ],
       "anyOf": [
         {
@@ -165,6 +187,10 @@
       "title": "LowEndInsight Per-Repo Analsyis Metadata",
       "type": "object",
       "properties": {
+        "repo": {
+          "description": "Git repository URL to be used as the identifier for the report",
+          "type": "string"
+        },
         "duration": {
           "description": "Time it took to complete the analysis of this repo (in seconds).",
           "type": "number"
@@ -192,6 +218,7 @@
         }
       },
       "required": [
+        "repo",
         "uuid",
         "library_version",
         "duration",

@@ -38,6 +38,14 @@ defmodule GitModuleTest do
     :ok
   end
 
+  test "get current hash", %{repo: repo} do
+    assert {:ok, "f47ee5f5ef7fb4dbe3d5d5f54e278ea941cb0332"} == GitModule.get_hash(repo)
+  end
+
+  test "get default branch", %{repo: repo} do
+    assert {:ok, "refs/remotes/origin/master"} = GitModule.get_default_branch(repo)
+  end
+
   test "get contributor list 1", %{repo: repo} do
     count = GitModule.get_contributor_count(repo)
     assert {:ok, 1} == count
@@ -53,14 +61,14 @@ defmodule GitModuleTest do
     {:ok, maps} = GitModule.get_contributions_map(kitrepo)
 
     expected_array = [
-      %{"Ben Morris" => 358},
-      %{"Kit Plummer" => 64},
-      %{"Tyler Bezera" => 6},
-      %{"Jakub Stasiak" => 4},
-      %{"0verse" => 2},
-      %{"pixeljoelson" => 2},
-      %{"degussa" => 1},
-      %{"MIURA Masahiro" => 1}
+      %{name: "Ben Morris", contributions: 358},
+      %{name: "Kit Plummer", contributions: 64},
+      %{name: "Tyler Bezera", contributions: 6},
+      %{name: "Jakub Stasiak", contributions: 4},
+      %{name: "0verse", contributions: 2},
+      %{name: "pixeljoelson", contributions: 2},
+      %{name: "degussa", contributions: 1},
+      %{name: "MIURA Masahiro", contributions: 1}
     ]
 
     assert Enum.at(expected_array, 0) == Enum.at(maps, 0)
@@ -74,6 +82,21 @@ defmodule GitModuleTest do
   #   assert true == Enum.member?(maps, "Prachayapron")
   #   assert [] == maps
   # end
+
+  test "get commit dates", context do
+    dates = GitModule.get_commit_dates(context[:repo])
+
+    assert {:ok,
+            [
+              1_231_298_600,
+              1_208_905_906,
+              1_208_905_647,
+              1_208_902_657,
+              1_208_902_186,
+              1_208_898_811,
+              1_208_896_913
+            ]} == dates
+  end
 
   test "get last commit date", context do
     date = GitModule.get_last_commit_date(context[:repo])
@@ -296,5 +319,11 @@ defmodule GitModuleTest do
   test "error on not a valid local path repo" do
     {:error, msg} = GitModule.get_repo("/tmp")
     assert 128 == msg.code
+  end
+
+  test "get repo size", %{repo: repo} do
+    {:ok, size} = GitModule.get_repo_size(repo)
+    assert nil != size
+    assert "" != size
   end
 end

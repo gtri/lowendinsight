@@ -19,12 +19,29 @@ Information about the report's generation.
 
 | Property                            | Type     | Required | Nullable       | Defined by                                                                                                                                                                                                            |
 | :---------------------------------- | -------- | -------- | -------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [repo](#repo)                       | `string` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-per-repo-analsyis-metadata-properties-repo.md "http&#x3A;//example.com/data.schema.json#/properties/header/properties/repo")                       |
 | [duration](#duration)               | `number` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-per-repo-analsyis-metadata-properties-duration.md "http&#x3A;//example.com/data.schema.json#/properties/header/properties/duration")               |
 | [end_time](#end_time)               | `string` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-per-repo-analsyis-metadata-properties-end_time.md "http&#x3A;//example.com/data.schema.json#/properties/header/properties/end_time")               |
 | [start_time](#start_time)           | `string` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-per-repo-analsyis-metadata-properties-start_time.md "http&#x3A;//example.com/data.schema.json#/properties/header/properties/start_time")           |
 | [uuid](#uuid)                       | `string` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-per-repo-analsyis-metadata-properties-uuid.md "http&#x3A;//example.com/data.schema.json#/properties/header/properties/uuid")                       |
 | [library_version](#library_version) | `string` | Required | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-per-repo-analsyis-metadata-properties-library_version.md "http&#x3A;//example.com/data.schema.json#/properties/header/properties/library_version") |
 | [source_client](#source_client)     | `string` | Optional | cannot be null | [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-per-repo-analsyis-metadata-properties-source_client.md "http&#x3A;//example.com/data.schema.json#/properties/header/properties/source_client")     |
+
+## repo
+
+Git repository URL to be used as the identifier for the report
+
+
+`repo`
+
+-   is required
+-   Type: `string`
+-   cannot be null
+-   defined in: [LowEndInsight Analysis Data Schema](data-properties-lowendinsight-per-repo-analsyis-metadata-properties-repo.md "http&#x3A;//example.com/data.schema.json#/properties/header/properties/repo")
+
+### repo Type
+
+`string`
 
 ## duration
 

@@ -9,83 +9,88 @@ defmodule ProjectIdentTest do
     {:ok, cwd} = File.cwd()
     {:ok, tmp_path} = Temp.path("lei-test")
 
-    [cwd: cwd, tmp_path: tmp_path]
+    mix_type = %ProjectType{name: :mix, path: "**", files: ["mix.exs,mix.lock"]}
+    python_type = %ProjectType{name: :python, path: "**", files: ["setup.py,*requirements.txt*"]}
+    node_type = %ProjectType{name: :node, path: "**", files: ["package*.json"]}
+    go_type = %ProjectType{name: :go_mod, path: "**", files: ["go.mod"]}
+    cargo_type = %ProjectType{name: :cargo, path: "**", files: ["Cargo.toml"]}
+    rubygem_type = %ProjectType{name: :rubygem, path: "**", files: ["Gemfile*,*.gemspec"]}
+    maven_type = %ProjectType{name: :maven, path: "**", files: ["pom.xml"]}
+    gradle_type = %ProjectType{name: :gradle, path: "**", files: ["build.gradle*"]}
+
+    project_types = [
+      mix_type,
+      python_type,
+      node_type,
+      go_type,
+      cargo_type,
+      rubygem_type,
+      maven_type,
+      gradle_type
+    ]
+
+    [cwd: cwd, tmp_path: tmp_path, project_types: project_types]
   end
 
   doctest ProjectIdent
 
-  test "is_python?(repo)", %{tmp_path: tmp_path} do
+  test "is_python?(repo)", %{tmp_path: tmp_path, project_types: project_types} do
     {:ok, repo} = GitModule.clone_repo("https://bitbucket.org/kitplummer/clikan", tmp_path)
-    assert %{"python" => ["#{tmp_path}/clikan/setup.py"]} == ProjectIdent.is_python?(repo)
-    assert %{"python" => ["#{tmp_path}/clikan/setup.py"]} == ProjectIdent.project_types?(repo)
+
+    assert %{python: ["#{tmp_path}/clikan/setup.py"]} ==
+             ProjectIdent.categorize_repo(repo, project_types)
+
     GitModule.delete_repo(repo)
   end
 
-  test "is_node?(repo)", %{tmp_path: tmp_path} do
+  test "is_node?(repo)", %{tmp_path: tmp_path, project_types: project_types} do
     {:ok, repo} = GitModule.clone_repo("https://github.com/expressjs/express", tmp_path)
-    assert %{"node" => ["#{tmp_path}/express/package.json"]} == ProjectIdent.is_node?(repo)
-    assert %{"node" => ["#{tmp_path}/express/package.json"]} == ProjectIdent.project_types?(repo)
+
+    assert %{node: ["#{tmp_path}/express/package.json"]} ==
+             ProjectIdent.categorize_repo(repo, project_types)
+
     GitModule.delete_repo(repo)
   end
 
-  test "is_node?(repo)2", %{tmp_path: tmp_path} do
-    {:ok, repo} = GitModule.clone_repo("https://github.com/expressjs/express", tmp_path)
-    assert %{"node" => ["#{tmp_path}/express/package.json"]} == ProjectIdent.is_node?(repo)
-    assert %{"node" => ["#{tmp_path}/express/package.json"]} == ProjectIdent.project_types?(repo)
-    GitModule.delete_repo(repo)
-  end
-
-  test "is_go_mod?(repo)", %{tmp_path: tmp_path} do
+  test "is_go_mod?(repo)", %{tmp_path: tmp_path, project_types: project_types} do
     {:ok, repo} = GitModule.clone_repo("https://github.com/go-kit/kit", tmp_path)
-    assert %{"go_mod" => ["#{tmp_path}/kit/go.mod"]} == ProjectIdent.is_go_mod?(repo)
 
     assert %{
-             "go_mod" => ["#{tmp_path}/kit/go.mod"]
-           } == ProjectIdent.project_types?(repo)
+             go_mod: ["#{tmp_path}/kit/go.mod"]
+           } == ProjectIdent.categorize_repo(repo, project_types)
 
     GitModule.delete_repo(repo)
   end
 
-  test "is_cargo?(repo)", %{tmp_path: tmp_path} do
+  test "is_cargo?(repo)", %{tmp_path: tmp_path, project_types: project_types} do
     {:ok, repo} = GitModule.clone_repo("https://github.com/clap-rs/clap", tmp_path)
 
     assert %{
-             "cargo" => [
+             cargo: [
                "#{tmp_path}/clap/Cargo.toml",
                "#{tmp_path}/clap/clap_derive/Cargo.toml",
                "#{tmp_path}/clap/clap_generate/Cargo.toml"
              ]
-           } == ProjectIdent.is_cargo?(repo)
-
-    assert %{
-             "cargo" => [
-               "#{tmp_path}/clap/Cargo.toml",
-               "#{tmp_path}/clap/clap_derive/Cargo.toml",
-               "#{tmp_path}/clap/clap_generate/Cargo.toml"
-             ]
-           } == ProjectIdent.project_types?(repo)
+           } == ProjectIdent.categorize_repo(repo, project_types)
 
     GitModule.delete_repo(repo)
   end
 
-  test "is_rubygem?(repo)", %{tmp_path: tmp_path} do
+  test "is_rubygem?(repo)", %{tmp_path: tmp_path, project_types: project_types} do
     {:ok, repo} = GitModule.clone_repo("https://github.com/rubocop-hq/rubocop", tmp_path)
 
-    assert %{"rubygem" => ["#{tmp_path}/rubocop/Gemfile", "#{tmp_path}/rubocop/rubocop.gemspec"]} ==
-             ProjectIdent.is_rubygem?(repo)
-
     assert %{
-             "rubygem" => ["#{tmp_path}/rubocop/Gemfile", "#{tmp_path}/rubocop/rubocop.gemspec"]
-           } == ProjectIdent.project_types?(repo)
+             rubygem: ["#{tmp_path}/rubocop/Gemfile", "#{tmp_path}/rubocop/rubocop.gemspec"]
+           } == ProjectIdent.categorize_repo(repo, project_types)
 
     GitModule.delete_repo(repo)
   end
 
-  test "is_maven?(repo)", %{tmp_path: tmp_path} do
+  test "is_maven?(repo)", %{tmp_path: tmp_path, project_types: project_types} do
     {:ok, repo} = GitModule.clone_repo("https://github.com/snyk/snyk-maven-plugin", tmp_path)
 
     assert %{
-             "maven" => [
+             maven: [
                "#{tmp_path}/snyk-maven-plugin/pom.xml",
                "#{tmp_path}/snyk-maven-plugin/src/it/license-issues-module/pom.xml",
                "#{tmp_path}/snyk-maven-plugin/src/it/multi-module/child-module/pom.xml",
@@ -93,40 +98,29 @@ defmodule ProjectIdentTest do
                "#{tmp_path}/snyk-maven-plugin/src/it/private-repo-module/pom.xml",
                "#{tmp_path}/snyk-maven-plugin/src/it/single-module/pom.xml"
              ]
-           } == ProjectIdent.is_maven?(repo)
-
-    assert %{
-             "maven" => [
-               "#{tmp_path}/snyk-maven-plugin/pom.xml",
-               "#{tmp_path}/snyk-maven-plugin/src/it/license-issues-module/pom.xml",
-               "#{tmp_path}/snyk-maven-plugin/src/it/multi-module/child-module/pom.xml",
-               "#{tmp_path}/snyk-maven-plugin/src/it/multi-module/pom.xml",
-               "#{tmp_path}/snyk-maven-plugin/src/it/private-repo-module/pom.xml",
-               "#{tmp_path}/snyk-maven-plugin/src/it/single-module/pom.xml"
-             ]
-           } == ProjectIdent.project_types?(repo)
+           } == ProjectIdent.categorize_repo(repo, project_types)
 
     GitModule.delete_repo(repo)
   end
 
-  test "is_gradle?(repo)", %{tmp_path: tmp_path} do
+  test "is_gradle?(repo)", %{tmp_path: tmp_path, project_types: project_types} do
     {:ok, repo} = GitModule.clone_repo("https://github.com/ReactiveX/RxKotlin", tmp_path)
 
-    assert %{"gradle" => ["#{tmp_path}/RxKotlin/build.gradle.kts"]} ==
-             ProjectIdent.is_gradle?(repo)
-
-    assert %{"gradle" => ["#{tmp_path}/RxKotlin/build.gradle.kts"]} ==
-             ProjectIdent.project_types?(repo)
+    assert %{gradle: ["#{tmp_path}/RxKotlin/build.gradle.kts"]} ==
+             ProjectIdent.categorize_repo(repo, project_types)
 
     GitModule.delete_repo(repo)
   end
 
-  test "project_types?(repo)", %{cwd: cwd} do
+  test "find_files", %{cwd: cwd} do
     {:ok, repo} = GitModule.get_repo(cwd)
-    assert %{"mix" => ["#{cwd}/mix.exs", "#{cwd}/mix.lock"]} == ProjectIdent.project_types?(repo)
+    mix_type = %ProjectType{name: :mix, path: "", files: ["mix.exs", "mix.lock"]}
+
+    assert ["#{cwd}/mix.exs", "#{cwd}/mix.lock"] ==
+             ProjectIdent.find_files(repo, mix_type)
   end
 
-  test "many build or package managers", %{tmp_path: tmp_path} do
+  test "many build or package managers", %{tmp_path: tmp_path, project_types: project_types} do
     {:ok, repo} =
       GitModule.clone_repo(
         "https://github.com/xword/java-npm-gradle-integration-example",
@@ -134,7 +128,7 @@ defmodule ProjectIdentTest do
       )
 
     assert %{
-             "gradle" => [
+             gradle: [
                "#{tmp_path}/java-npm-gradle-integration-example/gradle-groovy-dsl/build.gradle",
                "#{tmp_path}/java-npm-gradle-integration-example/gradle-groovy-dsl/java-app/build.gradle",
                "#{tmp_path}/java-npm-gradle-integration-example/gradle-groovy-dsl/npm-app/build.gradle",
@@ -142,10 +136,12 @@ defmodule ProjectIdentTest do
                "#{tmp_path}/java-npm-gradle-integration-example/gradle-kotlin-dsl/java-app/build.gradle.kts",
                "#{tmp_path}/java-npm-gradle-integration-example/gradle-kotlin-dsl/npm-app/build.gradle.kts"
              ],
-             "node" => [
+             node: [
+               "#{tmp_path}/java-npm-gradle-integration-example/gradle-groovy-dsl/npm-app/package-lock.json",
                "#{tmp_path}/java-npm-gradle-integration-example/gradle-groovy-dsl/npm-app/package.json",
+               "#{tmp_path}/java-npm-gradle-integration-example/gradle-kotlin-dsl/npm-app/package-lock.json",
                "#{tmp_path}/java-npm-gradle-integration-example/gradle-kotlin-dsl/npm-app/package.json"
              ]
-           } == ProjectIdent.project_types?(repo)
+           } == ProjectIdent.categorize_repo(repo, project_types)
   end
 end

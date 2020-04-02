@@ -71,6 +71,26 @@ defmodule GitModule do
   end
 
   @doc """
+  get_current_hash/1: returns the hash of the repo's HEAD
+  """
+  def get_hash(repo) do
+    hash = Git.rev_parse!(repo, "HEAD") |> String.trim()
+    {:ok, hash}
+  end
+
+  @doc """
+  get_default_branch/1: returns the default branch of the remote repo
+  """
+  def get_default_branch(repo) do
+    try do
+      default_branch = Git.symbolic_ref!(repo, "refs/remotes/origin/HEAD") |> String.trim()
+      {:ok, default_branch}
+    rescue
+      _e in Git.Error -> {:ok, "undeterminable, not at HEAD"}
+    end
+  end
+
+  @doc """
   get_commit_dates/1: returns a list of unix timestamps representing commit times
   """
   def get_commit_dates(repo) do
@@ -117,8 +137,11 @@ defmodule GitModule do
   get_last_n_commits/2: returns a list of lines generated from the diff of two commits
   """
   def get_diff_2_commits(repo, [commit1 | [commit2 | []]]) do
-    {:ok, diff} = Git.diff(repo, ["--stat", commit1, commit2])
-    {:ok, String.split(String.trim_trailing(diff, "\n"), "\n")}
+    with {:ok, diff} <- Git.diff(repo, ["--stat", commit1, commit2]) do
+      {:ok, String.split(String.trim_trailing(diff, "\n"), "\n")}
+    else
+      _ -> []
+    end
   end
 
   @doc """
@@ -134,12 +157,14 @@ defmodule GitModule do
   end
 
   @doc """
-  get_recent_changes/1: returns the fraction of changed lines in the last commit by the total lines in the repo
+  get_recent_changes/1: returns the percentage of changed lines in the last commit by the total lines in the repo
   """
   def get_recent_changes(repo) do
     {:ok, total_lines, total_files_changed} = get_total_lines(repo)
     {:ok, file_num, insertions, deletions} = get_last_2_delta(repo)
-    {:ok, (insertions + deletions) / total_lines, file_num / total_files_changed}
+
+    {:ok, Float.round((insertions + deletions) / total_lines, 5),
+     Float.round(file_num / total_files_changed, 5)}
   end
 
   @doc """
@@ -147,10 +172,23 @@ defmodule GitModule do
   """
   def get_last_2_delta(repo) do
     {:ok, commits} = get_last_n_commits(repo, 2)
-    {:ok, diffs} = get_diff_2_commits(repo, commits)
-    GitHelper.parse_diff(diffs)
+
+    cond do
+      length(commits) >= 2 ->
+        {:ok, diffs} = get_diff_2_commits(repo, commits)
+
+        if diffs == [""] do
+          {:ok, 0, 0, 0}
+        else
+          GitHelper.parse_diff(diffs)
+        end
+
+      length(commits) < 2 ->
+        {:ok, 0, 0, 0}
+    end
   end
 
+  @spec get_contributor_distribution(Git.Repository.t()) :: {:ok, map, non_neg_integer}
   def get_contributor_distribution(repo) do
     contributors = Git.log!(repo, ["--pretty=format:%an"])
     contributors_list = String.split(contributors, "\n")
@@ -159,6 +197,7 @@ defmodule GitModule do
     {:ok, counts, total_contributions}
   end
 
+  @spec get_functional_contributors(Git.Repository.t()) :: {:ok, non_neg_integer, [any]}
   def get_functional_contributors(repo) do
     {:ok, counts, total} = get_contributor_distribution(repo)
     {:ok, length, filtered_list} = GitHelper.get_filtered_contributor_count(counts, total)
@@ -180,16 +219,27 @@ defmodule GitModule do
         if String.contains?(x, "\t") do
           k = Enum.at(s, 1)
           v = String.to_integer(Enum.at(s, 0))
-          %{k => v}
+          %{:name => k, :contributions => v}
         end
       end)
 
     {:ok, map}
   end
 
+  @spec get_top10_contributors_map(Git.Repository.t()) :: {:ok, [any]}
   def get_top10_contributors_map(repo) do
     {:ok, map} = get_contributions_map(repo)
     map10 = Enum.take(map, 10)
     {:ok, map10}
+  end
+
+  def get_repo_size(repo) do
+    space =
+      elem(System.cmd("du", ["-sh", "#{repo.path}"]), 0)
+      |> String.split("\t")
+      |> List.first()
+      |> String.trim()
+
+    {:ok, space}
   end
 end
