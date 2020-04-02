@@ -315,7 +315,7 @@ the library to your project's dependencies:
 ```
 defp deps do
   [
-    {:lowendinsight, "~> 0.4", except: :prod, runtime: false}
+    {:lowendinsight, "~> 0.5", except: :prod, runtime: false}
   ]
 end
 ```
