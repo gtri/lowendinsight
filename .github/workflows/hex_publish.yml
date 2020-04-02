@@ -31,5 +31,5 @@ jobs:
         HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
       if: github.event.pull_request.merged == true
       run: |
-        mix hex.publish --yes
+        MIX_ENV=prod mix hex.publish --yes
 
