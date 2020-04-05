@@ -25,7 +25,7 @@ jobs:
     - name: Run Tests
       run: |
         MIX_ENV=test mix coveralls
-        mix docs
+        MIX_ENV=test mix docs
     - name: Publish to Hex
       env: # Or as an environment variable
         HEX_API_KEY: ${{ secrets.HEX_API_KEY }}

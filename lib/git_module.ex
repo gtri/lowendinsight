@@ -219,7 +219,7 @@ defmodule GitModule do
         if String.contains?(x, "\t") do
           k = Enum.at(s, 1)
           v = String.to_integer(Enum.at(s, 0))
-          %{k => v}
+          %{:name => k, :contributions => v}
         end
       end)
 
