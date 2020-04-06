@@ -211,16 +211,11 @@ defmodule GitModule do
   def get_contributions_map(repo) do
     map =
       Git.shortlog!(repo, ["-s", "-n", "HEAD"])
-      |> String.trim()
-      |> String.split(~r{\s\s+})
+      |> (&Regex.scan(~r{([0-9]+)\t(\w.*)}, &1)).()
       |> Enum.map(fn x ->
-        s = String.split(x, "\t")
-        ## Found that there can be bad entries in the git log, just ignore
-        if String.contains?(x, "\t") do
-          k = Enum.at(s, 1)
-          v = String.to_integer(Enum.at(s, 0))
-          %{:name => k, :contributions => v}
-        end
+        k = Enum.at(x, 2)
+        v = String.to_integer(Enum.at(x, 1))
+        %{:name => k, :contributions => v}
       end)
 
     {:ok, map}
