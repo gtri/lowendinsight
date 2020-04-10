@@ -65,7 +65,10 @@ defmodule AnalyzerTest do
         :functional_contributors_risk => "critical",
         :large_recent_commit_risk => "low",
         :recent_commit_size_in_percent_of_codebase => 0.00368,
-        :top10_contributors => [%{contributions: 7, name: "Kit Plummer"}]
+        :top10_contributors => [
+          %{contributions: 6, name: "Kit Plummer", email: "kplummer@blitz.local", merges: 0},
+          %{contributions: 1, email: "kplummer@blitz.(none)", merges: 0, name: "Kit Plummer"}
+        ]
       },
       :project_types => %{},
       :repo_size => "292K",

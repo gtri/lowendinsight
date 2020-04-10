@@ -221,9 +221,25 @@ defmodule GitModule do
     {:ok, map}
   end
 
+  def get_clean_contributions_map(repo) do
+    map =
+      Git.shortlog!(repo, ["-n", "-e", "HEAD"])
+      |> GitHelper.parse_shortlog()
+      |> Enum.map(fn contributor ->
+        %{
+          name: contributor.name,
+          contributions: contributor.count,
+          merges: contributor.merges,
+          email: contributor.email
+        }
+      end)
+
+    {:ok, map}
+  end
+
   @spec get_top10_contributors_map(Git.Repository.t()) :: {:ok, [any]}
   def get_top10_contributors_map(repo) do
-    {:ok, map} = get_contributions_map(repo)
+    {:ok, map} = get_clean_contributions_map(repo)
     map10 = Enum.take(map, 10)
     {:ok, map10}
   end
