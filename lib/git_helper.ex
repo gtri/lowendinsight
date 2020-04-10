@@ -92,15 +92,19 @@ defmodule GitHelper do
     |> Enum.map(fn contributor ->
       {name, email, count} = parse_header(contributor)
       {merges, commits} = parse_commits(contributor)
+
       {count, _} = Integer.parse(count)
-      %Contributor{name: String.trim(name),
-       email: String.trim(email),
-       count: count,
-       merges: merges,
-       commits: commits
+
+      %Contributor{
+        name: String.trim(name),
+        email: String.trim(email),
+        count: count,
+        merges: merges,
+        commits: commits
       }
     end)
   end
+
   defp split_shortlog(log) do
     log
     |> String.trim()
@@ -108,13 +112,18 @@ defmodule GitHelper do
   end
 
   defp parse_header(contributor) do
-    header = Regex.scan(~r{([^<]+)<([^;]*)>.\(([^:]+)\)}, contributor) |> Enum.at(0)
+    header =
+      contributor
+      |> String.split("\n")
+      |> Enum.at(0)
+      |> (&Regex.scan(~r{([^<]+)<([^;]*)>.\(([^:]+)\)}, &1)).()
+      |> Enum.at(0)
+
     {Enum.at(header, 1), Enum.at(header, 2), Enum.at(header, 3)}
   end
 
   defp parse_commits(contributor) do
-    [_|commits] =
-      String.split(contributor, "\n")
+    [_ | commits] = String.split(contributor, "\n")
 
     commits = Enum.map(commits, fn commit -> String.trim(commit) end)
     merges = Enum.count(commits, &(&1 =~ ~r/^(merge)+/i))

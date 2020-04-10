@@ -24,6 +24,7 @@ defmodule GitModuleTest do
     {:ok, kitrepo} = GitModule.clone_repo("https://github.com/kitplummer/kit", tmp_path)
 
     {:ok, this_repo} = GitModule.get_repo(".")
+
     [
       tmp_path: tmp_path,
       repo: repo,
@@ -87,11 +88,16 @@ defmodule GitModuleTest do
       %{contributions: 1, name: "MIURA Masahiro", email: "echochamber@gmail.com", merges: 0},
       %{contributions: 1, name: "0verse", email: "ali.h.caliskan@protonmail.com", merges: 0},
       %{contributions: 1, name: "degussa", email: "aron@mojang.com", merges: 0},
-      %{contributions: 1, email: "44509301+0verse@users.noreply.github.com", merges: 0, name: "0verse"}
+      %{
+        contributions: 1,
+        email: "44509301+0verse@users.noreply.github.com",
+        merges: 0,
+        name: "0verse"
+      }
     ]
 
     {:ok, result} = GitModule.get_clean_contributions_map(kitrepo)
-    assert Enum.at(expected,1) == Enum.at(result,1)
+    assert Enum.at(expected, 1) == Enum.at(result, 1)
   end
 
   # test "wip" do

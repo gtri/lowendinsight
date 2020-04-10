@@ -226,10 +226,11 @@ defmodule GitModule do
       Git.shortlog!(repo, ["-n", "-e", "HEAD"])
       |> GitHelper.parse_shortlog()
       |> Enum.map(fn contributor ->
-        %{name: contributor.name,
+        %{
+          name: contributor.name,
           contributions: contributor.count,
           merges: contributor.merges,
-          email: contributor.email,
+          email: contributor.email
         }
       end)
 
