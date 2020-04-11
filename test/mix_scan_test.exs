@@ -42,4 +42,19 @@ defmodule Mix.Tasks.ScanTest do
       assert 4 == report_data["metadata"]["repo_count"]
     end
   end
+
+  describe "multi hub repo scan/1" do
+    test "run scan and report against a package that has a known reference to Bitbucket" do
+      {:ok, tmp_path} = Temp.path("lei-analyzer-test")
+
+      {:ok, repo} =
+        GitModule.clone_repo("https://github.com/kitplummer/mix_test_project", tmp_path)
+
+      Scan.run([repo.path])
+      assert_received {:mix_shell, :info, [report]}
+
+      report_data = Poison.decode!(report)
+      assert 2 == report_data["metadata"]["repo_count"]
+    end
+  end
 end
