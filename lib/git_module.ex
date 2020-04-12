@@ -23,10 +23,12 @@ defmodule GitModule do
     case response do
       {:ok, repo} ->
         status = Git.log(repo)
+
         case status do
           {:ok, _} -> {:ok, repo}
           {:error, error} -> {:error, message: error.message}
         end
+
       {:error, _error} ->
         # This error message is not always appropriate
         {:error, "Repository not found"}
@@ -230,7 +232,7 @@ defmodule GitModule do
       |> GitHelper.parse_shortlog()
       |> Enum.map(fn contributor ->
         %{
-          name: contributor.name,
+          name: raw_binary_to_string(contributor.name),
           contributions: contributor.count,
           merges: contributor.merges,
           email: contributor.email
@@ -255,5 +257,19 @@ defmodule GitModule do
       |> String.trim()
 
     {:ok, space}
+  end
+
+  defp raw_binary_to_string(raw) do
+    String.codepoints(raw)
+    |> Enum.reduce(fn w, result ->
+      cond do
+        String.valid?(w) ->
+          result <> w
+
+        true ->
+          <<parsed::8>> = w
+          result <> <<parsed::utf8>>
+      end
+    end)
   end
 end
