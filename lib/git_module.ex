@@ -52,7 +52,7 @@ defmodule GitModule do
 
   def get_contributor_count(repo) do
     count =
-      Git.shortlog!(repo, ["-s", "-n"])
+      Git.shortlog!(repo, ["-s", "-n", "HEAD", "--"])
       |> String.trim()
       |> String.split(~r{\s\s+})
       |> Enum.count()
@@ -226,7 +226,7 @@ defmodule GitModule do
 
   def get_clean_contributions_map(repo) do
     map =
-      Git.shortlog!(repo, ["-n", "-e", "HEAD"])
+      Git.shortlog!(repo, ["-n", "-e", "HEAD", "--"])
       |> GitHelper.parse_shortlog()
       |> Enum.map(fn contributor ->
         %{
