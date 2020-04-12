@@ -22,8 +22,11 @@ defmodule GitModule do
 
     case response do
       {:ok, repo} ->
-        {:ok, repo}
-
+        status = Git.log(repo)
+        case status do
+          {:ok, _} -> {:ok, repo}
+          {:error, error} -> {:error, message: error.message}
+        end
       {:error, _error} ->
         # This error message is not always appropriate
         {:error, "Repository not found"}
