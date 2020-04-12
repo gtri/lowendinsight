@@ -52,7 +52,7 @@ defmodule GitModule do
 
   def get_contributor_count(repo) do
     count =
-      Git.shortlog!(repo, ["-s", "-n", "HEAD"])
+      Git.shortlog!(repo, ["-s", "-n"])
       |> String.trim()
       |> String.split(~r{\s\s+})
       |> Enum.count()
