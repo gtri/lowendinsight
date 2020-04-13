@@ -231,8 +231,15 @@ defmodule GitModule do
       Git.shortlog!(repo, ["-n", "-e", "HEAD", "--"])
       |> GitHelper.parse_shortlog()
       |> Enum.map(fn contributor ->
+        name =
+          cond do
+            contributor.name == nil -> "UNKNOWN"
+            contributor.name == "" -> "UNKNOWN"
+            contributor.name != "" -> raw_binary_to_string(contributor.name)
+          end
+
         %{
-          name: raw_binary_to_string(contributor.name),
+          name: raw_binary_to_string(name),
           contributions: contributor.count,
           merges: contributor.merges,
           email: contributor.email
