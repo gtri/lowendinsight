@@ -51,7 +51,6 @@ defmodule GitModule do
   get_contributors_count/1: returns the number of contributors for
   a given Git repo
   """
-
   def get_contributor_count(repo) do
     count =
       Git.shortlog!(repo, ["-s", "-n", "HEAD", "--"])
@@ -193,6 +192,14 @@ defmodule GitModule do
     end
   end
 
+  @spec get_contributors(Git.Repository.t()) :: {:ok, [Contributor.t()]}
+  def get_contributors(repo) do
+    list =
+      Git.shortlog!(repo, ["-n", "-e", "HEAD", "--"])
+      |> GitHelper.parse_shortlog()
+    {:ok, list}
+  end
+
   @spec get_contributor_distribution(Git.Repository.t()) :: {:ok, map, non_neg_integer}
   def get_contributor_distribution(repo) do
     contributors = Git.log!(repo, ["--pretty=format:%an"])
@@ -280,3 +287,4 @@ defmodule GitModule do
     end)
   end
 end
+

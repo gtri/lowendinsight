@@ -87,6 +87,7 @@ defmodule GitHelper do
     {:ok, length, filtered_list}
   end
 
+  @spec parse_shortlog(binary) :: [Contributor.t()]
   def parse_shortlog(log) do
     split_shortlog(log)
     |> Enum.map(fn contributor ->
@@ -102,7 +103,8 @@ defmodule GitHelper do
         merges: merges,
         commits: commits
       }
-    end)
+      end)
+    |> filter_contributors()
   end
 
   defp split_shortlog(log) do
@@ -192,5 +194,36 @@ defmodule GitHelper do
 
   defp get_contributor_counts([], accumulator) do
     {:ok, accumulator}
+  end
+
+  defp name_sorter(x) do
+    # Create a name metric to compare with
+    (10 * length(String.split(x, " "))) + String.length(x)
+  end
+
+  defp filter_contributors([]) do
+    []
+  end
+  @spec filter_contributors([Contributor.t()]) :: [Contributor.t()]
+  defp filter_contributors(list) do
+    is_author = fn (x, y) -> String.downcase(x.email) == String.downcase(y.email) end
+    # Divide the list
+    cur_contrib = for item <- list, is_author.(item, hd(list)) == true, do: item
+    other = for item <- list, is_author.(item, hd(list)) == false, do: item
+    # Determine the best name
+    #   for now, just the first one
+    name_list = for a <- cur_contrib, do: a.name
+    best_name =
+      Enum.sort_by(name_list, &name_sorter/1, :desc)
+      |> Enum.at(0)
+    # Create the new contributor object
+    contrib_ret = %Contributor{
+      name: best_name,
+      email: hd(list).email,
+      commits: List.flatten(for a <- cur_contrib, do: a.commits),
+      merges: Enum.sum(for a <- cur_contrib, do: a.merges),
+      count: Enum.sum(for a <- cur_contrib, do: a.count)
+    }
+    [contrib_ret | filter_contributors(other)]
   end
 end
