@@ -7,6 +7,8 @@ defmodule GitHelper do
   Collection of lower-level functions for analyzing outputs from git command.
   """
 
+  @type contrib_count :: %{String.t => integer}
+
   @doc """
       parse_diff/1: returns the relevant information contained in the last array position of a diff array
   """
@@ -74,6 +76,7 @@ defmodule GitHelper do
   @doc """
       det_filtered_contributor_count/2: Gets the resolved list of contributers, return count and list
   """
+  @spec get_filtered_contributor_count(contrib_count, non_neg_integer) :: {:ok, non_neg_integer, [contrib_count]}
   def get_filtered_contributor_count(map, total) do
     filtered_list =
       Enum.filter(
@@ -173,6 +176,7 @@ defmodule GitHelper do
     {:ok, accumulator}
   end
 
+  @spec get_contributor_counts([any], contrib_count) :: {:ok, [contrib_count], non_neg_integer}
   defp get_contributor_counts([head | tail], accumulator) do
     if head == "" do
       get_contributor_counts(tail, accumulator)
