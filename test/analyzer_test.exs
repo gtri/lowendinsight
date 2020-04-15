@@ -60,7 +60,7 @@ defmodule AnalyzerTest do
         :commit_currency_weeks => context[:weeks],
         :contributor_count => 1,
         :contributor_risk => "critical",
-        :functional_contributor_names => ["Kit Plummer"],
+        :functional_contributor_names => ["Kit Plummer <kplummer@blitz.local>"],
         :functional_contributors => 1,
         :functional_contributors_risk => "critical",
         :large_recent_commit_risk => "low",
@@ -82,6 +82,7 @@ defmodule AnalyzerTest do
     assert expected_data[:results] == repo_data[:data][:results]
   end
 
+  @tag timeout: 180000
   test "get multi report mixed risks" do
     {:ok, report} =
       AnalyzerModule.analyze(

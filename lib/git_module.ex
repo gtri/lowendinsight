@@ -51,7 +51,6 @@ defmodule GitModule do
   get_contributors_count/1: returns the number of contributors for
   a given Git repo
   """
-
   def get_contributor_count(repo) do
     count =
       Git.shortlog!(repo, ["-s", "-n", "HEAD", "--"])
@@ -193,12 +192,25 @@ defmodule GitModule do
     end
   end
 
+  @spec get_contributors(Git.Repository.t()) :: {:ok, [Contributor.t()]}
+  def get_contributors(repo) do
+    list =
+      Git.shortlog!(repo, ["-n", "-e", "HEAD", "--"])
+      |> GitHelper.parse_shortlog()
+    {:ok, list}
+  end
+
   @spec get_contributor_distribution(Git.Repository.t()) :: {:ok, map, non_neg_integer}
   def get_contributor_distribution(repo) do
-    contributors = Git.log!(repo, ["--pretty=format:%an"])
-    contributors_list = String.split(contributors, "\n")
-    total_contributions = Kernel.length(contributors_list)
-    {:ok, counts} = GitHelper.get_contributor_counts(contributors_list)
+    {:ok, contributors} = get_contributors(repo)
+    # Helper function
+    get_counts = fn contrib -> contrib.count end
+    get_signoff = fn contrib -> contrib.name <> " <" <> contrib.email <> ">" end
+    # Calcualte for each
+    counts_kwlist = for a <- contributors, do: {get_signoff.(a), get_counts.(a)}
+    counts = Enum.into(counts_kwlist, %{})
+    # Calculate for all
+    total_contributions = Enum.sum(for a <- contributors, do: get_counts.(a))
     {:ok, counts, total_contributions}
   end
 
@@ -213,16 +225,13 @@ defmodule GitModule do
   get_contributions_map/1: returns a map of contributions per git user
   note: this map is unfiltered, dupes aren't identified
   """
+  @spec get_contributions_map(Git.Repository.t) :: {:ok, [%{contributions: non_neg_integer,
+                                                            name: String.t}]}
   def get_contributions_map(repo) do
-    map =
-      Git.shortlog!(repo, ["-s", "-n", "HEAD"])
-      |> (&Regex.scan(~r{([0-9]+)\t(\w.*)}, &1)).()
-      |> Enum.map(fn x ->
-        k = Enum.at(x, 2)
-        v = String.to_integer(Enum.at(x, 1))
-        %{:name => k, :contributions => v}
-      end)
-
+    {:ok, contrib} = get_contributors(repo)
+    map = Enum.map(
+      contrib,
+      fn x -> %{:name => x.name, :contributions => x.count} end)
     {:ok, map}
   end
 
@@ -249,10 +258,23 @@ defmodule GitModule do
     {:ok, map}
   end
 
+  @doc """
+      get_top10_contributors_map/1: Gets the top 10 contributors and returns it
+      as a list of contributors with the commits list stripped from the map.
+  """
   @spec get_top10_contributors_map(Git.Repository.t()) :: {:ok, [any]}
   def get_top10_contributors_map(repo) do
-    {:ok, map} = get_clean_contributions_map(repo)
-    map10 = Enum.take(map, 10)
+    {:ok, contrib} = get_contributors(repo)
+    map10 =
+      Enum.sort_by(contrib, &(&1.count), &>=/2)
+      |> Stream.take(10)
+      |> Stream.map(fn x ->
+          Map.put(x, :contributions, x.count)
+        end)
+      |> Stream.map(fn x ->
+          Map.drop(x, [:commits, :count, :__struct__])
+        end)
+      |> Enum.to_list()
     {:ok, map10}
   end
 
@@ -280,3 +302,4 @@ defmodule GitModule do
     end)
   end
 end
+
