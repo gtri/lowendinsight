@@ -60,7 +60,7 @@ defmodule AnalyzerTest do
         :commit_currency_weeks => context[:weeks],
         :contributor_count => 1,
         :contributor_risk => "critical",
-        :functional_contributor_names => ["Kit Plummer"],
+        :functional_contributor_names => ["Kit Plummer <kplummer@blitz.local>"],
         :functional_contributors => 1,
         :functional_contributors_risk => "critical",
         :large_recent_commit_risk => "low",

@@ -205,8 +205,9 @@ defmodule GitModule do
     {:ok, contributors} = get_contributors(repo)
     # Helper function
     get_counts = fn contrib -> contrib.count end
+    get_signoff = fn contrib -> contrib.name <> " <" <> contrib.email <> ">" end
     # Calcualte for each
-    counts_kwlist = for a <- contributors, do: {a.name, get_counts.(a)}
+    counts_kwlist = for a <- contributors, do: {get_signoff.(a), get_counts.(a)}
     counts = Enum.into(counts_kwlist, %{})
     # Calculate for all
     total_contributions = Enum.sum(for a <- contributors, do: get_counts.(a))
@@ -268,7 +269,10 @@ defmodule GitModule do
       Enum.sort_by(contrib, &(&1.count), :desc)
       |> Stream.take(10)
       |> Stream.map(fn x ->
-          Map.drop(x, [:commits, :__struct__])
+          Map.put(x, :contributions, x.count)
+        end)
+      |> Stream.map(fn x ->
+          Map.drop(x, [:commits, :count, :__struct__])
         end)
       |> Enum.to_list()
     {:ok, map10}

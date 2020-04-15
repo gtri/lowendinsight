@@ -219,8 +219,8 @@ defmodule GitModuleTest do
 
     values = Map.values(contributor_distribution)
     assert total == 7
-    assert Enum.at(values, 0) == 7
-    assert Map.fetch(contributor_distribution, "Kit Plummer") == {:ok, 7}
+    assert values == [1, 6]
+    assert Map.fetch(contributor_distribution, "Kit Plummer <kplummer@blitz.local>") == {:ok, 6}
 
     {:ok, t_contributor_distribution, t_total} =
       GitModule.get_contributor_distribution(context[:tag_repo])
@@ -235,9 +235,10 @@ defmodule GitModuleTest do
              2,
              1,
              234,
-             5,
              1,
-             200,
+             4,
+             1,
+             204,
              1,
              1,
              9,
@@ -249,72 +250,70 @@ defmodule GitModuleTest do
              1,
              1,
              3,
-             4,
              3,
              2
-           ]
+    ]
 
     assert t_total == 524
 
     {:ok, bb_contributor_distribution, bb_total} =
       GitModule.get_contributor_distribution(context[:bitbucket_repo])
 
-    assert Map.values(bb_contributor_distribution) == [30, 2]
+    assert Map.values(bb_contributor_distribution) == [3, 29]
     assert bb_total == 32
 
     {:ok, gl_contributor_distribution, gl_total} =
       GitModule.get_contributor_distribution(context[:gitlab_repo])
 
     assert Map.values(gl_contributor_distribution) == [
+             3,
+             1,
              1,
              2,
-             10,
-             1,
-             2,
-             2,
-             22,
-             22,
+             11,
              5,
+             7,
              1,
-             1,
+             2,
              6,
+             12,
+             2,
+             2,
+             1,
+             1,
+             3,
+             1,
              3,
              11,
-             3,
-             2,
-             1,
-             1,
-             1,
+             5,
              35,
-             29,
+             7,
              1,
-             1,
-             6,
-             1,
-             1,
-             14,
+             2,
              4,
-             11,
+             4,
+             1,
+             1,
+             1,
+             2,
+             2,
+             28,
+             6,
+             6,
+             14,
+             1,
+             2,
+             24,
+             1,
+             3,
+             22,
              1,
              5,
              1,
-             2,
-             3,
-             2,
-             6,
-             8,
-             1,
-             17,
-             5,
-             1,
              11,
-             1,
-             2,
-             3,
-             1,
-             6,
-             5
-           ]
+             5,
+             11
+    ]
 
     assert gl_total == 281
   end
