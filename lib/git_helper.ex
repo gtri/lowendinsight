@@ -218,7 +218,7 @@ defmodule GitHelper do
     #   for now, just the first one
     name_list = for a <- cur_contrib, do: a.name
     best_name =
-      Enum.sort_by(name_list, &name_sorter/1, :desc)
+      Enum.sort_by(name_list, &name_sorter/1, &>=/2)
       |> Enum.at(0)
     # Create the new contributor object
     contrib_ret = %Contributor{
