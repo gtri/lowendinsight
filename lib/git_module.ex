@@ -266,7 +266,7 @@ defmodule GitModule do
   def get_top10_contributors_map(repo) do
     {:ok, contrib} = get_contributors(repo)
     map10 =
-      Enum.sort_by(contrib, &(&1.count), :desc)
+      Enum.sort_by(contrib, &(&1.count), &>=/2)
       |> Stream.take(10)
       |> Stream.map(fn x ->
           Map.put(x, :contributions, x.count)
