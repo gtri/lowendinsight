@@ -11,13 +11,16 @@ defmodule ScannerModule do
 
     File.cd!(path)
     start_time = DateTime.utc_now()
-
-    mixfile =
+    {_mixfile, count} =
       File.read!("./mix.exs")
-      |> Mixfile.parse()
+      |> Hex.Mixfile.parse!()
 
-    lib_map = Encoder.mixfile_map(mixfile)
+    {lockfile, _count} =
+      File.read!("./mix.lock")
+      |> Hex.Lockfile.parse!()
 
+    #lib_map = Hex.Encoder.mixfile_map(mixfile)
+    lib_map = Hex.Encoder.lockfile_map(lockfile)
     result_map =
       Enum.map(lib_map, fn {key, _value} ->
         query_hex(key)
@@ -25,7 +28,7 @@ defmodule ScannerModule do
 
     result = %{
       :state => :complete,
-      :metadata => %{repo_count: length(result_map)},
+      :metadata => %{repo_count: length(result_map), dependency_count: count},
       :report => %{:uuid => UUID.uuid1(), :repos => result_map}
     }
 

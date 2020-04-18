@@ -21,19 +21,22 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-defmodule Mixfile do
+defmodule Hex.Mixfile do
   @moduledoc """
     Provides mix.exs dependency parser
     From: https://github.com/librariesio/mix-deps-json/blob/master/lib/mixfile.ex
   """
 
-  @spec parse(binary) :: map
-  def parse(content) do
-    content
-    |> Code.string_to_quoted()
-    |> extract_module
-    |> extract_calls
-    |> extract_deps
+  @spec parse!(binary) :: {[any], non_neg_integer}
+  def parse!(content) do
+    deps =
+      content
+      |> Code.string_to_quoted()
+      |> extract_module
+      |> extract_calls
+      |> extract_deps
+
+    {deps, length(deps)}
   end
 
   defp extract_module({:ok, {:defmodule, _, content}}), do: content

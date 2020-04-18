@@ -10,7 +10,7 @@ defmodule GithubModule.MixProject do
       app: :lowendinsight,
       description: description(),
       version: "0.5.1",
-      elixir: "~> 1.9",
+      elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
@@ -33,7 +33,6 @@ defmodule GithubModule.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:tentacat, "~> 1.0"},
       {:httpoison, "~> 1.6"},
       {:git_cli, "~> 0.3"},
       {:poison, "~> 3.1"},

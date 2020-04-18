@@ -21,60 +21,47 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-defmodule Hex.Encoder do
+defmodule Hex.Lockfile do
   @moduledoc """
-    Provides map to json encoder
+    Provides mix.lock dependency parser
+    From: https://github.com/librariesio/mix-deps-json/blob/master/lib/lockfile.ex
   """
 
-  @spec mixfile_json(map) :: charlist
-  def mixfile_json(dependencies) do
-    dependencies
-    |> libraries
-    |> Poison.encode!()
+  @spec parse!(any) :: {[any], non_neg_integer}
+  def parse!(content) do
+    deps =
+      content
+      |> Code.string_to_quoted([file: "mix.lock", warn_on_unnecessary_quotes: false])
+      |> extract_deps()
+
+    {deps, length(deps)}
   end
 
-  def mixfile_map(dependencies) do
-    dependencies
-    |> libraries
+  defp extract_deps({:ok, {_, _, deps}}) do
+    extract_deps(deps)
   end
 
-  defp libraries(dependencies) do
-    dependencies |> Enum.reduce(%{}, &library/2)
+  defp extract_deps(deps) do
+    Enum.map(deps, &extract_dep/1)
   end
 
-  defp library({name, version}, acc) when is_bitstring(version) do
-    Map.put(acc, name, version)
+  defp extract_dep({_, {_, _, [source, lib, version, _, _, _]}}) do
+    {source, lib, version}
   end
 
-  defp library({name, details}, acc) do
-    Map.put(acc, name, extract_version(details))
+  defp extract_dep({_, {_, _, [source, lib, version, _]}}) do
+    {source, lib, version}
   end
 
-  # defp library({_, _, [name, version, _]}, acc) do
-  #   Map.put(acc, name, version)
+  defp extract_dep({_, {_, _, [source, lib, version]}}) do
+    {source, lib, version}
+  end
+
+  # defp extract_dep({_, {_, _, [source, lib, version, _, _, _, _]}}) do
+  #   {source, lib, version}
   # end
 
-  defp extract_version(details) do
-    item = Enum.into(details, %{})
-    Map.get(item, :tag) || Map.get(item, :branch) || "HEAD"
-  end
-
-  # @spec lockfile_json(map) :: charlist
-  # def lockfile_json(dependencies) do
-  #   dependencies
-  #   |> deps
-  #   |> Poison.encode!()
-  # end
-
-  def lockfile_map(dependencies) do
-    dependencies
-    |> deps
-  end
-
-  defp deps(deps) do
-    deps
-    |> Enum.reduce(%{}, fn {source, lib, version}, acc ->
-      Map.put(acc, lib, %{source: source, version: version})
-    end)
+  defp extract_dep({_, {_, _, [source, lib, version, _, _, _, _, _]}}) do
+    {source, lib, version}
   end
 end
