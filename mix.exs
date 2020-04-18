@@ -33,7 +33,6 @@ defmodule GithubModule.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:tentacat, "~> 1.0"},
       {:httpoison, "~> 1.6"},
       {:git_cli, "~> 0.3"},
       {:poison, "~> 3.1"},

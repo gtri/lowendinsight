@@ -340,8 +340,7 @@ defp deps do
 end
 ```
 
-Then run `mix deps.get`, and `mix lei.scan`.  This will produce a report for the dependencies
-specified in your Mix definition.
+Then run `mix deps.get`, and `mix lei.scan`.  This will produce a report for the dependencies (and transitive dependencies) specified in your Mix definition.
 
 You'll get a full report:
 
