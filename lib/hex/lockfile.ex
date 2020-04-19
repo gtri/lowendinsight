@@ -31,10 +31,23 @@ defmodule Hex.Lockfile do
   def parse!(content) do
     deps =
       content
-      |> Code.string_to_quoted([file: "mix.lock", warn_on_unnecessary_quotes: false])
+      |> Code.string_to_quoted(file: "mix.lock", warn_on_unnecessary_quotes: false)
       |> extract_deps()
 
     {deps, length(deps)}
+  end
+
+  def parse!(content, _do_no_extract) do
+    deps =
+      content
+      |> Code.string_to_quoted(file: "mix.lock", warn_on_unnecessary_quotes: false)
+      |> extract_deps_full()
+
+    deps
+  end
+
+  defp extract_deps_full({:ok, {_, _, deps}}) do
+    deps
   end
 
   defp extract_deps({:ok, {_, _, deps}}) do

@@ -11,6 +11,7 @@ defmodule Lowendinsight.Hex.EncoderTest do
       |> Hex.Mixfile.parse!()
 
     lib_map = Hex.Encoder.mixfile_map(deps)
+
     lib_json =
       Hex.Encoder.mixfile_json(lib_map)
       |> Poison.decode!()
@@ -29,5 +30,26 @@ defmodule Lowendinsight.Hex.EncoderTest do
     assert length(deps) == count
     assert true == Map.has_key?(trans_map, :cowboy)
     assert "1.0.4" == trans_map[:cowboy][:version]
+  end
+
+  test "get dependency tree as json" do
+    json =
+      File.read!("./test/fixtures/lockfile")
+      |> Hex.Lockfile.parse!(true)
+      |> Hex.Encoder.lockfile_json()
+
+    assert true == true
+  end
+
+  test "get mix.lock dependency tree as json" do
+    deps =
+      File.read!("./mix.lock")
+      |> Hex.Lockfile.parse!(true)
+      |> Hex.Encoder.lockfile_json()
+
+    json = Poison.decode!(deps)
+    bunt = List.first(json)
+
+    assert "bunt" == bunt["name"]
   end
 end

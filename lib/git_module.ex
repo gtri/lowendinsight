@@ -197,6 +197,7 @@ defmodule GitModule do
     list =
       Git.shortlog!(repo, ["-n", "-e", "HEAD", "--"])
       |> GitHelper.parse_shortlog()
+
     {:ok, list}
   end
 
@@ -225,13 +226,17 @@ defmodule GitModule do
   get_contributions_map/1: returns a map of contributions per git user
   note: this map is unfiltered, dupes aren't identified
   """
-  @spec get_contributions_map(Git.Repository.t) :: {:ok, [%{contributions: non_neg_integer,
-                                                            name: String.t}]}
+  @spec get_contributions_map(Git.Repository.t()) ::
+          {:ok, [%{contributions: non_neg_integer, name: String.t()}]}
   def get_contributions_map(repo) do
     {:ok, contrib} = get_contributors(repo)
-    map = Enum.map(
-      contrib,
-      fn x -> %{:name => x.name, :contributions => x.count} end)
+
+    map =
+      Enum.map(
+        contrib,
+        fn x -> %{:name => x.name, :contributions => x.count} end
+      )
+
     {:ok, map}
   end
 
@@ -265,16 +270,18 @@ defmodule GitModule do
   @spec get_top10_contributors_map(Git.Repository.t()) :: {:ok, [any]}
   def get_top10_contributors_map(repo) do
     {:ok, contrib} = get_contributors(repo)
+
     map10 =
-      Enum.sort_by(contrib, &(&1.count), &>=/2)
+      Enum.sort_by(contrib, & &1.count, &>=/2)
       |> Stream.take(10)
       |> Stream.map(fn x ->
-          Map.put(x, :contributions, x.count)
-        end)
+        Map.put(x, :contributions, x.count)
+      end)
       |> Stream.map(fn x ->
-          Map.drop(x, [:commits, :count, :__struct__])
-        end)
+        Map.drop(x, [:commits, :count, :__struct__])
+      end)
       |> Enum.to_list()
+
     {:ok, map10}
   end
 
@@ -302,4 +309,3 @@ defmodule GitModule do
     end)
   end
 end
-
