@@ -59,16 +59,80 @@ defmodule Hex.Encoder do
     Map.get(item, :tag) || Map.get(item, :branch) || "HEAD"
   end
 
-  # @spec lockfile_json(map) :: charlist
-  # def lockfile_json(dependencies) do
-  #   dependencies
-  #   |> deps
-  #   |> Poison.encode!()
-  # end
+  @spec lockfile_json(map) :: charlist
+  def lockfile_json(dependencies_full) do
+    dependencies_full
+    |> instruct()
+    |> Poison.encode!()
+  end
 
   def lockfile_map(dependencies) do
     dependencies
     |> deps
+  end
+
+  defp instruct(deps) do
+    deps
+    |> Enum.map(fn {k, v} ->
+      create_library(k, elem(v, 2))
+    end)
+  end
+
+  defp create_library(name, [source_type, source_name, source_hash, dependencies]) do
+    %Hex.Library{
+      name: name,
+      source_name: source_name,
+      source_type: source_type,
+      source_hash: source_hash,
+      dependencies: simplify_lib_dependencies(dependencies)
+    }
+  end
+
+  defp create_library(name, [source_type, source_name, version, source_hash, type, dependencies]) do
+    %Hex.Library{
+      name: name,
+      source_name: source_name,
+      source_type: source_type,
+      version: version,
+      source_hash: source_hash,
+      type: type,
+      dependencies: simplify_lib_dependencies(dependencies)
+    }
+  end
+
+  defp create_library(name, [
+         source_type,
+         source_name,
+         version,
+         source_hash,
+         type,
+         dependencies,
+         repo,
+         repo_hash
+       ]) do
+    %Hex.Library{
+      name: name,
+      source_name: source_name,
+      source_type: source_type,
+      version: version,
+      source_hash: source_hash,
+      type: type,
+      dependencies: simplify_lib_dependencies(dependencies),
+      repo: repo,
+      repo_hash: repo_hash
+    }
+  end
+
+  defp simplify_lib_dependencies(deps) do
+    deps
+    |> Enum.map(fn t ->
+      v = elem(t, 2)
+
+      %{
+        name: Enum.at(v, 0),
+        version: Enum.at(v, 1)
+      }
+    end)
   end
 
   defp deps(deps) do

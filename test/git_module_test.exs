@@ -252,7 +252,7 @@ defmodule GitModuleTest do
              3,
              3,
              2
-    ]
+           ]
 
     assert t_total == 524
 
@@ -313,7 +313,7 @@ defmodule GitModuleTest do
              11,
              5,
              11
-    ]
+           ]
 
     assert gl_total == 281
   end

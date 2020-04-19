@@ -7,7 +7,7 @@ defmodule GitHelper do
   Collection of lower-level functions for analyzing outputs from git command.
   """
 
-  @type contrib_count :: %{String.t => integer}
+  @type contrib_count :: %{String.t() => integer}
 
   @doc """
       parse_diff/1: returns the relevant information contained in the last array position of a diff array
@@ -76,7 +76,8 @@ defmodule GitHelper do
   @doc """
       det_filtered_contributor_count/2: Gets the resolved list of contributers, return count and list
   """
-  @spec get_filtered_contributor_count(contrib_count, non_neg_integer) :: {:ok, non_neg_integer, [contrib_count]}
+  @spec get_filtered_contributor_count(contrib_count, non_neg_integer) ::
+          {:ok, non_neg_integer, [contrib_count]}
   def get_filtered_contributor_count(map, total) do
     filtered_list =
       Enum.filter(
@@ -106,7 +107,7 @@ defmodule GitHelper do
         merges: merges,
         commits: commits
       }
-      end)
+    end)
     |> filter_contributors()
   end
 
@@ -202,24 +203,27 @@ defmodule GitHelper do
 
   defp name_sorter(x) do
     # Create a name metric to compare with
-    (10 * length(String.split(x, " "))) + String.length(x)
+    10 * length(String.split(x, " ")) + String.length(x)
   end
 
   defp filter_contributors([]) do
     []
   end
+
   @spec filter_contributors([Contributor.t()]) :: [Contributor.t()]
   defp filter_contributors(list) do
-    is_author = fn (x, y) -> String.downcase(x.email) == String.downcase(y.email) end
+    is_author = fn x, y -> String.downcase(x.email) == String.downcase(y.email) end
     # Divide the list
     cur_contrib = for item <- list, is_author.(item, hd(list)) == true, do: item
     other = for item <- list, is_author.(item, hd(list)) == false, do: item
     # Determine the best name
     #   for now, just the first one
     name_list = for a <- cur_contrib, do: a.name
+
     best_name =
       Enum.sort_by(name_list, &name_sorter/1, &>=/2)
       |> Enum.at(0)
+
     # Create the new contributor object
     contrib_ret = %Contributor{
       name: best_name,
@@ -228,6 +232,7 @@ defmodule GitHelper do
       merges: Enum.sum(for a <- cur_contrib, do: a.merges),
       count: Enum.sum(for a <- cur_contrib, do: a.count)
     }
+
     [contrib_ret | filter_contributors(other)]
   end
 end

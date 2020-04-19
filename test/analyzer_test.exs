@@ -82,7 +82,7 @@ defmodule AnalyzerTest do
     assert expected_data[:results] == repo_data[:data][:results]
   end
 
-  @tag timeout: 180000
+  @tag timeout: 180_000
   test "get multi report mixed risks" do
     {:ok, report} =
       AnalyzerModule.analyze(

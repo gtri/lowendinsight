@@ -6,11 +6,27 @@ defmodule ScannerModule do
   @moduledoc """
   Scanner scans.
   """
+
+  def dependencies(path) do
+    cwd = File.cwd!()
+
+    File.cd!(path)
+
+    deps =
+      File.read!("./mix.lock")
+      |> Hex.Lockfile.parse!(true)
+      |> Hex.Encoder.lockfile_json()
+
+    File.cd!(cwd)
+    deps
+  end
+
   def scan(path) do
     cwd = File.cwd!()
 
     File.cd!(path)
     start_time = DateTime.utc_now()
+
     {_mixfile, count} =
       File.read!("./mix.exs")
       |> Hex.Mixfile.parse!()
@@ -19,8 +35,9 @@ defmodule ScannerModule do
       File.read!("./mix.lock")
       |> Hex.Lockfile.parse!()
 
-    #lib_map = Hex.Encoder.mixfile_map(mixfile)
+    # lib_map = Hex.Encoder.mixfile_map(mixfile)
     lib_map = Hex.Encoder.lockfile_map(lockfile)
+
     result_map =
       Enum.map(lib_map, fn {key, _value} ->
         query_hex(key)

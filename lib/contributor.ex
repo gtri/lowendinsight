@@ -6,5 +6,10 @@ defmodule Contributor do
             commits: []
 
   @type t :: %__MODULE__{
-    name: String.t(), email: String.t(), count: integer, merges: integer, commits: [String.t()]}
+          name: String.t(),
+          email: String.t(),
+          count: integer,
+          merges: integer,
+          commits: [String.t()]
+        }
 end
