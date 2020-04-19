@@ -372,6 +372,12 @@ passing the absolute path to the directory where it is cloned:
 mix lei.scan /some/path/to/a/git/repo
 ```
 
+### Mix Task for Generating a Dependencies JSON List
+
+```
+mix lei.dependencies /some/path/to/a/Mix-based-project
+```
+
 ### Governance/Parameter Configuration
 
 The library uses a baseline configuration for each of the metrics calculated.  If you want to set your own, all you need to do is add the `:lowendinsight` configuration as mentioned below in the *Configuration* section.  Tuning of these defaults will likely happen over time, as analysis continues to run on a large scale.  The analysis will be made available here soon.
