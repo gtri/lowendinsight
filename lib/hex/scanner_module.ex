@@ -85,17 +85,17 @@ defmodule ScannerModule do
 
         cond do
           Map.has_key?(hex_package_links, "github") ->
-            {:ok, report} = AnalyzerModule.analyze(hex_package_links["github"], "mix.scan")
+            {:ok, report} = AnalyzerModule.analyze(hex_package_links["github"], "mix.scan", %{types: false})
 
             report
 
           Map.has_key?(hex_package_links, "bitbucket") ->
-            {:ok, report} = AnalyzerModule.analyze(hex_package_links["bitbucket"], "mix.scan")
+            {:ok, report} = AnalyzerModule.analyze(hex_package_links["bitbucket"], "mix.scan", %{types: false})
 
             report
 
           Map.has_key?(hex_package_links, "gitlab") ->
-            {:ok, report} = AnalyzerModule.analyze(hex_package_links["gitlab"], "mix.scan")
+            {:ok, report} = AnalyzerModule.analyze(hex_package_links["gitlab"], "mix.scan", %{types: false})
 
             report
 
