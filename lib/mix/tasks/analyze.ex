@@ -44,7 +44,7 @@ defmodule Mix.Tasks.Lei.Analyze do
   ```
   """
   def run(url) do
-    {:ok, report} = AnalyzerModule.analyze(url, "mix task")
+    {:ok, report} = AnalyzerModule.analyze(url, "mix task", DateTime.utc_now(), %{types: true})
 
     Poison.encode!(report)
     |> Mix.shell().info()

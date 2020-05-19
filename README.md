@@ -2,6 +2,15 @@
 
 ![build status](https://github.com/gtri/lowendinsight/workflows/default_elixir_ci/badge.svg?branch=develop) ![Hex.pm](https://img.shields.io/hexpm/v/lowendinsight) [![Coverage Status](https://coveralls.io/repos/github/gtri/lowendinsight/badge.svg?branch=develop)](https://coveralls.io/github/gtri/lowendinsight?branch=develop)
 
+CAVEAT: Version 0.6.0 includes breaking changes to the analyze function -> upgrading from 0.5.0 to 0.6.0 will require you to pass in a couple
+extra arguments to the analyze function:
+
+```
+AnalyzerModule.analyze(["https://github.com/gtri/lowendinsight","https://github.com/gtri/lowendinsight-get"], "iex", DateTime.utc_now(), %{types: true})
+```
+
+In version 0.6.0 the `DateTime.utc_now()` and new `options` field `%{types: true}` are required.
+
 <img src="lei_bus_128.png" style="float: left;margin-right: 10px;margin-top: 10px;"> LowEndInsight is a simple "bus-factor" risk analysis library for Open
 Source Software which is managed within a Git repository.  Provide the
 git URL and the library will respond with a basic Elixir Map structure report. (There is a desire to make this a struct.)
@@ -394,7 +403,7 @@ This will get you the `iex` prompt:
 Erlang/OTP 22 [erts-10.6.4] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [hipe] [dtrace]
 
 Interactive Elixir (1.10.2) - press Ctrl+C to exit (type h() ENTER for help)
-iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
+iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex", %{types: false}
 {:ok,
  %{
    data: %{
@@ -449,7 +458,7 @@ iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
 Here's the command that you would paste in to the `iex` REPL as an example:
 
 ```
-AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
+AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex", %{types: false}
 ```
 
 ### Docker
@@ -466,7 +475,7 @@ From iex you can access to the library functions.
 Erlang/OTP 22 [erts-10.6.3] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [hipe] [dtrace]
 
 Interactive Elixir (1.10.0) - press Ctrl+C to exit (type h() ENTER for help)
-iex(1)> AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"], "iex")
+iex(1)> AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"], "iex", DateTime.utc_now(), %{types: true})
 {:ok,
  %{
    metadata: %{
