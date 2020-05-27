@@ -17,11 +17,11 @@ defmodule AnalyzerTest do
 
   test "analyze local path repo" do
     {:ok, cwd} = File.cwd()
-    {:ok, report} = AnalyzerModule.analyze(["file:///#{cwd}"], "path_test")
+    {:ok, report} = AnalyzerModule.analyze(["file:///#{cwd}"], "path_test", DateTime.utc_now(), %{types: false})
     assert "complete" == report[:state]
     repo_data = List.first(report[:report][:repos])
     assert "path_test" == repo_data[:header][:source_client]
-    assert %{mix: ["#{cwd}/mix.exs", "#{cwd}/mix.lock"]} == repo_data[:data][:project_types]
+    assert [] == repo_data[:data][:project_types]
   end
 
   test "get empty report" do
@@ -60,12 +60,15 @@ defmodule AnalyzerTest do
         :commit_currency_weeks => context[:weeks],
         :contributor_count => 1,
         :contributor_risk => "critical",
-        :functional_contributor_names => ["Kit Plummer"],
+        :functional_contributor_names => ["Kit Plummer <kplummer@blitz.local>"],
         :functional_contributors => 1,
         :functional_contributors_risk => "critical",
         :large_recent_commit_risk => "low",
         :recent_commit_size_in_percent_of_codebase => 0.00368,
-        :top10_contributors => [%{contributions: 7, name: "Kit Plummer"}]
+        :top10_contributors => [
+          %{contributions: 6, name: "Kit Plummer", email: "kplummer@blitz.local", merges: 0},
+          %{contributions: 1, email: "kplummer@blitz.(none)", merges: 0, name: "Kit Plummer"}
+        ]
       },
       :project_types => %{},
       :repo_size => "292K",
@@ -79,6 +82,7 @@ defmodule AnalyzerTest do
     assert expected_data[:results] == repo_data[:data][:results]
   end
 
+  @tag timeout: 180_000
   test "get multi report mixed risks" do
     {:ok, report} =
       AnalyzerModule.analyze(
@@ -175,7 +179,7 @@ defmodule AnalyzerTest do
   end
 
   test "get single repo report validated by report schema" do
-    {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/lita-cron"], "test")
+    {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/lita-cron"], "test", DateTime.utc_now(), %{types: true})
 
     {:ok, report_json} = Poison.encode(report)
 
@@ -191,7 +195,9 @@ defmodule AnalyzerTest do
     {:ok, report} =
       AnalyzerModule.analyze(
         ["https://github.com/kitplummer/xmpp4rails", "https://github.com/kitplummer/lita-cron"],
-        "test_multi"
+        "test_multi",
+        DateTime.utc_now(),
+        %{types: true}
       )
 
     {:ok, report_json} = Poison.encode(report)

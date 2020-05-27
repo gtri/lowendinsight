@@ -6,17 +6,37 @@ defmodule ScannerModule do
   @moduledoc """
   Scanner scans.
   """
+
+  def dependencies(path) do
+    cwd = File.cwd!()
+
+    File.cd!(path)
+
+    deps =
+      File.read!("./mix.lock")
+      |> Hex.Lockfile.parse!(true)
+      |> Hex.Encoder.lockfile_json()
+
+    File.cd!(cwd)
+    deps
+  end
+
   def scan(path) do
     cwd = File.cwd!()
 
     File.cd!(path)
     start_time = DateTime.utc_now()
 
-    mixfile =
+    {_mixfile, count} =
       File.read!("./mix.exs")
-      |> Mixfile.parse()
+      |> Hex.Mixfile.parse!()
 
-    lib_map = Encoder.mixfile_map(mixfile)
+    {lockfile, _count} =
+      File.read!("./mix.lock")
+      |> Hex.Lockfile.parse!()
+
+    # lib_map = Hex.Encoder.mixfile_map(mixfile)
+    lib_map = Hex.Encoder.lockfile_map(lockfile)
 
     result_map =
       Enum.map(lib_map, fn {key, _value} ->
@@ -25,7 +45,7 @@ defmodule ScannerModule do
 
     result = %{
       :state => :complete,
-      :metadata => %{repo_count: length(result_map)},
+      :metadata => %{repo_count: length(result_map), dependency_count: count},
       :report => %{:uuid => UUID.uuid1(), :repos => result_map}
     }
 
@@ -65,17 +85,17 @@ defmodule ScannerModule do
 
         cond do
           Map.has_key?(hex_package_links, "github") ->
-            {:ok, report} = AnalyzerModule.analyze(hex_package_links["github"], "mix.scan")
+            {:ok, report} = AnalyzerModule.analyze(hex_package_links["github"], "mix.scan", %{types: false})
 
             report
 
           Map.has_key?(hex_package_links, "bitbucket") ->
-            {:ok, report} = AnalyzerModule.analyze(hex_package_links["bitbucket"], "mix.scan")
+            {:ok, report} = AnalyzerModule.analyze(hex_package_links["bitbucket"], "mix.scan", %{types: false})
 
             report
 
           Map.has_key?(hex_package_links, "gitlab") ->
-            {:ok, report} = AnalyzerModule.analyze(hex_package_links["gitlab"], "mix.scan")
+            {:ok, report} = AnalyzerModule.analyze(hex_package_links["gitlab"], "mix.scan", %{types: false})
 
             report
 

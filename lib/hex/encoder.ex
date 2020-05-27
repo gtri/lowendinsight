@@ -21,7 +21,7 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-defmodule Encoder do
+defmodule Hex.Encoder do
   @moduledoc """
     Provides map to json encoder
   """
@@ -46,35 +46,99 @@ defmodule Encoder do
     Map.put(acc, name, version)
   end
 
-  # defp library({name, details}, acc) do
-  #   Map.put(acc, name, extract_version(details))
-  # end
-
-  defp library({_, _, [name, version, _]}, acc) do
-    Map.put(acc, name, version)
+  defp library({name, details}, acc) do
+    Map.put(acc, name, extract_version(details))
   end
 
-  # defp extract_version(details) do
-  #   item = Enum.into(details, %{})
-  #   Map.get(item, :tag) || Map.get(item, :branch) || "HEAD"
+  # defp library({_, _, [name, version, _]}, acc) do
+  #   Map.put(acc, name, version)
   # end
 
-  # @spec lockfile_json(map) :: charlist
-  # def lockfile_json(dependencies) do
-  #   dependencies
-  #   |> deps
-  #   |> Poison.encode!()
-  # end
+  defp extract_version(details) do
+    item = Enum.into(details, %{})
+    Map.get(item, :tag) || Map.get(item, :branch) || "HEAD"
+  end
 
-  # def lockfile_map(dependencies) do
-  #   dependencies
-  #   |> deps
-  # end
+  @spec lockfile_json(map) :: charlist
+  def lockfile_json(dependencies_full) do
+    dependencies_full
+    |> instruct()
+    |> Poison.encode!()
+  end
 
-  # defp deps(deps) do
-  #   deps
-  #   |> Enum.reduce(%{}, fn {source, lib, version}, acc ->
-  #     Map.put(acc, lib, %{source: source, version: version})
-  #   end)
-  # end
+  def lockfile_map(dependencies) do
+    dependencies
+    |> deps
+  end
+
+  defp instruct(deps) do
+    deps
+    |> Enum.map(fn {k, v} ->
+      create_library(k, elem(v, 2))
+    end)
+  end
+
+  defp create_library(name, [source_type, source_name, source_hash, dependencies]) do
+    %Hex.Library{
+      name: name,
+      source_name: source_name,
+      source_type: source_type,
+      source_hash: source_hash,
+      dependencies: simplify_lib_dependencies(dependencies)
+    }
+  end
+
+  defp create_library(name, [source_type, source_name, version, source_hash, type, dependencies]) do
+    %Hex.Library{
+      name: name,
+      source_name: source_name,
+      source_type: source_type,
+      version: version,
+      source_hash: source_hash,
+      type: type,
+      dependencies: simplify_lib_dependencies(dependencies)
+    }
+  end
+
+  defp create_library(name, [
+         source_type,
+         source_name,
+         version,
+         source_hash,
+         type,
+         dependencies,
+         repo,
+         repo_hash
+       ]) do
+    %Hex.Library{
+      name: name,
+      source_name: source_name,
+      source_type: source_type,
+      version: version,
+      source_hash: source_hash,
+      type: type,
+      dependencies: simplify_lib_dependencies(dependencies),
+      repo: repo,
+      repo_hash: repo_hash
+    }
+  end
+
+  defp simplify_lib_dependencies(deps) do
+    deps
+    |> Enum.map(fn t ->
+      v = elem(t, 2)
+
+      %{
+        name: Enum.at(v, 0),
+        version: Enum.at(v, 1)
+      }
+    end)
+  end
+
+  defp deps(deps) do
+    deps
+    |> Enum.reduce(%{}, fn {source, lib, version}, acc ->
+      Map.put(acc, lib, %{source: source, version: version})
+    end)
+  end
 end

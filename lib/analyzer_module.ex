@@ -9,8 +9,9 @@ defmodule AnalyzerModule do
   or "file".  Note, that the latter scheme will only work an existing clone
   and won't remove the directory structure upon completion of analysis.
   """
-  @spec analyze(String.t() | list(), String.t()) :: tuple()
-  def analyze(url, source) when is_binary(url) do
+  @spec analyze(binary | maybe_improper_list, any, any) :: {:ok, map}
+  def analyze(url, source, options) when is_binary(url) do
+    IO.inspect options, label: "OPTIONS"
     Temp.track!()
 
     start_time = DateTime.utc_now()
@@ -101,7 +102,12 @@ defmodule AnalyzerModule do
         gradle_type
       ]
 
-      project_types_identified = ProjectIdent.categorize_repo(repo, project_types)
+      project_types_identified =
+      case Map.has_key?(options, :types) && options.types == true do
+        true -> ProjectIdent.categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
+        false -> []
+      end
+
       {:ok, repo_size} = GitModule.get_repo_size(repo)
       {:ok, git_hash} = GitModule.get_hash(repo)
       {:ok, default_branch} = GitModule.get_default_branch(repo)
@@ -142,7 +148,7 @@ defmodule AnalyzerModule do
             hash: git_hash,
             default_branch: default_branch
           },
-          project_types: Helpers.convert_config_to_list(project_types_identified),
+          project_types: project_types_identified,
           repo_size: repo_size,
           results: %{
             contributor_count: count,
@@ -208,7 +214,7 @@ defmodule AnalyzerModule do
     ```
   """
   # @defaults %{start_time: DateTime.utc_now()}
-  def analyze(urls, source, start_time \\ DateTime.utc_now()) when is_list(urls) do
+  def analyze(urls, source \\ "lei", start_time \\ DateTime.utc_now(), options \\ %{}) when is_list(urls) do
     ## Concurrency for parallelizing the analysis. This is the magic.
     ## Will run two jobs per core available max...
     max_concurrency =
@@ -217,7 +223,7 @@ defmodule AnalyzerModule do
 
     l =
       urls
-      |> Task.async_stream(__MODULE__, :analyze, [source],
+      |> Task.async_stream(__MODULE__, :analyze, [source, options],
         timeout: :infinity,
         max_concurrency: max_concurrency
       )

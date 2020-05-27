@@ -21,29 +21,60 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-defmodule Hex.Mixfile do
+defmodule Hex.Lockfile do
   @moduledoc """
-    Provides mix.exs dependency parser
-    From: https://github.com/librariesio/mix-deps-json/blob/master/lib/mixfile.ex
+    Provides mix.lock dependency parser
+    From: https://github.com/librariesio/mix-deps-json/blob/master/lib/lockfile.ex
   """
 
-  @spec parse!(binary) :: {[any], non_neg_integer}
+  @spec parse!(any) :: {[any], non_neg_integer}
   def parse!(content) do
     deps =
       content
-      |> Code.string_to_quoted()
-      |> extract_module
-      |> extract_calls
-      |> extract_deps
+      |> Code.string_to_quoted(file: "mix.lock", warn_on_unnecessary_quotes: false)
+      |> extract_deps()
 
     {deps, length(deps)}
   end
 
-  defp extract_module({:ok, {:defmodule, _, content}}), do: content
+  def parse!(content, _do_no_extract) do
+    deps =
+      content
+      |> Code.string_to_quoted(file: "mix.lock", warn_on_unnecessary_quotes: false)
+      |> extract_deps_full()
 
-  defp extract_calls([_ | [[do: {:__block__, _, calls}] | _]]), do: calls
+    deps
+  end
 
-  defp extract_deps({:defp, _, [{:deps, _, _}, [do: dependencies]]}, _), do: dependencies
-  defp extract_deps(_, tail), do: extract_deps(tail)
-  defp extract_deps([head | tail]), do: extract_deps(head, tail)
+  defp extract_deps_full({:ok, {_, _, deps}}) do
+    deps
+  end
+
+  defp extract_deps({:ok, {_, _, deps}}) do
+    extract_deps(deps)
+  end
+
+  defp extract_deps(deps) do
+    Enum.map(deps, &extract_dep/1)
+  end
+
+  defp extract_dep({_, {_, _, [source, lib, version, _, _, _]}}) do
+    {source, lib, version}
+  end
+
+  defp extract_dep({_, {_, _, [source, lib, version, _]}}) do
+    {source, lib, version}
+  end
+
+  defp extract_dep({_, {_, _, [source, lib, version]}}) do
+    {source, lib, version}
+  end
+
+  # defp extract_dep({_, {_, _, [source, lib, version, _, _, _, _]}}) do
+  #   {source, lib, version}
+  # end
+
+  defp extract_dep({_, {_, _, [source, lib, version, _, _, _, _, _]}}) do
+    {source, lib, version}
+  end
 end

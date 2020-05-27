@@ -30,6 +30,18 @@ defmodule Mix.Tasks.AnalyzeTest do
       report_data = Poison.decode!(report)
       assert :ok == JsonXema.validate(schema, report_data)
       assert true == JsonXema.valid?(schema, report_data)
+
+      Analyze.run(["https://github.com/amorphid/artifactory-elixir"])
+      assert_received {:mix_shell, :info, [report]}
+      report_data = Poison.decode!(report)
+      assert :ok == JsonXema.validate(schema, report_data)
+      assert true == JsonXema.valid?(schema, report_data)
+
+      Analyze.run(["https://github.com/wli0503/Mixeur"])
+      assert_received {:mix_shell, :info, [report]}
+      report_data = Poison.decode!(report)
+      assert :ok == JsonXema.validate(schema, report_data)
+      assert true == JsonXema.valid?(schema, report_data)
     end
   end
 end

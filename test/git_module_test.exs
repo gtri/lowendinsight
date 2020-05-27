@@ -23,13 +23,16 @@ defmodule GitModuleTest do
 
     {:ok, kitrepo} = GitModule.clone_repo("https://github.com/kitplummer/kit", tmp_path)
 
+    {:ok, this_repo} = GitModule.get_repo(".")
+
     [
       tmp_path: tmp_path,
       repo: repo,
       tag_repo: tag_repo,
       bitbucket_repo: bitbucket_repo,
       gitlab_repo: gitlab_repo,
-      kitrepo: kitrepo
+      kitrepo: kitrepo,
+      this_repo: this_repo
     ]
   end
 
@@ -61,17 +64,40 @@ defmodule GitModuleTest do
     {:ok, maps} = GitModule.get_contributions_map(kitrepo)
 
     expected_array = [
-      %{name: "Ben Morris", contributions: 358},
-      %{name: "Kit Plummer", contributions: 64},
-      %{name: "Tyler Bezera", contributions: 6},
-      %{name: "Jakub Stasiak", contributions: 4},
-      %{name: "0verse", contributions: 2},
-      %{name: "pixeljoelson", contributions: 2},
-      %{name: "degussa", contributions: 1},
-      %{name: "MIURA Masahiro", contributions: 1}
+      %{contributions: 358, name: "Ben Morris"},
+      %{contributions: 64, name: "Kit Plummer"},
+      %{contributions: 6, name: "Tyler Bezera"},
+      %{contributions: 4, name: "Jakub Stasiak"},
+      %{contributions: 2, name: "pixeljoelson"},
+      %{contributions: 1, name: "MIURA Masahiro"},
+      %{contributions: 1, name: "0verse"},
+      %{contributions: 1, name: "degussa"},
+      %{contributions: 1, name: "0verse"}
     ]
 
     assert Enum.at(expected_array, 0) == Enum.at(maps, 0)
+  end
+
+  test "get cleaned contribution map", %{kitrepo: kitrepo} do
+    expected = [
+      %{contributions: 358, name: "Ben Morris", email: "ben@bendmorris.com", merges: 2},
+      %{contributions: 64, name: "Kit Plummer", email: "kitplummer@gmail.com", merges: 4},
+      %{contributions: 6, name: "Tyler Bezera", email: "TylerJessilynn@gmail.com", merges: 0},
+      %{contributions: 4, name: "Jakub Stasiak", email: "jakub@stasiak.at", merges: 0},
+      %{contributions: 2, name: "pixeljoelson", email: "pixeljoelson@gmail.com", merges: 0},
+      %{contributions: 1, name: "MIURA Masahiro", email: "echochamber@gmail.com", merges: 0},
+      %{contributions: 1, name: "0verse", email: "ali.h.caliskan@protonmail.com", merges: 0},
+      %{contributions: 1, name: "degussa", email: "aron@mojang.com", merges: 0},
+      %{
+        contributions: 1,
+        email: "44509301+0verse@users.noreply.github.com",
+        merges: 0,
+        name: "0verse"
+      }
+    ]
+
+    {:ok, result} = GitModule.get_clean_contributions_map(kitrepo)
+    assert Enum.at(expected, 1) == Enum.at(result, 1)
   end
 
   # test "wip" do
@@ -193,8 +219,8 @@ defmodule GitModuleTest do
 
     values = Map.values(contributor_distribution)
     assert total == 7
-    assert Enum.at(values, 0) == 7
-    assert Map.fetch(contributor_distribution, "Kit Plummer") == {:ok, 7}
+    assert values == [1, 6]
+    assert Map.fetch(contributor_distribution, "Kit Plummer <kplummer@blitz.local>") == {:ok, 6}
 
     {:ok, t_contributor_distribution, t_total} =
       GitModule.get_contributor_distribution(context[:tag_repo])
@@ -209,9 +235,10 @@ defmodule GitModuleTest do
              2,
              1,
              234,
-             5,
              1,
-             200,
+             4,
+             1,
+             204,
              1,
              1,
              9,
@@ -223,7 +250,6 @@ defmodule GitModuleTest do
              1,
              1,
              3,
-             4,
              3,
              2
            ]
@@ -233,61 +259,60 @@ defmodule GitModuleTest do
     {:ok, bb_contributor_distribution, bb_total} =
       GitModule.get_contributor_distribution(context[:bitbucket_repo])
 
-    assert Map.values(bb_contributor_distribution) == [30, 2]
+    assert Map.values(bb_contributor_distribution) == [3, 29]
     assert bb_total == 32
 
     {:ok, gl_contributor_distribution, gl_total} =
       GitModule.get_contributor_distribution(context[:gitlab_repo])
 
     assert Map.values(gl_contributor_distribution) == [
+             3,
+             1,
              1,
              2,
-             10,
-             1,
-             2,
-             2,
-             22,
-             22,
+             11,
              5,
+             7,
              1,
-             1,
+             2,
              6,
+             12,
+             2,
+             2,
+             1,
+             1,
+             3,
+             1,
              3,
              11,
-             3,
-             2,
-             1,
-             1,
-             1,
+             5,
              35,
-             29,
+             7,
              1,
-             1,
-             6,
-             1,
-             1,
-             14,
+             2,
              4,
-             11,
+             4,
+             1,
+             1,
+             1,
+             2,
+             2,
+             28,
+             6,
+             6,
+             14,
+             1,
+             2,
+             24,
+             1,
+             3,
+             22,
              1,
              5,
              1,
-             2,
-             3,
-             2,
-             6,
-             8,
-             1,
-             17,
-             5,
-             1,
              11,
-             1,
-             2,
-             3,
-             1,
-             6,
-             5
+             5,
+             11
            ]
 
     assert gl_total == 281

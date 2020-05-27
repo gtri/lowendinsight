@@ -2,7 +2,16 @@
 
 ![build status](https://github.com/gtri/lowendinsight/workflows/default_elixir_ci/badge.svg?branch=develop) ![Hex.pm](https://img.shields.io/hexpm/v/lowendinsight) [![Coverage Status](https://coveralls.io/repos/github/gtri/lowendinsight/badge.svg?branch=develop)](https://coveralls.io/github/gtri/lowendinsight?branch=develop)
 
-LowEndInsight is a simple "bus-factor" risk analysis library for Open
+CAVEAT: Version 0.6.0 includes breaking changes to the analyze function -> upgrading from 0.5.0 to 0.6.0 will require you to pass in a couple
+extra arguments to the analyze function:
+
+```
+AnalyzerModule.analyze(["https://github.com/gtri/lowendinsight","https://github.com/gtri/lowendinsight-get"], "iex", DateTime.utc_now(), %{types: true})
+```
+
+In version 0.6.0 the `DateTime.utc_now()` and new `options` field `%{types: true}` are required.
+
+<img src="lei_bus_128.png" style="float: left;margin-right: 10px;margin-top: 10px;"> LowEndInsight is a simple "bus-factor" risk analysis library for Open
 Source Software which is managed within a Git repository.  Provide the
 git URL and the library will respond with a basic Elixir Map structure report. (There is a desire to make this a struct.)
 
@@ -29,17 +38,17 @@ the tolerance level, which you can easily override) and responds with a useful r
 {
   "state": "complete",
   "report": {
-    "uuid": "c3baa0fe-7463-11ea-9b27-acde48001122",
+    "uuid": "4d1e2b08-7b68-11ea-9ca1-88e9fe666193",
     "repos": [
       {
         "header": {
-          "uuid": "c3ba45be-7463-11ea-a2a8-acde48001122",
-          "start_time": "2020-04-01T21:57:09.307791Z",
+          "uuid": "4d1dbee8-7b68-11ea-93b9-88e9fe666193",
+          "start_time": "2020-04-10T20:15:34.912972Z",
           "source_client": "mix task",
           "repo": "https://github.com/facebook/react",
           "library_version": "",
-          "end_time": "2020-04-01T21:57:22.245416Z",
-          "duration": 13
+          "end_time": "2020-04-10T20:17:28.867848Z",
+          "duration": 114
         },
         "data": {
           "risk": "low",
@@ -47,49 +56,69 @@ the tolerance level, which you can easily override) and responds with a useful r
             "top10_contributors": [
               {
                 "name": "Paul O’Shannessy",
+                "merges": 959,
+                "email": "paul@oshannessy.com",
                 "contributions": 1777
               },
               {
                 "name": "Dan Abramov",
-                "contributions": 1377
-              },
-              {
-                "name": "Brian Vaughn",
-                "contributions": 1350
+                "merges": 86,
+                "email": "dan.abramov@gmail.com",
+                "contributions": 1356
               },
               {
                 "name": "Sophie Alpert",
-                "contributions": 1266
+                "merges": 392,
+                "email": "git@sophiebits.com",
+                "contributions": 1265
+              },
+              {
+                "name": "Brian Vaughn",
+                "merges": 101,
+                "email": "bvaughn@fb.com",
+                "contributions": 995
               },
               {
                 "name": "Sebastian Markbåge",
-                "contributions": 790
-              },
-              {
-                "name": "Andrew Clark",
-                "contributions": 711
+                "merges": 141,
+                "email": "sebastian@calyptus.eu",
+                "contributions": 803
               },
               {
                 "name": "Jim Sproch",
+                "merges": 327,
+                "email": "jsproch@fb.com",
                 "contributions": 456
               },
               {
+                "name": "Brian Vaughn",
+                "merges": 65,
+                "email": "brian.david.vaughn@gmail.com",
+                "contributions": 363
+              },
+              {
                 "name": "Dominic Gannaway",
-                "contributions": 355
+                "merges": 6,
+                "email": "trueadm@users.noreply.github.com",
+                "contributions": 336
               },
               {
                 "name": "Pete Hunt",
+                "merges": 126,
+                "email": "floydophone@gmail.com",
                 "contributions": 332
               },
               {
-                "name": "Cheng Lou",
-                "contributions": 222
+                "name": "Andrew Clark",
+                "merges": 2,
+                "email": "acdlite@fb.com",
+                "contributions": 264
               }
             ],
-            "recent_commit_size_in_percent_of_codebase": 3e-05,
+            "recent_commit_size_in_percent_of_codebase": 0.00032,
             "large_recent_commit_risk": "low",
             "functional_contributors_risk": "low",
-            "functional_contributors": 83,
+            "functional_contributors": 84,
             "functional_contributor_names": [
               "yiminghe",
               "Marshall Roch",
@@ -153,6 +182,7 @@ the tolerance level, which you can easily override) and responds with a useful r
               "Ben Newman",
               "jim",
               "Clement Hoang",
+              "Hristo Kanchev",
               "Scott Feeney",
               "Connor McSheffrey",
               "Brandon Dail",
@@ -176,7 +206,7 @@ the tolerance level, which you can easily override) and responds with a useful r
               "Jason Quense"
             ],
             "contributor_risk": "low",
-            "contributor_count": 1502,
+            "contributor_count": 1505,
             "commit_currency_weeks": 0,
             "commit_currency_risk": "low"
           },
@@ -184,70 +214,69 @@ the tolerance level, which you can easily override) and responds with a useful r
           "repo": "https://github.com/facebook/react",
           "project_types": {
             "node": [
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/art/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/attribute-behavior/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/concurrent/time-slicing/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/dom/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/eslint/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/eslint/proxy/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/expiration/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/fiber-debugger/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/flight/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/browserify/dev/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/browserify/prod/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/brunch/dev/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/brunch/prod/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/rjs/dev/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/rjs/prod/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/systemjs-builder/dev/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/systemjs-builder/prod/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/webpack-alias/dev/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/webpack-alias/prod/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/webpack/dev/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/packaging/webpack/prod/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/fixtures/ssr/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/babel-plugin-react-jsx/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/create-subscription/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/dom-event-testing-library/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/eslint-plugin-react-hooks/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/jest-mock-scheduler/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/jest-react/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/legacy-events/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-art/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-cache/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-client/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-debug-tools/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools-core/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools-extensions/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools-inline/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools-shared/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools-shared/src/node_modules/react-window/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools-shell/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-devtools/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-dom/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-flight-dom-relay/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-flight-dom-webpack/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-interactions/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-is/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-native-renderer/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-noop-renderer/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-reconciler/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-refresh/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-server/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react-test-renderer/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/react/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/scheduler/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/shared/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/packages/use-subscription/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/scripts/bench/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/scripts/eslint-rules/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/scripts/perf-counters/package.json",
-              "/tmp/lei-1585778229-6206-23kw46/react/scripts/release/package.json"
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/art/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/attribute-behavior/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/concurrent/time-slicing/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/dom/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/eslint/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/eslint/proxy/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/expiration/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/fiber-debugger/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/flight/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/packaging/browserify/dev/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/packaging/browserify/prod/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/packaging/brunch/dev/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/packaging/brunch/prod/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/packaging/rjs/dev/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/packaging/rjs/prod/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/packaging/systemjs-builder/dev/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/packaging/systemjs-builder/prod/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/packaging/webpack-alias/dev/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/packaging/webpack-alias/prod/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/packaging/webpack/dev/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/packaging/webpack/prod/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/fixtures/ssr/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/create-subscription/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/dom-event-testing-library/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/eslint-plugin-react-hooks/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/jest-mock-scheduler/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/jest-react/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/legacy-events/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-art/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-cache/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-client/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-debug-tools/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-devtools-core/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-devtools-extensions/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-devtools-inline/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-devtools-shared/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-devtools-shared/src/node_modules/react-window/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-devtools-shell/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-devtools/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-dom/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-flight-dom-relay/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-flight-dom-webpack/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-interactions/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-is/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-native-renderer/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-noop-renderer/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-reconciler/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-refresh/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-server/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react-test-renderer/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/react/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/scheduler/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/shared/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/packages/use-subscription/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/scripts/bench/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/scripts/eslint-rules/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/scripts/perf-counters/package.json",
+              "/tmp/lei-1586549734-63434-1b1so9e/react/scripts/release/package.json"
             ]
           },
           "git": {
-            "hash": "c80cd8ee27d24bb5b9a6136ede6875d13b9f1ba4",
+            "hash": "8e13f099ab0c820c6f97547ad08244340e074266",
             "default_branch": "refs/remotes/origin/master"
           },
           "config": {
@@ -271,9 +300,9 @@ the tolerance level, which you can easily override) and responds with a useful r
   },
   "metadata": {
     "times": {
-      "start_time": "2020-04-01T21:57:09.298319Z",
-      "end_time": "2020-04-01T21:57:22.259390Z",
-      "duration": 13
+      "start_time": "2020-04-10T20:15:34.901638Z",
+      "end_time": "2020-04-10T20:17:28.885951Z",
+      "duration": 114
     },
     "risk_counts": {
       "low": 1
@@ -295,7 +324,7 @@ by adding `lowendinsight` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:lowendinsight, "~> 0.4"}
+    {:lowendinsight, "~> 0.5"}
   ]
 end
 ```
@@ -320,8 +349,7 @@ defp deps do
 end
 ```
 
-Then run `mix deps.get`, and `mix lei.scan`.  This will produce a report for the dependencies
-specified in your Mix definition.
+Then run `mix deps.get`, and `mix lei.scan`.  This will produce a report for the dependencies (and transitive dependencies) specified in your Mix definition.
 
 You'll get a full report:
 
@@ -353,6 +381,12 @@ passing the absolute path to the directory where it is cloned:
 mix lei.scan /some/path/to/a/git/repo
 ```
 
+### Mix Task for Generating a Dependencies JSON List
+
+```
+mix lei.dependencies /some/path/to/a/Mix-based-project
+```
+
 ### Governance/Parameter Configuration
 
 The library uses a baseline configuration for each of the metrics calculated.  If you want to set your own, all you need to do is add the `:lowendinsight` configuration as mentioned below in the *Configuration* section.  Tuning of these defaults will likely happen over time, as analysis continues to run on a large scale.  The analysis will be made available here soon.
@@ -369,7 +403,7 @@ This will get you the `iex` prompt:
 Erlang/OTP 22 [erts-10.6.4] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [hipe] [dtrace]
 
 Interactive Elixir (1.10.2) - press Ctrl+C to exit (type h() ENTER for help)
-iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
+iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex", %{types: false}
 {:ok,
  %{
    data: %{
@@ -424,7 +458,7 @@ iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
 Here's the command that you would paste in to the `iex` REPL as an example:
 
 ```
-AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
+AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex", %{types: false}
 ```
 
 ### Docker
@@ -441,7 +475,7 @@ From iex you can access to the library functions.
 Erlang/OTP 22 [erts-10.6.3] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [hipe] [dtrace]
 
 Interactive Elixir (1.10.0) - press Ctrl+C to exit (type h() ENTER for help)
-iex(1)> AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"], "iex")
+iex(1)> AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"], "iex", DateTime.utc_now(), %{types: true})
 {:ok,
  %{
    metadata: %{

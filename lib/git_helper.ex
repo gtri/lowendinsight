@@ -7,6 +7,8 @@ defmodule GitHelper do
   Collection of lower-level functions for analyzing outputs from git command.
   """
 
+  @type contrib_count :: %{String.t() => integer}
+
   @doc """
       parse_diff/1: returns the relevant information contained in the last array position of a diff array
   """
@@ -74,6 +76,8 @@ defmodule GitHelper do
   @doc """
       det_filtered_contributor_count/2: Gets the resolved list of contributers, return count and list
   """
+  @spec get_filtered_contributor_count(contrib_count, non_neg_integer) ::
+          {:ok, non_neg_integer, [contrib_count]}
   def get_filtered_contributor_count(map, total) do
     filtered_list =
       Enum.filter(
@@ -85,6 +89,51 @@ defmodule GitHelper do
 
     length = Kernel.length(filtered_list)
     {:ok, length, filtered_list}
+  end
+
+  @spec parse_shortlog(binary) :: [Contributor.t()]
+  def parse_shortlog(log) do
+    split_shortlog(log)
+    |> Enum.map(fn contributor ->
+      {name, email, count} = parse_header(contributor)
+      {merges, commits} = parse_commits(contributor)
+
+      {count, _} = Integer.parse(count)
+
+      %Contributor{
+        name: String.trim(name),
+        email: String.trim(email),
+        count: count,
+        merges: merges,
+        commits: commits
+      }
+    end)
+    |> filter_contributors()
+  end
+
+  defp split_shortlog(log) do
+    log
+    |> String.trim()
+    |> String.split(~r{\n\n})
+  end
+
+  defp parse_header(contributor) do
+    header =
+      contributor
+      |> String.split("\n")
+      |> Enum.at(0)
+      |> (&Regex.scan(~r{([^<]+)<([^;]*)>.\(([^:]+)\)}, &1)).()
+      |> Enum.at(0)
+
+    {Enum.at(header, 1), Enum.at(header, 2), Enum.at(header, 3)}
+  end
+
+  defp parse_commits(contributor) do
+    [_ | commits] = String.split(contributor, "\n")
+
+    commits = Enum.map(commits, fn commit -> String.trim(commit) end)
+    merges = Enum.count(commits, &(&1 =~ ~r/^(merge)+/i))
+    {merges, commits}
   end
 
   defp split_commits_by_tag([], current) do
@@ -128,6 +177,7 @@ defmodule GitHelper do
     {:ok, accumulator}
   end
 
+  @spec get_contributor_counts([any], contrib_count) :: {:ok, [contrib_count], non_neg_integer}
   defp get_contributor_counts([head | tail], accumulator) do
     if head == "" do
       get_contributor_counts(tail, accumulator)
@@ -149,5 +199,40 @@ defmodule GitHelper do
 
   defp get_contributor_counts([], accumulator) do
     {:ok, accumulator}
+  end
+
+  defp name_sorter(x) do
+    # Create a name metric to compare with
+    10 * length(String.split(x, " ")) + String.length(x)
+  end
+
+  defp filter_contributors([]) do
+    []
+  end
+
+  @spec filter_contributors([Contributor.t()]) :: [Contributor.t()]
+  defp filter_contributors(list) do
+    is_author = fn x, y -> String.downcase(x.email) == String.downcase(y.email) end
+    # Divide the list
+    cur_contrib = for item <- list, is_author.(item, hd(list)) == true, do: item
+    other = for item <- list, is_author.(item, hd(list)) == false, do: item
+    # Determine the best name
+    #   for now, just the first one
+    name_list = for a <- cur_contrib, do: a.name
+
+    best_name =
+      Enum.sort_by(name_list, &name_sorter/1, &>=/2)
+      |> Enum.at(0)
+
+    # Create the new contributor object
+    contrib_ret = %Contributor{
+      name: best_name,
+      email: hd(list).email,
+      commits: List.flatten(for a <- cur_contrib, do: a.commits),
+      merges: Enum.sum(for a <- cur_contrib, do: a.merges),
+      count: Enum.sum(for a <- cur_contrib, do: a.count)
+    }
+
+    [contrib_ret | filter_contributors(other)]
   end
 end
