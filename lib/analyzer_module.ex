@@ -9,8 +9,9 @@ defmodule AnalyzerModule do
   or "file".  Note, that the latter scheme will only work an existing clone
   and won't remove the directory structure upon completion of analysis.
   """
-  @spec analyze(String.t() | list(), String.t()) :: tuple()
+  @spec analyze(binary | maybe_improper_list, any, any) :: {:ok, map}
   def analyze(url, source, options) when is_binary(url) do
+    IO.inspect options, label: "OPTIONS"
     Temp.track!()
 
     start_time = DateTime.utc_now()
@@ -102,7 +103,7 @@ defmodule AnalyzerModule do
       ]
 
       project_types_identified =
-      case Map.has_key?(options, :types) do
+      case Map.has_key?(options, :types) && options.types == true do
         true -> ProjectIdent.categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
         false -> []
       end
