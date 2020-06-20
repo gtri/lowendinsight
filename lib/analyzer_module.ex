@@ -11,7 +11,6 @@ defmodule AnalyzerModule do
   """
   @spec analyze(binary | maybe_improper_list, any, any) :: {:ok, map}
   def analyze(url, source, options) when is_binary(url) do
-    IO.inspect options, label: "OPTIONS"
     Temp.track!()
 
     start_time = DateTime.utc_now()

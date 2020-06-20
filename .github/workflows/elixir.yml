@@ -51,6 +51,9 @@ jobs:
     - name: Run Audit
       run: |
         MIX_ENV=test mix deps.audit    
+    - name: LowEndInsight Scan
+      run: |
+        mix lei.scan .
 
         
 

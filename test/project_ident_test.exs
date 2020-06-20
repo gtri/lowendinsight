@@ -69,7 +69,8 @@ defmodule ProjectIdentTest do
              cargo: [
                "#{tmp_path}/clap/Cargo.toml",
                "#{tmp_path}/clap/clap_derive/Cargo.toml",
-               "#{tmp_path}/clap/clap_generate/Cargo.toml"
+               "#{tmp_path}/clap/clap_generate/Cargo.toml",
+               "#{tmp_path}/clap/clap_up/Cargo.toml"
              ]
            } == ProjectIdent.categorize_repo(repo, project_types)
 
