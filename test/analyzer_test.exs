@@ -17,7 +17,10 @@ defmodule AnalyzerTest do
 
   test "analyze local path repo" do
     {:ok, cwd} = File.cwd()
-    {:ok, report} = AnalyzerModule.analyze(["file:///#{cwd}"], "path_test", DateTime.utc_now(), %{types: false})
+
+    {:ok, report} =
+      AnalyzerModule.analyze(["file:///#{cwd}"], "path_test", DateTime.utc_now(), %{types: false})
+
     assert "complete" == report[:state]
     repo_data = List.first(report[:report][:repos])
     assert "path_test" == repo_data[:header][:source_client]
@@ -179,7 +182,13 @@ defmodule AnalyzerTest do
   end
 
   test "get single repo report validated by report schema" do
-    {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/lita-cron"], "test", DateTime.utc_now(), %{types: true})
+    {:ok, report} =
+      AnalyzerModule.analyze(
+        ["https://github.com/kitplummer/lita-cron"],
+        "test",
+        DateTime.utc_now(),
+        %{types: true}
+      )
 
     {:ok, report_json} = Poison.encode(report)
 

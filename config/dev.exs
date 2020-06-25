@@ -44,7 +44,7 @@ config :lowendinsight,
   jobs_per_core_max: String.to_integer(System.get_env("LEI_JOBS_PER_CORE_MAX") || "2"),
 
   ## Base directory structure for temp clones
-  base_temp_dir: System.get_env("LEI_BASE_TEMP_DIR") || "/tmp"
+  base_temp_dir: System.get_env("LEI_BASE_TEMP_DIR") || "/Users/cplummer8/tmp"
 
 # JsonXema Schema Loader
 config :xema, loader: SchemaLoader

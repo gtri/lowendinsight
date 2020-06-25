@@ -9,8 +9,16 @@ defmodule AnalyzerModule do
   or "file".  Note, that the latter scheme will only work an existing clone
   and won't remove the directory structure upon completion of analysis.
   """
+  require Logger
+
   @spec analyze(binary | maybe_improper_list, any, any) :: {:ok, map}
   def analyze(url, source, options) when is_binary(url) do
+    count =
+      if Map.has_key?(options, :counter) do
+        CounterAgent.click(options[:counter])
+        CounterAgent.get(options[:counter])
+      end
+
     Temp.track!()
 
     start_time = DateTime.utc_now()
@@ -34,17 +42,29 @@ defmodule AnalyzerModule do
 
           uri.scheme == "https" or uri.scheme == "http" ->
             if Helpers.count_forward_slashes(url) > 4 do
+              Logger.error("Not a Git repo URL, is a subdirectory")
               raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
             end
 
-            {:ok, tmp_path} =
+            tmp =
               Temp.mkdir(%{
                 prefix: "lei",
                 basedir: Application.fetch_env!(:lowendinsight, :base_temp_dir) || "/tmp"
               })
 
+            tmp_path =
+              case tmp do
+                {:ok, tmp_path} ->
+                  tmp_path
+
+                {:error, :enoent} ->
+                  raise ArgumentError, message: "Failed to create a temp path for clone"
+              end
+
             GitModule.clone_repo(url, tmp_path)
         end
+
+      Logger.info("Cloned -> #{count}: #{url}")
 
       # Get unique contributors count
       {:ok, count} = GitModule.get_contributor_count(repo)
@@ -102,10 +122,13 @@ defmodule AnalyzerModule do
       ]
 
       project_types_identified =
-      case Map.has_key?(options, :types) && options.types == true do
-        true -> ProjectIdent.categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
-        false -> []
-      end
+        case Map.has_key?(options, :types) && options.types == true do
+          true ->
+            ProjectIdent.categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
+
+          false ->
+            []
+        end
 
       {:ok, repo_size} = GitModule.get_repo_size(repo)
       {:ok, git_hash} = GitModule.get_hash(repo)
@@ -164,6 +187,7 @@ defmodule AnalyzerModule do
         }
       }
 
+      Temp.cleanup()
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
@@ -213,9 +237,14 @@ defmodule AnalyzerModule do
     ```
   """
   # @defaults %{start_time: DateTime.utc_now()}
-  def analyze(urls, source \\ "lei", start_time \\ DateTime.utc_now(), options \\ %{}) when is_list(urls) do
+  def analyze(urls, source \\ "lei", start_time \\ DateTime.utc_now(), options \\ %{})
+      when is_list(urls) do
     ## Concurrency for parallelizing the analysis. This is the magic.
     ## Will run two jobs per core available max...
+
+    {:ok, counter} = CounterAgent.new()
+    options = Map.put(options, :counter, counter)
+
     max_concurrency =
       System.schedulers_online() *
         (Application.get_env(:lowendinsight, :jobs_per_core_max) || 1)

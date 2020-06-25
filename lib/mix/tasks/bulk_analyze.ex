@@ -52,7 +52,8 @@ defmodule Mix.Tasks.Lei.BulkAnalyze do
 
         case Helpers.validate_urls(urls) do
           :ok ->
-            {:ok, report} = AnalyzerModule.analyze(urls, "mix task")
+            {:ok, report} =
+              AnalyzerModule.analyze(urls, "mix task", DateTime.utc_now(), %{types: false})
 
             Poison.encode!(report)
             |> Mix.shell().info()
