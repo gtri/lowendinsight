@@ -23,6 +23,13 @@ defmodule AnalyzerModule do
 
     start_time = DateTime.utc_now()
 
+    # Return summary report as JSON
+    # Workaround to allow `mix analyze` to work even that :application doesn't exist
+    library_version =
+      if :application.get_application() != :undefined,
+        do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string(),
+        else: ""
+
     try do
       url = URI.decode(url)
 
@@ -141,13 +148,6 @@ defmodule AnalyzerModule do
       end_time = DateTime.utc_now()
       duration = DateTime.diff(end_time, start_time)
 
-      # Return summary report as JSON
-      # Workaround to allow `mix analyze` to work even that :application doesn't exist
-      library_version =
-        if :application.get_application() != :undefined,
-          do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string(),
-          else: ""
-
       config =
         if Application.get_all_env(:lowendinsight) == [],
           do: %{info: "no config loaded, defaults in use"},
@@ -191,6 +191,8 @@ defmodule AnalyzerModule do
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
+        end_time = DateTime.utc_now()
+        duration = DateTime.diff(end_time, start_time)
         {:ok, %{ 
            header: %{
             repo: url,
@@ -213,6 +215,8 @@ defmodule AnalyzerModule do
          }}
 
       e in ArgumentError ->
+        end_time = DateTime.utc_now()
+        duration = DateTime.diff(end_time, start_time)
         {:ok, %{
           header: %{
             repo: url,
