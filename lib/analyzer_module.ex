@@ -191,8 +191,16 @@ defmodule AnalyzerModule do
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
-        {:ok,
-         %{
+        {:ok, %{ 
+           header: %{
+            repo: url,
+            start_time: DateTime.to_iso8601(start_time),
+            end_time: DateTime.to_iso8601(end_time),
+            duration: duration,
+            uuid: UUID.uuid1(),
+            source_client: source,
+            library_version: library_version
+          },
            data: %{
              # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?",
@@ -205,8 +213,16 @@ defmodule AnalyzerModule do
          }}
 
       e in ArgumentError ->
-        {:ok,
-         %{
+        {:ok, %{
+          header: %{
+            repo: url,
+            start_time: DateTime.to_iso8601(start_time),
+            end_time: DateTime.to_iso8601(end_time),
+            duration: duration,
+            uuid: UUID.uuid1(),
+            source_client: source,
+            library_version: library_version
+          },
            data: %{
              # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}). #{e.message}",
