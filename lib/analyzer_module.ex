@@ -23,6 +23,13 @@ defmodule AnalyzerModule do
 
     start_time = DateTime.utc_now()
 
+    # Return summary report as JSON
+    # Workaround to allow `mix analyze` to work even that :application doesn't exist
+    library_version =
+      if :application.get_application() != :undefined,
+        do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string(),
+        else: ""
+
     try do
       url = URI.decode(url)
 
@@ -141,13 +148,6 @@ defmodule AnalyzerModule do
       end_time = DateTime.utc_now()
       duration = DateTime.diff(end_time, start_time)
 
-      # Return summary report as JSON
-      # Workaround to allow `mix analyze` to work even that :application doesn't exist
-      library_version =
-        if :application.get_application() != :undefined,
-          do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string(),
-          else: ""
-
       config =
         if Application.get_all_env(:lowendinsight) == [],
           do: %{info: "no config loaded, defaults in use"},
@@ -191,8 +191,18 @@ defmodule AnalyzerModule do
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
-        {:ok,
-         %{
+        end_time = DateTime.utc_now()
+        duration = DateTime.diff(end_time, start_time)
+        {:ok, %{ 
+           header: %{
+            repo: url,
+            start_time: DateTime.to_iso8601(start_time),
+            end_time: DateTime.to_iso8601(end_time),
+            duration: duration,
+            uuid: UUID.uuid1(),
+            source_client: source,
+            library_version: library_version
+          },
            data: %{
              # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?",
@@ -205,8 +215,18 @@ defmodule AnalyzerModule do
          }}
 
       e in ArgumentError ->
-        {:ok,
-         %{
+        end_time = DateTime.utc_now()
+        duration = DateTime.diff(end_time, start_time)
+        {:ok, %{
+          header: %{
+            repo: url,
+            start_time: DateTime.to_iso8601(start_time),
+            end_time: DateTime.to_iso8601(end_time),
+            duration: duration,
+            uuid: UUID.uuid1(),
+            source_client: source,
+            library_version: library_version
+          },
            data: %{
              # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}). #{e.message}",
