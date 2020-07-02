@@ -18,20 +18,12 @@ defmodule GitModule do
     ## repo_name needs to go to a tmp path struct
     tmp_repo_path = Path.join(tmp_path, repo_name)
 
-    response = Git.clone([url, tmp_repo_path])
-
-    case response do
-      {:ok, repo} ->
-        status = Git.log(repo)
-
-        case status do
-          {:ok, _} -> {:ok, repo}
-          {:error, error} -> {:error, message: error.message}
-        end
-
-      {:error, _error} ->
-        # This error message is not always appropriate
-        {:error, "Repository not found"}
+    with {:ok, repo} <- Git.clone([url, tmp_repo_path]),
+         {:ok, _} <- Git.log(repo)
+    do 
+      {:ok, repo}
+    else
+      _error -> {:error, "Respository not found"}
     end
   end
 
@@ -39,11 +31,12 @@ defmodule GitModule do
   get_repo/1: gets a repo by path, returns Repository struct
   """
   def get_repo(path) do
-    repo = Git.new(path)
-
-    case Git.status(repo) do
-      {:ok, _} -> {:ok, repo}
-      {:error, msg} -> {:error, msg}
+    with repo <- Git.new(path), 
+         {:ok, _} <- Git.status(repo)
+    do 
+      {:ok, repo}
+    else 
+      error -> error
     end
   end
 
@@ -164,11 +157,12 @@ defmodule GitModule do
   get_recent_changes/1: returns the percentage of changed lines in the last commit by the total lines in the repo
   """
   def get_recent_changes(repo) do
-    {:ok, total_lines, total_files_changed} = get_total_lines(repo)
-    {:ok, file_num, insertions, deletions} = get_last_2_delta(repo)
-
-    {:ok, Float.round((insertions + deletions) / total_lines, 5),
-     Float.round(file_num / total_files_changed, 5)}
+    with {:ok, total_lines, total_files_changed} <- get_total_lines(repo),
+         {:ok, file_num, insertions, deletions} = get_last_2_delta(repo)
+    do
+      {:ok, Float.round((insertions + deletions) / total_lines, 5),
+        Float.round(file_num / total_files_changed, 5)}
+    end
   end
 
   @doc """
