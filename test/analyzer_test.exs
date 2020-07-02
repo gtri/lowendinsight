@@ -158,7 +158,10 @@ defmodule AnalyzerTest do
     }
 
     repo_data = List.first(report[:report][:repos])
-    assert expected_data == repo_data
+    
+    assert "test" == repo_data[:header][:source_client]
+    assert "https://github.com/kitplummer/blah" == repo_data[:header][:repo]
+    assert expected_data[:data] == repo_data[:data]
   end
 
   test "get report fail when subdirectory" do
@@ -178,7 +181,10 @@ defmodule AnalyzerTest do
     }
 
     repo_data = List.first(report[:report][:repos])
-    assert expected_data == repo_data
+
+    assert "test" == repo_data[:header][:source_client]
+    assert "https://github.com/kitplummer/xmpp4rails/blah" == repo_data[:header][:repo]
+    assert expected_data[:data] == repo_data[:data]
   end
 
   test "get single repo report validated by report schema" do
