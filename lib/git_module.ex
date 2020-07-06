@@ -246,7 +246,7 @@ defmodule GitModule do
     {:ok, map}
   end
 
-  @spec get_clean_contributions_map(Git.Repositories.t()) :: {:ok, map}
+  @spec get_clean_contributions_map(Git.Repository.t()) :: {:ok, map}
   def get_clean_contributions_map(repo) do
     map =
       Git.shortlog!(repo, ["-n", "-e", "HEAD", "--"])
