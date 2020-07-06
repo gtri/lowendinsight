@@ -24,6 +24,7 @@ defmodule TimeHelper do
     ```
 
   """
+  @spec sec_to_str(non_neg_integer) :: String.t
   def sec_to_str(sec) do
     {_, [s, m, h, d, w]} =
       Enum.reduce(@divisor, {sec, []}, fn divisor, {n, acc} ->
@@ -38,6 +39,7 @@ defmodule TimeHelper do
   @doc """
   sec_to_weeks/1: returns a roll-up of weeks from a number of secs
   """
+  @spec sec_to_weeks(non_neg_integer) :: non_neg_integer
   def sec_to_weeks(sec) do
     Kernel.trunc(sec / @week)
   end
@@ -45,6 +47,7 @@ defmodule TimeHelper do
   @doc """
   sec_to_days/1: returns a roll-up of days from a number of secs
   """
+  @spec sec_to_days(non_neg_integer) :: non_neg_integer
   def sec_to_days(sec) do
     Kernel.trunc(sec / @day)
   end
@@ -52,6 +55,7 @@ defmodule TimeHelper do
   @doc """
   get_commit_delta/1: returns the time between now and the last commit in seconds
   """
+  @spec get_commit_delta(String.t) :: {:ok, String.t} | {:error, String.t}
   def get_commit_delta(last_commit_date) do
     case DateTime.from_iso8601(last_commit_date) do
       {:error, error} ->
@@ -66,6 +70,7 @@ defmodule TimeHelper do
   @doc """
   sum_ts_diff/2
   """
+  @spec sum_ts_diff([any], non_neg_integer) :: {:ok, non_neg_integer}
   def sum_ts_diff([_head | []], accumulator) do
     {:ok, accumulator}
   end
@@ -73,6 +78,7 @@ defmodule TimeHelper do
   @doc """
   sum_ts_diff/2
   """
+  @spec sum_ts_diff([any], non_neg_integer) :: {:ok, non_neg_integer}
   def sum_ts_diff([head_1 | tail], accumulator) do
     [head_2 | _next_tail] = tail
     [_ | timestamp_1] = head_1
@@ -83,6 +89,7 @@ defmodule TimeHelper do
   @doc """
   sum_ts_diff/1
   """
+  @spec sum_ts_diff([any]) :: {:ok, non_neg_integer}
   def sum_ts_diff(list) do
     sum_ts_diff(list, 0)
   end

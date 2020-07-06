@@ -12,6 +12,7 @@ defmodule GitHelper do
   @doc """
       parse_diff/1: returns the relevant information contained in the last array position of a diff array
   """
+  @spec parse_diff([String.t]) :: {:ok, non_neg_integer, non_neg_integer, non_neg_integer}
   def parse_diff(list) do
     last = List.last(list)
     last_trimmed = String.trim(last)
@@ -91,7 +92,7 @@ defmodule GitHelper do
     {:ok, length, filtered_list}
   end
 
-  @spec parse_shortlog(binary) :: [Contributor.t()]
+  @spec parse_shortlog(String.t) :: [Contributor.t()]
   def parse_shortlog(log) do
     split_shortlog(log)
     |> Enum.map(fn contributor ->
@@ -197,6 +198,7 @@ defmodule GitHelper do
     end
   end
 
+  @spec get_contributor_counts([], non_neg_integer) :: {:ok, non_neg_integer}
   defp get_contributor_counts([], accumulator) do
     {:ok, accumulator}
   end
@@ -206,6 +208,7 @@ defmodule GitHelper do
     10 * length(String.split(x, " ")) + String.length(x)
   end
 
+  @spec filter_contributors([any]) :: [any]
   defp filter_contributors([]) do
     []
   end

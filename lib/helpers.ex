@@ -16,6 +16,7 @@ defmodule Helpers do
       iex(2)> slug
       "kitplummer/xmpprails"
   """
+  @spec get_slug(String.t) :: {:ok, String.t} | {:error, String.t}
   def get_slug(url) do
     uri = URI.parse(url)
 
@@ -42,6 +43,7 @@ defmodule Helpers do
       "xmpprails"
 
   """
+  @spec split_slug(String.t) :: {:ok, String.t, String.t} | {:error, String.t}
   def split_slug(slug) do
     if String.contains?(slug, "/") do
       v = String.split(slug, "/")
@@ -51,6 +53,7 @@ defmodule Helpers do
     end
   end
 
+  @spec count_forward_slashes(String.t) :: non_neg_integer
   def count_forward_slashes(url) do
     url |> String.graphemes() |> Enum.count(&(&1 == "/"))
   end
@@ -79,6 +82,7 @@ defmodule Helpers do
   ...> |> Helpers.validate_url()
   {:error, "invalid URI host"}
   """
+  @spec validate_url(String.t) :: :ok | {:error, String.t}
   def validate_url(url) do
     try do
       with :ok <- validate_scheme(url),
@@ -107,6 +111,7 @@ defmodule Helpers do
   ...> |> Helpers.validate_urls()
   {:error, "invalid URI"}
   """
+  @spec validate_urls([String.t]) :: :ok | {:error, String.t}
   def validate_urls(urls) do
     try do
       if !is_list(urls), do: throw(:break)
@@ -127,6 +132,7 @@ defmodule Helpers do
   # {:hostent, 'https.cust.blueprintrf.com', [], :inet, 4,
   # [{23, 202, 231, 167}, {23, 217, 138, 108}]}}
   # oh well i guess, will handle the issue downstream i guess.
+  @spec validate_host(String.t) :: :ok | {:error, String.t}
   defp validate_host(url) do
     case URI.parse(url) do
       %URI{host: host, path: path} ->
@@ -152,6 +158,7 @@ defmodule Helpers do
     end
   end
 
+  @spec validate_scheme(String.t) :: :ok | {:error, String.t}
   defp validate_scheme(url) do
     case URI.parse(url) do
       %URI{scheme: nil} ->
@@ -172,6 +179,7 @@ defmodule Helpers do
   maps, to be encoded as JSON.  Since JSON doesn't have an equivalent tuple type the
   libs all bonk on encoding config values.
   """
+  @spec convert_config_to_list([any]) :: map
   def convert_config_to_list(config) do
     Enum.into(config, %{})
     |> Map.delete(:jobs_per_core_max)
