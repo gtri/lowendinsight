@@ -11,6 +11,7 @@ defmodule RiskLogic do
   @doc """
   contributor_risk/1: returns text enumeration for count
   """
+  @spec contributor_risk(non_neg_integer) :: {:ok, String.t}
   def contributor_risk(contributor_count) do
     critical_contributor_level =
       if Application.fetch_env(:lowendinsight, :critical_contributor_level) == :error,
@@ -45,6 +46,7 @@ defmodule RiskLogic do
   @doc """
   commit_currency_risk/1: returns text enumeration for commit currency risk
   """
+  @spec commit_currency_risk(non_neg_integer) :: {:ok, String.t}
   def commit_currency_risk(delta_in_weeks) do
     medium_currency_level =
       if Application.fetch_env(:lowendinsight, :medium_currency_level) == :error,
@@ -79,6 +81,7 @@ defmodule RiskLogic do
   @doc """
   last_commit_size_risk/1: returns a text enumeration for the risk based on the size of the last commit
   """
+  @spec commit_change_size_risk(non_neg_integer) :: {:ok, String.t}
   def commit_change_size_risk(change_percent) do
     medium_large_commit_level =
       if Application.fetch_env(:lowendinsight, :medium_large_commit_level) == :error,
@@ -113,6 +116,7 @@ defmodule RiskLogic do
   @doc """
   functional_contributors_risk/1: returns the enumerated risk based on input contributors list
   """
+  @spec functional_contributors_risk(non_neg_integer) :: {:ok, String.t}
   def functional_contributors_risk(contributors) do
     medium_functional_contributors_level =
       if Application.fetch_env(:lowendinsight, :medium_functional_contributors_level) == :error,

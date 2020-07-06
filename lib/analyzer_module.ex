@@ -257,6 +257,7 @@ defmodule AnalyzerModule do
     ```
   """
   # @defaults %{start_time: DateTime.utc_now()}
+  @spec analyze([binary], any, any, any) :: {:ok, map}
   def analyze(urls, source \\ "lei", start_time \\ DateTime.utc_now(), options \\ %{})
       when is_list(urls) do
     ## Concurrency for parallelizing the analysis. This is the magic.
@@ -304,6 +305,7 @@ defmodule AnalyzerModule do
   produces the repo report object to be returned immediately by asynchronous
   requestors (e.g. LowEndInsight-Get HTTP endpoint)
   """
+  @spec create_empty_report(String.t, [String.t], any) :: map
   def create_empty_report(uuid, urls, start_time \\ DateTime.utc_now()) do
     %{
       :metadata => %{
@@ -325,9 +327,10 @@ defmodule AnalyzerModule do
   determine_risk_counts/1: takes in a full report of n-repo reports, and calculates
   the number or risk ratings, given the number of repos.  It returns a new report
   with the risk_counts object populated with the count table.  Have to accommodate
-  both the atom and string elements, becuse the JSON gets parsed into the string
+  both the atom and string elements, because the JSON gets parsed into the string
   format - so caching can be supported (as reports are stored in JSON).
   """
+  @spec determine_risk_counts(RepoReport.t) :: map
   def determine_risk_counts(report) do
     count_map =
       report[:report][:repos]
@@ -342,6 +345,7 @@ defmodule AnalyzerModule do
   determine_toplevel_risk/1: takes in a report and determines the highest
   criticality, and assigns it to the "risk" element for the repo report.
   """
+  @spec determine_toplevel_risk(RepoReport.t) :: map
   def determine_toplevel_risk(report) do
     values = Map.values(report[:data][:results])
 
