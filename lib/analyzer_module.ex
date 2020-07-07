@@ -47,7 +47,15 @@ defmodule AnalyzerModule do
           uri.scheme == "file" ->
             GitModule.get_repo(uri.path)
 
-          uri.scheme == "https" or uri.scheme == "http" ->
+          uri.scheme == "https" or uri.scheme == "http" or uri.scheme == "git+https" ->
+
+            url =
+              if uri.scheme == "git+https" do
+                String.slice(url, 4..-1)
+              else
+                url
+              end
+
             if Helpers.count_forward_slashes(url) > 4 do
               Logger.error("Not a Git repo URL, is a subdirectory")
               raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
@@ -193,7 +201,7 @@ defmodule AnalyzerModule do
       MatchError ->
         end_time = DateTime.utc_now()
         duration = DateTime.diff(end_time, start_time)
-        {:ok, %{ 
+        {:ok, %{
            header: %{
             repo: url,
             start_time: DateTime.to_iso8601(start_time),
