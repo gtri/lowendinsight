@@ -38,7 +38,7 @@ defmodule Lowendinsight.Hex.EncoderTest do
       |> Hex.Lockfile.parse!(true)
       |> Hex.Encoder.lockfile_json()
 
-    lockfile = Poison.Parser.parse!(json)
+    lockfile = Poison.Parser.parse!(json, %{})
     f = List.first(lockfile)
     assert Map.has_key?(f, "name") == true
   end
