@@ -17,7 +17,10 @@ defmodule AnalyzerTest do
 
   test "analyze local path repo" do
     {:ok, cwd} = File.cwd()
-    {:ok, report} = AnalyzerModule.analyze(["file:///#{cwd}"], "path_test", DateTime.utc_now(), %{types: false})
+
+    {:ok, report} =
+      AnalyzerModule.analyze(["file:///#{cwd}"], "path_test", DateTime.utc_now(), %{types: false})
+
     assert "complete" == report[:state]
     repo_data = List.first(report[:report][:repos])
     assert "path_test" == repo_data[:header][:source_client]
@@ -131,11 +134,10 @@ defmodule AnalyzerTest do
 
     {:ok, report} =
       AnalyzerModule.analyze(
-        ["https://github.com/kitplummer/xmpp4rails"],
+        ["git+https://github.com/hmfng/modal.git"],
         "test_start_time_option",
         start_time
       )
-
     assert DateTime.to_iso8601(start_time) == report[:metadata][:times][:start_time]
   end
 
@@ -155,7 +157,10 @@ defmodule AnalyzerTest do
     }
 
     repo_data = List.first(report[:report][:repos])
-    assert expected_data == repo_data
+
+    assert "test" == repo_data[:header][:source_client]
+    assert "https://github.com/kitplummer/blah" == repo_data[:header][:repo]
+    assert expected_data[:data] == repo_data[:data]
   end
 
   test "get report fail when subdirectory" do
@@ -175,11 +180,20 @@ defmodule AnalyzerTest do
     }
 
     repo_data = List.first(report[:report][:repos])
-    assert expected_data == repo_data
+
+    assert "test" == repo_data[:header][:source_client]
+    assert "https://github.com/kitplummer/xmpp4rails/blah" == repo_data[:header][:repo]
+    assert expected_data[:data] == repo_data[:data]
   end
 
   test "get single repo report validated by report schema" do
-    {:ok, report} = AnalyzerModule.analyze(["https://github.com/kitplummer/lita-cron"], "test", DateTime.utc_now(), %{types: true})
+    {:ok, report} =
+      AnalyzerModule.analyze(
+        ["https://github.com/kitplummer/lita-cron"],
+        "test",
+        DateTime.utc_now(),
+        %{types: true}
+      )
 
     {:ok, report_json} = Poison.encode(report)
 

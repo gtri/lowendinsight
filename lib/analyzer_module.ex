@@ -9,11 +9,26 @@ defmodule AnalyzerModule do
   or "file".  Note, that the latter scheme will only work an existing clone
   and won't remove the directory structure upon completion of analysis.
   """
+  require Logger
+
   @spec analyze(binary | maybe_improper_list, any, any) :: {:ok, map}
   def analyze(url, source, options) when is_binary(url) do
+    count =
+      if Map.has_key?(options, :counter) do
+        CounterAgent.click(options[:counter])
+        CounterAgent.get(options[:counter])
+      end
+
     Temp.track!()
 
     start_time = DateTime.utc_now()
+
+    # Return summary report as JSON
+    # Workaround to allow `mix analyze` to work even that :application doesn't exist
+    library_version =
+      if :application.get_application() != :undefined,
+        do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string(),
+        else: ""
 
     try do
       url = URI.decode(url)
@@ -32,19 +47,39 @@ defmodule AnalyzerModule do
           uri.scheme == "file" ->
             GitModule.get_repo(uri.path)
 
-          uri.scheme == "https" or uri.scheme == "http" ->
+          uri.scheme == "https" or uri.scheme == "http" or uri.scheme == "git+https" ->
+
+            url =
+              if uri.scheme == "git+https" do
+                String.slice(url, 4..-1)
+              else
+                url
+              end
+
             if Helpers.count_forward_slashes(url) > 4 do
+              Logger.error("Not a Git repo URL, is a subdirectory")
               raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
             end
 
-            {:ok, tmp_path} =
+            tmp =
               Temp.mkdir(%{
                 prefix: "lei",
                 basedir: Application.fetch_env!(:lowendinsight, :base_temp_dir) || "/tmp"
               })
 
+            tmp_path =
+              case tmp do
+                {:ok, tmp_path} ->
+                  tmp_path
+
+                {:error, :enoent} ->
+                  raise ArgumentError, message: "Failed to create a temp path for clone"
+              end
+
             GitModule.clone_repo(url, tmp_path)
         end
+
+      Logger.info("Cloned -> #{count}: #{url}")
 
       # Get unique contributors count
       {:ok, count} = GitModule.get_contributor_count(repo)
@@ -102,10 +137,13 @@ defmodule AnalyzerModule do
       ]
 
       project_types_identified =
-      case Map.has_key?(options, :types) && options.types == true do
-        true -> ProjectIdent.categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
-        false -> []
-      end
+        case Map.has_key?(options, :types) && options.types == true do
+          true ->
+            ProjectIdent.categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
+
+          false ->
+            []
+        end
 
       {:ok, repo_size} = GitModule.get_repo_size(repo)
       {:ok, git_hash} = GitModule.get_hash(repo)
@@ -117,13 +155,6 @@ defmodule AnalyzerModule do
 
       end_time = DateTime.utc_now()
       duration = DateTime.diff(end_time, start_time)
-
-      # Return summary report as JSON
-      # Workaround to allow `mix analyze` to work even that :application doesn't exist
-      library_version =
-        if :application.get_application() != :undefined,
-          do: elem(:application.get_key(:lowendinsight, :vsn), 1) |> List.to_string(),
-          else: ""
 
       config =
         if Application.get_all_env(:lowendinsight) == [],
@@ -164,11 +195,22 @@ defmodule AnalyzerModule do
         }
       }
 
+      Temp.cleanup()
       {:ok, determine_toplevel_risk(report)}
     rescue
       MatchError ->
-        {:ok,
-         %{
+        end_time = DateTime.utc_now()
+        duration = DateTime.diff(end_time, start_time)
+        {:ok, %{
+           header: %{
+            repo: url,
+            start_time: DateTime.to_iso8601(start_time),
+            end_time: DateTime.to_iso8601(end_time),
+            duration: duration,
+            uuid: UUID.uuid1(),
+            source_client: source,
+            library_version: library_version
+          },
            data: %{
              # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?",
@@ -181,8 +223,18 @@ defmodule AnalyzerModule do
          }}
 
       e in ArgumentError ->
-        {:ok,
-         %{
+        end_time = DateTime.utc_now()
+        duration = DateTime.diff(end_time, start_time)
+        {:ok, %{
+          header: %{
+            repo: url,
+            start_time: DateTime.to_iso8601(start_time),
+            end_time: DateTime.to_iso8601(end_time),
+            duration: duration,
+            uuid: UUID.uuid1(),
+            source_client: source,
+            library_version: library_version
+          },
            data: %{
              # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}). #{e.message}",
@@ -213,9 +265,15 @@ defmodule AnalyzerModule do
     ```
   """
   # @defaults %{start_time: DateTime.utc_now()}
-  def analyze(urls, source \\ "lei", start_time \\ DateTime.utc_now(), options \\ %{}) when is_list(urls) do
+  @spec analyze([binary], any, any, any) :: {:ok, map}
+  def analyze(urls, source \\ "lei", start_time \\ DateTime.utc_now(), options \\ %{})
+      when is_list(urls) do
     ## Concurrency for parallelizing the analysis. This is the magic.
     ## Will run two jobs per core available max...
+
+    {:ok, counter} = CounterAgent.new()
+    options = Map.put(options, :counter, counter)
+
     max_concurrency =
       System.schedulers_online() *
         (Application.get_env(:lowendinsight, :jobs_per_core_max) || 1)
@@ -255,6 +313,7 @@ defmodule AnalyzerModule do
   produces the repo report object to be returned immediately by asynchronous
   requestors (e.g. LowEndInsight-Get HTTP endpoint)
   """
+  @spec create_empty_report(String.t, [String.t], any) :: map
   def create_empty_report(uuid, urls, start_time \\ DateTime.utc_now()) do
     %{
       :metadata => %{
@@ -276,9 +335,10 @@ defmodule AnalyzerModule do
   determine_risk_counts/1: takes in a full report of n-repo reports, and calculates
   the number or risk ratings, given the number of repos.  It returns a new report
   with the risk_counts object populated with the count table.  Have to accommodate
-  both the atom and string elements, becuse the JSON gets parsed into the string
+  both the atom and string elements, because the JSON gets parsed into the string
   format - so caching can be supported (as reports are stored in JSON).
   """
+  @spec determine_risk_counts(RepoReport.t) :: map
   def determine_risk_counts(report) do
     count_map =
       report[:report][:repos]
@@ -293,6 +353,7 @@ defmodule AnalyzerModule do
   determine_toplevel_risk/1: takes in a report and determines the highest
   criticality, and assigns it to the "risk" element for the repo report.
   """
+  @spec determine_toplevel_risk(RepoReport.t) :: map
   def determine_toplevel_risk(report) do
     values = Map.values(report[:data][:results])
 

@@ -9,7 +9,7 @@ defmodule GithubModule.MixProject do
     [
       app: :lowendinsight,
       description: description(),
-      version: "0.6.1",
+      version: "0.6.2",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -35,7 +35,7 @@ defmodule GithubModule.MixProject do
     [
       {:httpoison, "~> 1.6"},
       {:git_cli, "~> 0.3"},
-      {:poison, "~> 3.1"},
+      {:poison, "~> 4.0"},
       {:uuid, "~> 1.1"},
       {:ex_doc, "~> 0.21", runtime: false},
       {:credo, "~> 0.10", except: :prod, runtime: false},

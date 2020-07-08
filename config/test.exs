@@ -3,6 +3,7 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 use Mix.Config
+config :logger, level: :error
 
 config :lowendinsight,
   ## Contributor in terms of discrete users

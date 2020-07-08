@@ -10,7 +10,7 @@ defmodule GitModule do
   @doc """
   clone_repo/2: clones the repo
   """
-
+  @spec clone_repo(String.t, String.t) :: {:ok, String.t} | {:error, String.t}
   def clone_repo(url, tmp_path) do
     {:ok, slug} = url |> Helpers.get_slug()
     {:ok, _, repo_name} = Helpers.split_slug(slug)
@@ -18,31 +18,25 @@ defmodule GitModule do
     ## repo_name needs to go to a tmp path struct
     tmp_repo_path = Path.join(tmp_path, repo_name)
 
-    response = Git.clone([url, tmp_repo_path])
-
-    case response do
-      {:ok, repo} ->
-        status = Git.log(repo)
-
-        case status do
-          {:ok, _} -> {:ok, repo}
-          {:error, error} -> {:error, message: error.message}
-        end
-
-      {:error, _error} ->
-        # This error message is not always appropriate
-        {:error, "Repository not found"}
+    with {:ok, repo} <- Git.clone([url, tmp_repo_path]),
+         {:ok, _} <- Git.log(repo)
+    do 
+      {:ok, repo}
+    else
+      _error -> {:error, "Respository not found"}
     end
   end
 
   @doc """
   get_repo/1: gets a repo by path, returns Repository struct
   """
+  @spec get_repo(String.t) :: {:ok, Git.Repository.t()} | {:error, String.t}
   def get_repo(path) do
-    repo = Git.new(path)
-
-    case Git.status(repo) do
-      {:ok, _} -> {:ok, repo}
+    with repo <- Git.new(path), 
+         {:ok, _} <- Git.status(repo)
+    do 
+      {:ok, repo}
+    else 
       {:error, msg} -> {:error, msg}
     end
   end
@@ -51,6 +45,7 @@ defmodule GitModule do
   get_contributors_count/1: returns the number of contributors for
   a given Git repo
   """
+  @spec get_contributor_count(Git.Repository.t()) :: {:ok, non_neg_integer}
   def get_contributor_count(repo) do
     count =
       Git.shortlog!(repo, ["-s", "-n", "HEAD", "--"])
@@ -64,12 +59,13 @@ defmodule GitModule do
   @doc """
   get_last_commit_date/1: returns the date of the last commit
   """
-
+  @spec get_last_commit_date(Git.Repository.t()) :: {:ok, String.t}
   def get_last_commit_date(repo) do
     date = Git.log!(repo, ["-1", "--pretty=format:%cI"])
     {:ok, date}
   end
 
+  @spec delete_repo(Git.Repository.t()) :: String.t
   def delete_repo(repo) do
     File.rm_rf!(repo.path)
   end
@@ -77,6 +73,7 @@ defmodule GitModule do
   @doc """
   get_current_hash/1: returns the hash of the repo's HEAD
   """
+  @spec get_hash(Git.Repository.t()) :: {:ok, String.t}
   def get_hash(repo) do
     hash = Git.rev_parse!(repo, "HEAD") |> String.trim()
     {:ok, hash}
@@ -85,6 +82,7 @@ defmodule GitModule do
   @doc """
   get_default_branch/1: returns the default branch of the remote repo
   """
+  @spec get_default_branch(Git.Repository.t()) :: {:ok, String.t}
   def get_default_branch(repo) do
     try do
       default_branch = Git.symbolic_ref!(repo, "refs/remotes/origin/HEAD") |> String.trim()
@@ -97,6 +95,7 @@ defmodule GitModule do
   @doc """
   get_commit_dates/1: returns a list of unix timestamps representing commit times
   """
+  @spec get_commit_dates(Git.Repository.t()) :: {:ok, [non_neg_integer]}
   def get_commit_dates(repo) do
     dates =
       Git.log!(repo, ["--pretty=format:%ct"])
@@ -110,6 +109,7 @@ defmodule GitModule do
   get_tag_and_commit_dates/1: returns a list of lists of unix timestamps
   representing commit times with each lsit belonging to a different tag
   """
+  @spec get_tag_and_commit_dates(Git.Repository.t()) :: [any]
   def get_tag_and_commit_dates(repo) do
     tag_and_date =
       Git.log!(repo, ["--pretty=format:%d$%ct"])
@@ -132,6 +132,7 @@ defmodule GitModule do
   @doc """
   get_last_n_commits/1: returns a list of the short hashes of the last n commits
   """
+  @spec get_last_n_commits(Git.Repository.t(), non_neg_integer) :: {:ok, [any]}
   def get_last_n_commits(repo, n) do
     output = Git.log!(repo, ["--pretty=format:%h", "--no-merges", "-#{n}"])
     {:ok, String.split(output, "\n")}
@@ -140,6 +141,7 @@ defmodule GitModule do
   @doc """
   get_last_n_commits/2: returns a list of lines generated from the diff of two commits
   """
+  @spec get_diff_2_commits(Git.Repository.t(), [any]) :: {:ok, [String.t]} | []
   def get_diff_2_commits(repo, [commit1 | [commit2 | []]]) do
     with {:ok, diff} <- Git.diff(repo, ["--stat", commit1, commit2]) do
       {:ok, String.split(String.trim_trailing(diff, "\n"), "\n")}
@@ -151,6 +153,7 @@ defmodule GitModule do
   @doc """
   get_total_lines/1: returns the total lines and files contained in a repo as of the latest commit
   """
+  @spec get_total_lines(Git.Repository.t()) :: {:ok, non_neg_integer, non_neg_integer}
   def get_total_lines(repo) do
     {:ok, hash} = Git.hash_object(repo, ["-t", "tree", "/dev/null"])
     {:ok, diff} = Git.diff(repo, ["--shortstat", String.replace_suffix(hash, "\n", "")])
@@ -163,17 +166,20 @@ defmodule GitModule do
   @doc """
   get_recent_changes/1: returns the percentage of changed lines in the last commit by the total lines in the repo
   """
+  @spec get_recent_changes(Git.Repository.t()) :: {:ok, float}
   def get_recent_changes(repo) do
-    {:ok, total_lines, total_files_changed} = get_total_lines(repo)
-    {:ok, file_num, insertions, deletions} = get_last_2_delta(repo)
-
-    {:ok, Float.round((insertions + deletions) / total_lines, 5),
-     Float.round(file_num / total_files_changed, 5)}
+    with {:ok, total_lines, total_files_changed} <- get_total_lines(repo),
+         {:ok, file_num, insertions, deletions} = get_last_2_delta(repo)
+    do
+      {:ok, Float.round((insertions + deletions) / total_lines, 5),
+        Float.round(file_num / total_files_changed, 5)}
+    end
   end
 
   @doc """
   get_last_2_delta/1: returns the lines changed, files changed, additions and deletions in the last commit
   """
+  @spec get_last_2_delta(Git.Repository.t()) :: {:ok, non_neg_integer, non_neg_integer, non_neg_integer}
   def get_last_2_delta(repo) do
     {:ok, commits} = get_last_n_commits(repo, 2)
 
@@ -240,6 +246,7 @@ defmodule GitModule do
     {:ok, map}
   end
 
+  @spec get_clean_contributions_map(Git.Repository.t()) :: {:ok, map}
   def get_clean_contributions_map(repo) do
     map =
       Git.shortlog!(repo, ["-n", "-e", "HEAD", "--"])
@@ -285,6 +292,7 @@ defmodule GitModule do
     {:ok, map10}
   end
 
+  @spec get_repo_size(Git.Repository.t()) :: {:ok, String.t}
   def get_repo_size(repo) do
     space =
       elem(System.cmd("du", ["-sh", "#{repo.path}"]), 0)
@@ -295,6 +303,7 @@ defmodule GitModule do
     {:ok, space}
   end
 
+  @spec raw_binary_to_string(binary) :: String.t
   defp raw_binary_to_string(raw) do
     String.codepoints(raw)
     |> Enum.reduce(fn w, result ->
