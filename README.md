@@ -309,11 +309,11 @@ the tolerance level, which you can easily override) and responds with a useful r
     },
     "repo_count": 1
   }
-} 
+}
 ```
 
 NOTE: that the "file://" is also supporting, but presumes that the directory provided
-is a valid Git clone.  Analysis of a file://-based repo will not conclude with the 
+is a valid Git clone.  Analysis of a file://-based repo will not conclude with the
 directory structure being removed.
 
 ## Installation
@@ -338,7 +338,7 @@ a container to run stuff in.
 
 ### Mix Task for Scanning in a Mix-based Project
 
-It is also possible to drop this in as a library dependency to your Mix-based Elixir project.  Simply add 
+It is also possible to drop this in as a library dependency to your Mix-based Elixir project.  Simply add
 the library to your project's dependencies:
 
 ```
@@ -537,6 +537,23 @@ https://github.com/gtri/lowendinsight
 https://github.com/gtri/lowendinsight-get
 ```
 
+### GitHub Action
+Lowendinsight can also be added to a GitHub workflow as an action. This action currently only exists in the develop branch. The following is an example usage:
+
+```yaml
+name: lowendinsight
+
+on: [push, pull_request]
+
+jobs:
+  request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: gtri/lowendinsight@develop
+```
+
+
 ### LowEndInsight REST-y API
 
 Also, there is a sister project that wraps this library and provides an HTTP-based interface.
@@ -669,7 +686,7 @@ The JSON schema found in `schema` is and should be used to validate the main ana
 
 There is an external tool used to do the schema docs conversion: `jsonschema2md -d schema/ -o schema/docs`. If you make a modification to the schema please run the tool to update the docs with the submission.
 
-`jsonschema2md` is a Node.js tool. 
+`jsonschema2md` is a Node.js tool.
 
 ## License
 
@@ -677,7 +694,7 @@ BSD 3-Clause.  See https://opensource.org/licenses/BSD-3-Clause or LICENSE file 
 
 There is code in this project [`mixfile.ex` and `encoder.ex`], taken from [mix-deps-json](https://github.com/librariesio/mix-deps-json), that is copyright:
 
-Copyright (c) 2016 Andrew Nesbitt. 
+Copyright (c) 2016 Andrew Nesbitt.
 
 Blatant attribution: https://github.com/andrew
 
@@ -685,4 +702,4 @@ And licensed with the MIT license.  See the [mix-deps-json](https://github.com/l
 
 For a bit of insight into the licensing part of inclusion within another licensed repo, there's [this](https://softwareengineering.stackexchange.com/questions/121998/mit-vs-bsd-vs-dual-license), which is really interesting.
 
-The logic for pulling the code in versus the project as a dependency is that `mix-deps-json` is really a server I the transitive dependencies aren't worth the weight.  
+The logic for pulling the code in versus the project as a dependency is that `mix-deps-json` is really a server I the transitive dependencies aren't worth the weight.
