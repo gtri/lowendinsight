@@ -538,7 +538,7 @@ https://github.com/gtri/lowendinsight-get
 ```
 
 ### GitHub Action
-Lowendinsight can also be added to a GitHub workflow as an action. This action currently only exists in the develop branch. The following is an example usage:
+Lowendinsight can also be added to a GitHub workflow as an action. In its current state, this action only works for elixir projects. However, this will possibly be expanded to non-elixir projects with further development. This action currently exists in the develop branch. The following is an example usage:
 
 ```yaml
 name: lowendinsight
