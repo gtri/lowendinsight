@@ -24,11 +24,7 @@ COPY . .
 
 RUN MIX_ENV=${MIX_ENV} mix do deps.get, deps.compile, compile
 
-RUN mix lei.analyze https://github.com/elixir-lang/elixir
+COPY entrypoint.sh /entrypoint.sh 
+RUN chmod +x /entrypoint.sh
 
-CMD mix lei.scan ${GITHUB_WORKSPACE}
-
-# COPY entrypoint.sh /entrypoint.sh 
-# RUN chmod +x /entrypoint.sh
-
-# ENTRYPOINT ["sh", "/entrypoint.sh"]
+ENTRYPOINT ["sh", "/entrypoint.sh"]
