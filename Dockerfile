@@ -22,9 +22,11 @@ RUN apk update && \
 
 COPY . .
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
 RUN MIX_ENV=${MIX_ENV} mix do deps.get, deps.compile, compile
 
-ENTRYPOINT ["sh", "/entrypoint.sh"]
+CMD mix lei.scan ${GITHUB_WORKSPACE}
+
+# COPY entrypoint.sh /entrypoint.sh 
+# RUN chmod +x /entrypoint.sh
+
+# ENTRYPOINT ["sh", "/entrypoint.sh"]
