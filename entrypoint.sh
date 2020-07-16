@@ -1,2 +1,4 @@
 #!/bin/bash -l
-mix lei.analyze https://github.com/haldihri3/hello-world
+
+cd /opt/app
+mix lei.scan ${GITHUB_WORKSPACE}
