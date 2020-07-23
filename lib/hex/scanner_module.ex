@@ -107,4 +107,41 @@ defmodule ScannerModule do
         end
     end
   end
+
+  def query_npm(package) do
+    encoded_id = URI.encode package
+
+    HTTPoison.start
+    {:ok, response} =
+      HTTPoison.get "https://replicate.npmjs.com/" <> encoded_id
+      # |> HTTPoison.Retry.autoretry(max_attempts: 5, wait: 15000, include_404s: false, retry_unknown_errors: false)
+
+    case response.status_code do
+      200 -> 
+        repo_info = get_repository(response.body)
+        repo_url = get_url(repo_info)
+        AnalyzerModule.analyze(repo_url, "mix.scan", %{types: false})
+      _ -> %{lib: package, error: "failed to fetch"}
+    end
+
+  end
+
+  defp get_repository(body) do
+    decoded = Poison.decode!(body)
+    repos =
+      case Map.has_key?(decoded, "repository") do
+        true -> decoded["repository"]
+        false -> %{error: "no repository"}
+      end
+    repos
+  end
+
+  defp get_url(repo) do
+    repo["url"]
+    |> remove_url_prefix
+  end
+
+  defp remove_url_prefix(url) do
+    String.trim_leading(url, "git+")
+  end
 end
