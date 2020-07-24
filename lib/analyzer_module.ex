@@ -77,6 +77,10 @@ defmodule AnalyzerModule do
               end
 
             GitModule.clone_repo(url, tmp_path)
+
+          true -> 
+            # raise ArgumentError, message: "Not a public Git repo URL"
+            {:ok}
         end
 
       Logger.info("Cloned -> #{count}: #{url}")
