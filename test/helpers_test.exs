@@ -20,4 +20,9 @@ defmodule Lowendinsight.HelpersTest do
   test "validate scheme" do
     assert {:error, "invalid URI scheme"} == Helpers.validate_url("blah://blah")
   end
+
+  test "removes git+ only when it is a prefix in url" do
+    assert "https://github.com/hmfng/modal.git" == Helpers.remove_git_prefix("git+https://github.com/hmfng/modal.git")
+    assert "git://github.com/hmfng/modal.git" == Helpers.remove_git_prefix("git://github.com/hmfng/modal.git")
+  end
 end
