@@ -169,7 +169,7 @@ defmodule AnalyzerModule do
       MatchError ->
         end_time = DateTime.utc_now()
         duration = DateTime.diff(end_time, start_time)
-        {:ok, %{ 
+        {:ok, %{
            header: %{
             repo: url,
             start_time: DateTime.to_iso8601(start_time),

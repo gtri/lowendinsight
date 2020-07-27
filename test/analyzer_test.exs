@@ -134,11 +134,10 @@ defmodule AnalyzerTest do
 
     {:ok, report} =
       AnalyzerModule.analyze(
-        ["https://github.com/kitplummer/xmpp4rails"],
+        ["git+https://github.com/hmfng/modal.git"],
         "test_start_time_option",
         start_time
       )
-
     assert DateTime.to_iso8601(start_time) == report[:metadata][:times][:start_time]
   end
 
@@ -158,7 +157,7 @@ defmodule AnalyzerTest do
     }
 
     repo_data = List.first(report[:report][:repos])
-    
+
     assert "test" == repo_data[:header][:source_client]
     assert "https://github.com/kitplummer/blah" == repo_data[:header][:repo]
     assert expected_data[:data] == repo_data[:data]

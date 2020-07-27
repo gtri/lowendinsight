@@ -59,28 +59,28 @@ defmodule Helpers do
   end
 
   @doc """
-  validates field is a valid url
+  validate_url/1: validates field is a valid url.
 
   ## Examples
-  iex> "https:://www.url.com"
-  ...> |> Helpers.validate_url()
-  {:error, "invalid URI path"}
+      iex> "https:://www.url.com"
+      ...> |> Helpers.validate_url()
+      {:error, "invalid URI path"}
 
-  iex> "https://github.com/"
-  ...> |> Helpers.validate_url()
-  :ok
+      iex> "https://github.com/"
+      ...> |> Helpers.validate_url()
+      :ok
 
-  iex> '"https://"https://www.google.com"'
-  ...> |> Helpers.validate_url()
-  {:error, "invalid URI"}
+      iex> '"https://"https://www.google.com"'
+      ...> |> Helpers.validate_url()
+      {:error, "invalid URI"}
 
-  iex> "zipbooks.com"
-  ...> |> Helpers.validate_url()
-  {:error, "invalid URI"}
+      iex> "zipbooks.com"
+      ...> |> Helpers.validate_url()
+      {:error, "invalid URI"}
 
-  iex> "https://zipbooks..com"
-  ...> |> Helpers.validate_url()
-  {:error, "invalid URI host"}
+      iex> "https://zipbooks..com"
+      ...> |> Helpers.validate_url()
+      {:error, "invalid URI host"}
   """
   @spec validate_url(String.t) :: :ok | {:error, String.t}
   def validate_url(url) do
@@ -95,21 +95,24 @@ defmodule Helpers do
   end
 
   @doc """
-  iex> ["http://www.google.com","http://www.test.com"]
-  ...> |> Helpers.validate_urls()
-  :ok
+  validate_urls/1: validates a list of urls
 
-  iex> ["https://zipbooks..com", "http://www.test.com"]
-  ...> |> Helpers.validate_urls()
-  {:error, "invalid URI"}
+  ## Examples
+      iex> ["http://www.google.com","http://www.test.com"]
+      ...> |> Helpers.validate_urls()
+      :ok
 
-  iex> ["https//github.com/kitplummer/xmpp4rails","https://www.zipbooks.com", "http://www.test.com"]
-  ...> |> Helpers.validate_urls()
-  {:error, "invalid URI"}
+      iex> ["https://zipbooks..com", "http://www.test.com"]
+      ...> |> Helpers.validate_urls()
+      {:error, "invalid URI"}
 
-  iex> "https://zipbooks.com"
-  ...> |> Helpers.validate_urls()
-  {:error, "invalid URI"}
+      iex> ["https//github.com/kitplummer/xmpp4rails","https://www.zipbooks.com", "http://www.test.com"]
+      ...> |> Helpers.validate_urls()
+      {:error, "invalid URI"}
+
+      iex> "https://zipbooks.com"
+      ...> |> Helpers.validate_urls()
+      {:error, "invalid URI"}
   """
   @spec validate_urls([String.t]) :: :ok | {:error, String.t}
   def validate_urls(urls) do
