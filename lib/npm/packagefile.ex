@@ -1,4 +1,4 @@
-defmodule Npm.Packagelockfile do
+defmodule Npm.Packagefile do
 
     @spec parse!(binary) :: {[any], non_neg_integer}
     def parse!(content) do
