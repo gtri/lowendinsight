@@ -25,4 +25,40 @@ defmodule ProjectIdent do
       end
     end)
   end
+
+  def get_project_types_identified(repo) do
+    ## Non-metric data about repo
+    mix_type = %ProjectType{name: :mix, path: "", files: ["mix.exs,mix.lock"]}
+
+    python_type = %ProjectType{
+      name: :python,
+      path: "**",
+      files: ["setup.py,*requirements.txt*"]
+    }
+
+    node_type = %ProjectType{name: :node, path: "**", files: ["package*.json"]}
+    go_type = %ProjectType{name: :go_mod, path: "**", files: ["go.mod"]}
+    cargo_type = %ProjectType{name: :cargo, path: "**", files: ["Cargo.toml"]}
+    rubygem_type = %ProjectType{name: :rubygem, path: "**", files: ["Gemfile*,*.gemspec"]}
+    maven_type = %ProjectType{name: :maven, path: "**", files: ["pom.xml"]}
+    gradle_type = %ProjectType{name: :gradle, path: "**", files: ["build.gradle*"]}
+
+    project_types = [
+      mix_type,
+      python_type,
+      node_type,
+      go_type,
+      cargo_type,
+      rubygem_type,
+      maven_type,
+      gradle_type
+    ]
+
+    if is_map(repo) && Map.has_key?(repo, :__struct__) do
+      categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
+    else
+      {:ok, repo} = GitModule.get_repo(repo)
+      categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
+    end
+  end
 end
