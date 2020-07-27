@@ -26,7 +26,7 @@ defmodule ProjectIdent do
     end)
   end
 
-  def get_categories(path) do
+  def get_project_types_identified(repo) do
     ## Non-metric data about repo
     mix_type = %ProjectType{name: :mix, path: "", files: ["mix.exs,mix.lock"]}
 
@@ -54,7 +54,11 @@ defmodule ProjectIdent do
       gradle_type
     ]
 
-    repo = %Git.Repository{path: path}
-    categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
+    if is_map(repo) && Map.has_key?(repo, :__struct__) do
+      categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
+    else
+      {:ok, repo} = GitModule.get_repo(repo)
+      categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
+    end
   end
-end
+end  
