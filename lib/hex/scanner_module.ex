@@ -27,44 +27,23 @@ defmodule ScannerModule do
     File.cd!(path)
     start_time = DateTime.utc_now()
 
-    project_types_identified = ProjectIdent.get_categories(path)
+    project_types_identified = ProjectIdent.get_project_types_identified(path)
 
     mix? = Map.has_key?(project_types_identified, :mix)
     node? = Map.has_key?(project_types_identified, :node)
 
-    # result = Map.merge(mix_scan(mix?), npm_scan(node?))
-    # result = hex_scan(mix?)
+    {hex_reports_list, hex_deps_count} = hex_scan(mix?)
+    {npm_reports_list, npm_deps_count} = npm_scan(node?)
 
-    hex_map = hex_scan(mix?)
-    npm_map = npm_scan(node?)
+    result_list = hex_reports_list ++ npm_reports_list
 
-    result = Map.merge(hex_map, npm_map, fn duplicate, v1, v2 ->
-      case duplicate do
-        :repos ->
-          v1 ++ v2
-        :metadata ->
-          if Map.fetch!(hex_map["metadata"], "risk_counts") && Map.fetch!(npm_map["metadata"], "risk_counts") do
-            if Map.fetch!(v1["risk_counts"], "critical") && Map.fetch!(v2["risk_counts"], "critical") do
-              v1["risk_counts"]["critical"] + v2["risk_counts"]["critical"]
-            end
-            if Map.fetch!(v1["risk_counts"], "high") && Map.fetch!(v2["risk_counts"], "high") do
-              v1["risk_counts"]["high"] + v2["risk_counts"]["high"]
-            end
-            if Map.fetch!(v1["risk_counts"], "medium") && Map.fetch!(v2["risk_counts"], "medium") do
-              v1["risk_counts"]["medium"] + v2["risk_counts"]["medium"]
-            end
-            if Map.fetch!(v1["risk_counts"], "low") && Map.fetch!(v2["risk_counts"], "low") do
-              v1["risk_counts"]["low"] + v2["risk_counts"]["low"]
-            end
-          end
-        :repo_count ->
-          v1 + v2
-        :dependency_count ->
-          v1 + v2
-        _ ->
-          v2
-      end
-    end)
+    result = %{
+      :state => :complete,
+      :metadata => %{repo_count: Enum.count(result_list), dependency_count: hex_deps_count + npm_deps_count},
+      :report => %{:uuid => UUID.uuid1(), :repos => result_list}
+    }
+
+    result = AnalyzerModule.determine_risk_counts(result)
 
     end_time = DateTime.utc_now()
     duration = DateTime.diff(end_time, start_time)
@@ -84,8 +63,10 @@ defmodule ScannerModule do
     # Encoder.mixfile_json(mixfile)
   end
 
-  defp hex_scan(mix?) when mix? == true do
-    {_mixfile, count} =
+  defp hex_scan(mix?) when mix? == false, do: {%{}, 0}
+
+  defp hex_scan(_mix?) do
+    {_mixfile, deps_count} =
       File.read!("./mix.exs")
       |> Hex.Mixfile.parse!()
 
@@ -100,35 +81,28 @@ defmodule ScannerModule do
       Enum.map(lib_map, fn {key, _value} ->
         query_hex(key)
       end)
-
-    result = %{
-      :state => :complete,
-      :metadata => %{repo_count: length(result_map), dependency_count: count},
-      :report => %{:uuid => UUID.uuid1(), :repos => result_map}
-    }
-
-    AnalyzerModule.determine_risk_counts(result)
+    
+    {Enum.to_list(result_map), deps_count}
   end
 
-  defp npm_scan(node?) when node? == true do
-    lib_map = 
-    File.read!("lib/npm/package-lock.json")
-    |> Npm.Packagelockfile.parse!()
+  defp npm_scan(node?) when node? == false, do: {[], 0}
 
-    IO.inspect "running npm scan..."
+  defp npm_scan(_node?) do
+    {_direct_deps, deps_count} =
+      File.read!("./package.json") # not necessarily at root...
+      |> Npm.Packagefile.parse!()
 
-    count = length(lib_map) # package.json instead
+    # to be implemented => if package-lock.json doesn't exist, do a scan of 1st-degree dependencies (package.json)
+    {lib_map, _count} = 
+      File.read!("./package-lock.json") # not necessarily at root...
+      |> Npm.Packagelockfile.parse!()
+
     result_map =
-      Enum.map(lib_map, fn package ->
-        query_npm(package) end)
-
-    result = %{
-      :state => :complete,
-      :metadata => %{repo_count: length(result_map), dependency_count: count},
-      :report => %{:uuid => UUID.uuid1(), :repos => result_map}
-    }
-
-    AnalyzerModule.determine_risk_counts(result)
+      Enum.map(lib_map, fn {lib, _version} ->
+        query_npm(lib) 
+      end)
+ 
+    {result_map, deps_count}
   end
 
   defp query_hex(package) do
@@ -149,19 +123,16 @@ defmodule ScannerModule do
           Map.has_key?(hex_package_links, "github") ->
             {:ok, report} =
               AnalyzerModule.analyze(hex_package_links["github"], "mix.scan", %{types: true})
-
             report
 
           Map.has_key?(hex_package_links, "bitbucket") ->
             {:ok, report} =
               AnalyzerModule.analyze(hex_package_links["bitbucket"], "mix.scan", %{types: true})
-
             report
 
           Map.has_key?(hex_package_links, "gitlab") ->
             {:ok, report} =
               AnalyzerModule.analyze(hex_package_links["gitlab"], "mix.scan", %{types: true})
-
             report
 
           true ->
@@ -176,22 +147,21 @@ defmodule ScannerModule do
     HTTPoison.start
     {:ok, response} =
       HTTPoison.get "https://replicate.npmjs.com/" <> encoded_id
-      # |> HTTPoison.Retry.autoretry(max_attempts: 5, wait: 15000, include_404s: false, retry_unknown_errors: false)
 
     case response.status_code do
       404 ->
         "{\"error\":\"no package found in npm\"}"
       200 -> 
-        repo_info = get_repository(response.body)
-        repo_url = get_url(repo_info)
-        {:ok, report} = AnalyzerModule.analyze(repo_url, "npm.scan", %{types: true})
+        repo_info = get_npm_repository(response.body)
+        repo_url = Helpers.remove_git_prefix(repo_info["url"])
+        {:ok, report} = AnalyzerModule.analyze(repo_url, "mix.scan", %{types: true})
         report
       true ->
         "{\"error\":\"no source repo link available\"}"    
     end
   end
 
-  defp get_repository(body) do
+  defp get_npm_repository(body) do
     decoded = Poison.decode!(body)
     repos =
       case Map.has_key?(decoded, "repository") do
@@ -199,14 +169,5 @@ defmodule ScannerModule do
         false -> %{error: "no repository"}
       end
     repos
-  end
-
-  defp get_url(repo) do
-    repo["url"]
-    |> remove_url_prefix
-  end
-
-  defp remove_url_prefix(url) do
-    String.trim_leading(url, "git+")
   end
 end
