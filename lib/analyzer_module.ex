@@ -48,13 +48,8 @@ defmodule AnalyzerModule do
             GitModule.get_repo(uri.path)
 
           uri.scheme == "https" or uri.scheme == "http" or uri.scheme == "git+https" ->
-
-            url =
-              if uri.scheme == "git+https" do
-                String.slice(url, 4..-1)
-              else
-                url
-              end
+            
+            url = Helpers.remove_git_prefix(url)
 
             if Helpers.count_forward_slashes(url) > 4 do
               Logger.error("Not a Git repo URL, is a subdirectory")
@@ -113,37 +108,10 @@ defmodule AnalyzerModule do
 
       {:ok, top10_contributors} = GitModule.get_top10_contributors_map(repo)
 
-      ## Non-metric data about repo
-      mix_type = %ProjectType{name: :mix, path: "", files: ["mix.exs,mix.lock"]}
-
-      python_type = %ProjectType{
-        name: :python,
-        path: "**",
-        files: ["setup.py,*requirements.txt*"]
-      }
-
-      node_type = %ProjectType{name: :node, path: "**", files: ["package*.json"]}
-      go_type = %ProjectType{name: :go_mod, path: "**", files: ["go.mod"]}
-      cargo_type = %ProjectType{name: :cargo, path: "**", files: ["Cargo.toml"]}
-      rubygem_type = %ProjectType{name: :rubygem, path: "**", files: ["Gemfile*,*.gemspec"]}
-      maven_type = %ProjectType{name: :maven, path: "**", files: ["pom.xml"]}
-      gradle_type = %ProjectType{name: :gradle, path: "**", files: ["build.gradle*"]}
-
-      project_types = [
-        mix_type,
-        python_type,
-        node_type,
-        go_type,
-        cargo_type,
-        rubygem_type,
-        maven_type,
-        gradle_type
-      ]
-
       project_types_identified =
         case Map.has_key?(options, :types) && options.types == true do
           true ->
-            ProjectIdent.categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
+            ProjectIdent.get_project_types_identified(repo)
 
           false ->
             []

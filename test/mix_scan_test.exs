@@ -8,6 +8,7 @@ defmodule Mix.Tasks.ScanTest do
   use ExUnit.Case, async: false
   alias Mix.Tasks.Lei.Scan
 
+  @tag timeout: 130000
   describe "run/1" do
     test "run scan, validate report, return report" do
       Scan.run([])
