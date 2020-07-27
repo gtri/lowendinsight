@@ -184,4 +184,12 @@ defmodule Helpers do
     Enum.into(config, %{})
     |> Map.delete(:jobs_per_core_max)
   end
+
+    @doc """
+  remove_git_prefix/1: removes the git+ prefix found in some public Git URLs
+  """
+  @spec remove_git_prefix(String.t) :: String.t
+  def remove_git_prefix(url) do
+    String.trim_leading(url, "git+")
+  end
 end
