@@ -1,6 +1,19 @@
 defmodule Hex.Scanner do
+  @moduledoc """
+  Scanner scans for mix dependencies to run analysis on.
+  """
+
+  @doc """
+  scan: called when mix? is false, returning an empty list and 0.
+  """
+  @spec scan(boolean(), map) :: {[], 0}
   def scan(mix?, _project_types) when mix? == false, do: {[], 0}
 
+  @doc """
+  scan: takes in a path to mix dependencies and returns the
+  dependencies mapped to their analysis and the number of dependencies.
+  """
+  @spec scan(boolean(), %{node: []}) :: {[any], non_neg_integer}
   def scan(_mix?, %{mix: [path_to_mix_exs | path_to_mix_lock]}) do
     {_mixfile, deps_count} =
       File.read!(path_to_mix_exs)
@@ -21,6 +34,7 @@ defmodule Hex.Scanner do
     {result_map, deps_count}
   end
 
+  @spec query_hex(String.t) :: {:ok, map} | String.t
   defp query_hex(package) do
     HTTPoison.start()
     response = HTTPoison.get!("https://hex.pm/api/packages/#{package}")

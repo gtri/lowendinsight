@@ -1,4 +1,12 @@
 defmodule Npm.Packagelockfile do
+
+  @moduledoc """
+    Provides package-lock.json dependency parser
+  """
+  @doc """
+  parse!: parses package-lock.json dependencies, returning a map of those
+  dependencies along with the count of total dependencies.
+  """
   @spec parse!(binary) :: {[any], non_neg_integer}
   def parse!(content) do
     deps =

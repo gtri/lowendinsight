@@ -1,6 +1,19 @@
 defmodule Npm.Scanner do
+  @moduledoc """
+  Scanner scans for node dependencies to run analysis on.
+  """
+
+  @doc """
+  scan: called when node? is false, returning an empty list and 0
+  """
+  @spec scan(boolean(), map) :: {[], 0}
   def scan(node?, _project_types) when node? == false, do: {[], 0}
 
+  @doc """
+  scan: takes in a path to node dependencies and returns the
+  dependencies mapped to their analysis and the number of dependencies
+  """
+  @spec scan(boolean(), %{node: []}) :: {[any], non_neg_integer}
   def scan(_node?, %{node: path_to_json_list}, option \\ ".") do
     case Enum.find(path_to_json_list, &String.ends_with?(&1, "package#{option}json")) do
       nil ->
@@ -35,6 +48,12 @@ defmodule Npm.Scanner do
     end
   end
 
+  @doc """
+  query_npm: function that takes in a package and returns an analysis
+  on that package's repository using analyser_module.  If the package url cannot
+  be reached, an error is returned.
+  """
+  @spec query_npm(String.t) :: {:ok, map} | String.t
   def query_npm(package) do
     encoded_id = URI.encode(package)
 
