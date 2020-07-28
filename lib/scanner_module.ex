@@ -37,32 +37,36 @@ defmodule ScannerModule do
 
     result_list = hex_reports_list ++ npm_reports_list
 
-    result = %{
-      :state => :complete,
-      :metadata => %{
-        repo_count: Enum.count(result_list),
-        dependency_count: hex_deps_count + npm_deps_count
-      },
-      :report => %{:uuid => UUID.uuid1(), :repos => result_list}
-    }
+    if !Enum.empty?(result_list) do
+      result = %{
+        :state => :complete,
+        :metadata => %{
+          repo_count: Enum.count(result_list),
+          dependency_count: hex_deps_count + npm_deps_count
+        },
+        :report => %{:uuid => UUID.uuid1(), :repos => result_list}
+      }
 
-    result = AnalyzerModule.determine_risk_counts(result)
+      result = AnalyzerModule.determine_risk_counts(result)
 
-    end_time = DateTime.utc_now()
-    duration = DateTime.diff(end_time, start_time)
+      end_time = DateTime.utc_now()
+      duration = DateTime.diff(end_time, start_time)
 
-    times = %{
-      start_time: DateTime.to_iso8601(start_time),
-      end_time: DateTime.to_iso8601(end_time),
-      duration: duration
-    }
+      times = %{
+        start_time: DateTime.to_iso8601(start_time),
+        end_time: DateTime.to_iso8601(end_time),
+        duration: duration
+      }
 
-    metadata = Map.put_new(result[:metadata], :times, times)
-    result = result |> Map.put(:metadata, metadata)
+      metadata = Map.put_new(result[:metadata], :times, times)
+      result = result |> Map.put(:metadata, metadata)
 
-    File.cd!(cwd)
+      File.cd!(cwd)
 
-    Poison.encode!(result, pretty: true)
-    # Encoder.mixfile_json(mixfile)
+      Poison.encode!(result, pretty: true)
+      # Encoder.mixfile_json(mixfile)
+    else
+      Poison.encode!(%{:error => "No mix or npm dependency files were found"}, pretty: true)
+    end
   end
 end
