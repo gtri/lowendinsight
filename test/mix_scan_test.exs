@@ -8,7 +8,7 @@ defmodule Mix.Tasks.ScanTest do
   use ExUnit.Case, async: false
   alias Mix.Tasks.Lei.Scan
 
-  @tag timeout: 130000
+  @tag timeout: 130_000
   describe "run/1" do
     test "run scan, validate report, return report" do
       Scan.run([])
@@ -59,5 +59,21 @@ defmodule Mix.Tasks.ScanTest do
       assert 2 == report_data["metadata"]["dependency_count"]
       assert 14 == report_data["metadata"]["repo_count"]
     end
+  end
+
+  test "scans package-lock.json if it exists" do
+    paths = %{node: ["./test/fixtures/packagejson", "./test/fixtures/package-lockjson"]}
+    {reports_list, deps_count} = Npm.Scanner.scan(true, paths, "")
+
+    assert 1 == deps_count
+    assert 4 == Enum.count(reports_list)
+  end
+
+  test "scans first-degree dependencies if package-lock does not exist" do
+    paths = %{node: ["./test/fixtures/packagejson"]}
+    {reports_list, deps_count} = Npm.Scanner.scan(true, paths, "")
+
+    assert 1 == deps_count
+    assert 1 == Enum.count(reports_list)
   end
 end
