@@ -57,7 +57,7 @@ defmodule ProjectIdent do
     if is_map(repo) && Map.has_key?(repo, :__struct__) do
       categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
     else
-      {:ok, repo} = GitModule.get_repo(repo)
+      repo = %{path: repo} 
       categorize_repo(repo, project_types) |> Helpers.convert_config_to_list()
     end
   end
