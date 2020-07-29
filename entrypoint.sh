@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/bin/sh -l
 
 cd /opt/app
 mix local.hex --force
