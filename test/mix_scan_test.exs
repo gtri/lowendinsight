@@ -76,4 +76,16 @@ defmodule Mix.Tasks.ScanTest do
     assert 1 == deps_count
     assert 1 == Enum.count(reports_list)
   end
+
+  @tag timeout: 140_000
+  test "run scan on JS repo, validate report, return report" do
+    {:ok, tmp_path} = Temp.path("lei-scan-js-repo-test")
+    {:ok, repo} = GitModule.clone_repo("https://github.com/juliangarnier/anime", tmp_path)
+
+    Scan.run([repo.path])
+    assert_received {:mix_shell, :info, [report]}
+
+    report_data = Poison.decode!(report)
+    assert Map.has_key?(report_data["metadata"], "risk_counts") == true
+  end
 end
