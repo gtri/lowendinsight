@@ -53,7 +53,7 @@ defmodule Npm.Scanner do
   on that package's repository using analyser_module.  If the package url cannot
   be reached, an error is returned.
   """
-  @spec query_npm(String.t) :: {:ok, map} | String.t
+  @spec query_npm(String.t()) :: {:ok, map} | String.t()
   def query_npm(package) do
     encoded_id = URI.encode(package)
 
@@ -61,17 +61,20 @@ defmodule Npm.Scanner do
     {:ok, response} = HTTPoison.get("https://replicate.npmjs.com/" <> encoded_id)
 
     case response.status_code do
-      404 ->
-        "{\"error\":\"no package found in npm\"}"
-
       200 ->
         repo_info = get_npm_repository(response.body)
-        repo_url = Helpers.remove_git_prefix(repo_info["url"])
-        {:ok, report} = AnalyzerModule.analyze(repo_url, "mix.scan", %{types: true})
-        report
+
+        if is_map(repo_info) && Map.has_key?(repo_info, "url") do
+          {:ok, report} = AnalyzerModule.analyze(repo_info["url"], "mix.scan", %{types: true})
+          report
+        else
+          {:ok, report} = AnalyzerModule.analyze(package, "mix.scan", %{types: true})
+          report
+        end
 
       true ->
-        "{\"error\":\"no source repo link available\"}"
+        {:ok, report} = AnalyzerModule.analyze(package, "mix.scan", %{types: true})
+        report
     end
   end
 
