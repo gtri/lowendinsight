@@ -17,7 +17,7 @@ RUN apk update && \
   mix local.rebar --force && \
   mix local.hex --force
 
-- COPY . .
+COPY . .
 
 RUN MIX_ENV=${MIX_ENV} mix do deps.get, deps.compile, compile
 
