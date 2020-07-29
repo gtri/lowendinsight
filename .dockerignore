@@ -2,7 +2,6 @@ _build/
 deps/
 .git/
 .gitignore
-Dockerfile
+Dockerfile*
 Makefile
 README*
-test/
