@@ -17,15 +17,9 @@ RUN apk update && \
   mix local.rebar --force && \
   mix local.hex --force
 
-COPY lib ./lib
-COPY config ./config
-COPY schema ./schema
-COPY mix.exs ./mix.exs
-COPY scripts ./scripts
-COPY mix.lock ./mix.lock
-COPY entrypoint.sh ./entrypoint.sh 
+- COPY . .
 
 RUN MIX_ENV=${MIX_ENV} mix do deps.get, deps.compile, compile
 
-RUN chmod +x ./entrypoint.sh
-ENTRYPOINT ["sh", "./entrypoint.sh"]
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["sh", "/entrypoint.sh"]
