@@ -1,7 +1,5 @@
 _build/
 deps/
-.git/
-.gitignore
 Dockerfile*
 Makefile
 README*
