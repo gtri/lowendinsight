@@ -60,7 +60,7 @@ defmodule Npm.Scanner do
     HTTPoison.start()
     {:ok, response} = HTTPoison.get("https://replicate.npmjs.com/" <> encoded_id)
 
-    case response.status_code do
+    case response.status_code do      
       200 ->
         repo_info = get_npm_repository(response.body)
 
@@ -71,8 +71,7 @@ defmodule Npm.Scanner do
           {:ok, report} = AnalyzerModule.analyze(package, "mix.scan", %{types: true})
           report
         end
-
-      true ->
+      _ ->
         {:ok, report} = AnalyzerModule.analyze(package, "mix.scan", %{types: true})
         report
     end

@@ -71,7 +71,7 @@ defmodule Hex.Scanner do
             report
         end
 
-      true ->
+      _ ->
         {:ok, report} = AnalyzerModule.analyze(package, "mix.scan", %{types: true})
 
         report
