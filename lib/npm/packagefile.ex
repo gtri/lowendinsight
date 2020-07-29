@@ -12,11 +12,15 @@ defmodule Npm.Packagefile do
     deps =
       content
       |> Jason.decode()
-      |> extract_deps
+      |> extract_deps()
       |> Enum.to_list()
 
     {deps, length(deps)}
   end
 
+  defp extract_deps({:ok, %{"dependencies" => deps, "devDependencies" => devDeps}}), do: Map.merge(deps, devDeps)
+
   defp extract_deps({:ok, %{"dependencies" => deps}}), do: deps
+
+  defp extract_deps({:ok, %{"devDependencies" => devDeps}}), do: devDeps
 end

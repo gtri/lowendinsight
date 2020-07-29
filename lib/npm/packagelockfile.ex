@@ -12,7 +12,7 @@ defmodule Npm.Packagelockfile do
     deps =
       content
       |> Jason.decode()
-      |> extract_deps
+      |> extract_deps()
       |> Enum.to_list()
       |> Enum.map(fn {dependency, info} -> {dependency, info["version"]} end)
 
