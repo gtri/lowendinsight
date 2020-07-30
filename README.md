@@ -380,6 +380,17 @@ passing the absolute path to the directory where it is cloned:
 ```
 mix lei.scan /some/path/to/a/git/repo
 ```
+### Scanning in a NPM-Based Project
+Lowendinsight can now be run against NPM-Based projects. To do so, simply clone the repository and run the following from lowendinsight's root directory.
+```
+mix deps.get
+mix lei.scan /some/path/to/a/git/repo
+```
+It is important to note that though lowendinsight works on NPM-based projects, scanning still requires a local installation of Mix.
+
+At the least, the above requires an existing `package.json` file in order to scan the first-degree dependencies of an NPM-based project.  A complete scan of both first-degree and transitive dependencies requires a `package-lock.json` file. In other words, due to how NPM handles dependencies, a complete scan of a repository can only be accomplished if all of its dependencies are listed in `package-lock.json`.
+
+In the scope of `package.json`, dependencies listed in both `devDependencies` and `dependencies` are scanned. Future iterations of lowendinsight could offer the ability to disable `devDependencies` from being scanned.
 
 ### Mix Task for Generating a Dependencies JSON List
 
@@ -538,7 +549,7 @@ https://github.com/gtri/lowendinsight-get
 ```
 
 ### GitHub Action
-Lowendinsight can also be added to a GitHub workflow as an action. In its current state, this action only works for elixir projects. However, this will possibly be expanded to non-elixir projects with further development. This action currently exists in the develop branch. The following is an example usage:
+Lowendinsight can also be added to a GitHub workflow as an action. In its current state, it works against both NPM and Mix based projects. This action currently exists in the develop branch. The following is an example usage:
 
 ```yaml
 name: lowendinsight
