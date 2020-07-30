@@ -34,6 +34,7 @@ defmodule GithubModule.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.6"},
+      {:httpoison_retry, "~> 1.1"},
       {:git_cli, "~> 0.3"},
       {:poison, "~> 4.0"},
       {:uuid, "~> 1.1"},
