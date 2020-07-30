@@ -1,4 +1,6 @@
 defmodule Npm.Scanner do
+  require HTTPoison.Retry
+
   @moduledoc """
   Scanner scans for node dependencies to run analysis on.
   """
@@ -58,9 +60,17 @@ defmodule Npm.Scanner do
     encoded_id = URI.encode(package)
 
     HTTPoison.start()
-    {:ok, response} = HTTPoison.get("https://replicate.npmjs.com/" <> encoded_id)
 
-    case response.status_code do      
+    {:ok, response} =
+      HTTPoison.get("https://replicate.npmjs.com/" <> encoded_id)
+      |> HTTPoison.Retry.autoretry(
+        max_attempts: 5,
+        wait: 15000,
+        include_404s: false,
+        retry_unknown_errors: false
+      )
+
+    case response.status_code do
       200 ->
         repo_info = get_npm_repository(response.body)
 
@@ -71,6 +81,7 @@ defmodule Npm.Scanner do
           {:ok, report} = AnalyzerModule.analyze(package, "mix.scan", %{types: true})
           report
         end
+
       _ ->
         {:ok, report} = AnalyzerModule.analyze(package, "mix.scan", %{types: true})
         report
