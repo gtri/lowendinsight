@@ -1,13 +1,15 @@
 #!/bin/bash -l
 set -e
 
-#cd /opt/app
-#mix local.hex --force
-#mix lei.scan ${GITHUB_WORKSPACE}
+cd /opt/app
+mix local.hex --force
+OUTPUT=$(mix lei.scan ${GITHUB_WORKSPACE})
+cd ../..
 
 git config --local user.email "action@github.com"
 git config --local user.name "GitHub Action"
 touch foo.json
+echo "$OUTPUT" > "$foo.json"
 git add foo.json
 git commit -m "Add changes" -a
 
