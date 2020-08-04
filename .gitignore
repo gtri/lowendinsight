@@ -25,3 +25,7 @@ lowendinsight-*.tar
 .elixir_ls
 .vscode/
 out/
+
+DockerfileTest
+DockerfileDev
+entrypoint_*

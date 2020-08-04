@@ -1,0 +1,6 @@
+name: 'lowendinsight'
+description: 'Runs lowendinsight against a GitHub repository'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
