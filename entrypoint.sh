@@ -6,19 +6,20 @@ mix local.hex --force
 OUTPUT="$(mix lei.scan ${GITHUB_WORKSPACE})"
 #cd /../..
 
-git config --local user.email "action@github.com"
-git config --local user.name "GitHub Action"
-touch foo.json
-echo "$OUTPUT" > "$foo.json"
-git add foo.json
-git commit -m "Add changes" -a
-
 INPUT_BRANCH=${INPUT_BRANCH:-master}
 INPUT_FORCE=${INPUT_FORCE:-false}
 INPUT_TAGS=${INPUT_TAGS:-false}
 INPUT_DIRECTORY=${INPUT_DIRECTORY:-'.'}
 _FORCE_OPTION=''
 REPOSITORY=${INPUT_REPOSITORY:-$GITHUB_REPOSITORY}
+cd ${INPUT_DIRECTORY}
+
+git config --local user.email "action@github.com"
+git config --local user.name "GitHub Action"
+touch foo.json
+echo "$OUTPUT" > "$foo.json"
+git add foo.json
+git commit -m "Add changes" -a
 
 echo "Push to branch $INPUT_BRANCH";
 [ -z "${INPUT_GITHUB_TOKEN}" ] && {
@@ -33,8 +34,6 @@ fi
 if ${INPUT_TAGS}; then
     _TAGS='--tags'
 fi
-
-cd ${INPUT_DIRECTORY}
 
 remote_repo="https://${GITHUB_ACTOR}:${INPUT_GITHUB_TOKEN}@github.com/${REPOSITORY}.git"
 
