@@ -1,6 +1,7 @@
 #!/bin/bash -l
 set -e
 
+echo $PWD
 cd /opt/app
 mix local.hex --force
 OUTPUT="$(mix lei.scan ${GITHUB_WORKSPACE})"
