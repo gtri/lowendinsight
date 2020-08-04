@@ -97,6 +97,7 @@ defmodule ProjectIdentTest do
                "#{tmp_path}/snyk-maven-plugin/src/it/multi-module/child-module/pom.xml",
                "#{tmp_path}/snyk-maven-plugin/src/it/multi-module/pom.xml",
                "#{tmp_path}/snyk-maven-plugin/src/it/private-repo-module/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/remediation/pom.xml",
                "#{tmp_path}/snyk-maven-plugin/src/it/single-module/pom.xml"
              ]
            } == ProjectIdent.categorize_repo(repo, project_types)
