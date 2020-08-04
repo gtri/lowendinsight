@@ -5,6 +5,7 @@ cd /opt/app
 mix local.hex --force
 OUTPUT="$(mix lei.scan ${GITHUB_WORKSPACE})"
 #cd /../..
+echo $PWD
 
 INPUT_BRANCH=${INPUT_BRANCH:-master}
 INPUT_FORCE=${INPUT_FORCE:-false}
@@ -13,6 +14,7 @@ INPUT_DIRECTORY=${INPUT_DIRECTORY:-'.'}
 _FORCE_OPTION=''
 REPOSITORY=${INPUT_REPOSITORY:-$GITHUB_REPOSITORY}
 cd ${INPUT_DIRECTORY}
+echo $PWD
 
 git config --local user.email "action@github.com"
 git config --local user.name "GitHub Action"
