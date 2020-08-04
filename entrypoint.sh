@@ -4,7 +4,7 @@ set -e
 cd /opt/app
 mix local.hex --force
 OUTPUT="$(mix lei.scan ${GITHUB_WORKSPACE})"
-cd /../..
+#cd /../..
 
 git config --local user.email "action@github.com"
 git config --local user.name "GitHub Action"

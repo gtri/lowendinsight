@@ -1,7 +1,7 @@
 name: 'lowendinsight'
-description: 'Runs lowendinsight against a GitHub repository'
+description: 'Runs lowendinsight against a GitHub repository and saves the output to the repo root directory'
 
-author: 'ad-m'
+author: 'gtri'
 branding:
   icon: upload-cloud
   color: green
