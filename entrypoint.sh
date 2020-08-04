@@ -19,7 +19,7 @@ echo $OUTPUT
 git config --local user.email "action@github.com"
 git config --local user.name "GitHub Action"
 touch foo.json
-echo "$OUTPUT" > "$foo.json"
+echo "${OUTPUT}" > "$foo.json"
 git add foo.json
 git commit -m "Add changes" -a
 
