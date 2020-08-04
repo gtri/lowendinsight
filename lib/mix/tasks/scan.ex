@@ -19,8 +19,8 @@ defmodule Mix.Tasks.Lei.Scan do
   to perform its analysis of each dependency.
   """
   def run(args) do
-    Application.load(:lowendinsight)
-
+    Mix.Task.run "app.start"
+    
     cond do
       length(args) == 0 ->
         ScannerModule.scan(".")
