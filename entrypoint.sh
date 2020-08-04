@@ -4,7 +4,7 @@ set -e
 echo $PWD
 cd /opt/app
 mix local.hex --force
-OUTPUT="$(mix lei.scan ${GITHUB_WORKSPACE})"
+OUTPUT=`mix lei.scan ${GITHUB_WORKSPACE})`
 cd $GITHUB_WORKSPACE
 echo $PWD
 
