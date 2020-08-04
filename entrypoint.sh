@@ -4,7 +4,7 @@ set -e
 cd /opt/app
 mix local.hex --force
 OUTPUT="$(mix lei.scan ${GITHUB_WORKSPACE})"
-#cd /../..
+cd ../..
 echo $PWD
 
 INPUT_BRANCH=${INPUT_BRANCH:-master}
