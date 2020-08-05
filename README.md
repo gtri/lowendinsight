@@ -549,7 +549,7 @@ https://github.com/gtri/lowendinsight-get
 ```
 
 ### GitHub Action
-Lowendinsight can also be added to a GitHub workflow as an action. In its current state, it works against both NPM and Mix based projects. This action currently exists in the develop branch. The following is an example usage:
+Lowendinsight can also be added to a GitHub workflow as an action. In its current state, it works against both NPM and Mix based projects. When run against a GitHub repository, a `.json` file will be generated of the format `lei--Y-m-d--H-M-S.json` and pushed to that repository's root directory by default. This action currently exists in the develop branch. The following is an example usage:
 
 ```yaml
 name: LEI

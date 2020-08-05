@@ -1,5 +1,5 @@
 # Lowendinsight GitHub Action
-This is an action for Lowendinsight, a simple "bus-factor" risk analysis library for Open Source Software which is managed by the Georgia Tech Research Institute (GTRI). In its current state, this action works against both NPM and Mix based projects, currently existing in the develop branch of Lowendinsight.
+This is an action for Lowendinsight, a simple "bus-factor" risk analysis library for Open Source Software which is managed by the Georgia Tech Research Institute (GTRI). In its current state, this action works against both NPM and Mix based projects, currently existing in the develop branch of Lowendinsight. When run against a GitHub repository, a `.json` file will be generated of the format `lei--Y-m-d--H-M-S.json` and pushed to that repository's root directory by default.
 
 ## Usage
 ```yaml
