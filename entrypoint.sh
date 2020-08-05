@@ -13,14 +13,15 @@ INPUT_DIRECTORY=${INPUT_DIRECTORY:-'.'}
 _FORCE_OPTION=''
 REPOSITORY=${INPUT_REPOSITORY:-$GITHUB_REPOSITORY}
 cd ${INPUT_DIRECTORY}
-echo Printing Variable:
+echo Printing Report:
 echo $OUTPUT
 
 git config --local user.email "action@github.com"
 git config --local user.name "GitHub Action"
-touch foo.json
-echo "${OUTPUT}" > foo.json
-git add foo.json
+filename="lei--$(date +'%Y-%m-%d--%H-%M-%S').json"
+touch $filename
+echo "${OUTPUT}" > $filename
+git add $filename
 git commit -m "Add changes" -a
 
 echo "Push to branch $INPUT_BRANCH";
