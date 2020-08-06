@@ -1,22 +1,24 @@
 defmodule Npm.Packagefile do
+  @behaviour Parser
 
-  @moduledoc """
-    Provides package.json dependency parser
-  """
-  @doc """
-  parse!: parses package.json dependencies, returning a list of those
-  dependencies along with the count of total dependencies.
-  """
-  @spec parse!(binary) :: {[any], non_neg_integer}
+  @impl Parser
   def parse!(content) do
     deps =
       content
       |> Jason.decode()
       |> extract_deps()
       |> Enum.to_list()
+      |> Enum.map(fn {dependency, info} ->
+          if is_map(info) && Map.fetch!(info, "version"),
+            do: {dependency, info["version"]},
+            else: {dependency, List.last(String.split(info, ~r{[\^|~]}, parts: 2))}
+        end)
 
     {deps, length(deps)}
   end
+
+  @impl Parser
+  def file_names(), do: ["package.json", "package-lock.json"]
 
   defp extract_deps({:ok, %{"dependencies" => deps, "devDependencies" => devDeps}}), do: Map.merge(deps, devDeps)
 
