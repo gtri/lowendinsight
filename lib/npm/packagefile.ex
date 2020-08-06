@@ -1,6 +1,10 @@
 defmodule Npm.Packagefile do
   @behaviour Parser
 
+  @moduledoc """
+    Provides package.json and package-lock.json dependency parser		
+  """
+
   @impl Parser
   def parse!(content) do
     deps =
@@ -9,10 +13,10 @@ defmodule Npm.Packagefile do
       |> extract_deps()
       |> Enum.to_list()
       |> Enum.map(fn {dependency, info} ->
-          if is_map(info) && Map.fetch!(info, "version"),
-            do: {dependency, info["version"]},
-            else: {dependency, List.last(String.split(info, ~r{[\^|~]}, parts: 2))}
-        end)
+        if is_map(info) && Map.fetch!(info, "version"),
+          do: {dependency, info["version"]},
+          else: {dependency, List.last(String.split(info, ~r{[\^|~]}, parts: 2))}
+      end)
 
     {deps, length(deps)}
   end
@@ -20,7 +24,8 @@ defmodule Npm.Packagefile do
   @impl Parser
   def file_names(), do: ["package.json", "package-lock.json"]
 
-  defp extract_deps({:ok, %{"dependencies" => deps, "devDependencies" => devDeps}}), do: Map.merge(deps, devDeps)
+  defp extract_deps({:ok, %{"dependencies" => deps, "devDependencies" => devDeps}}),
+    do: Map.merge(deps, devDeps)
 
   defp extract_deps({:ok, %{"dependencies" => deps}}), do: deps
 
