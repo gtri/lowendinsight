@@ -11,7 +11,7 @@ defmodule ProjectIdentTest do
 
     mix_type = %ProjectType{name: :mix, path: "**", files: ["mix.exs,mix.lock"]}
     python_type = %ProjectType{name: :python, path: "**", files: ["setup.py,*requirements.txt*"]}
-    node_type = %ProjectType{name: :node, path: "**", files: ["package*.json"]}
+    node_type = %ProjectType{name: :node, path: "**", files: ["package*.json,yarn.lock"]}
     go_type = %ProjectType{name: :go_mod, path: "**", files: ["go.mod"]}
     cargo_type = %ProjectType{name: :cargo, path: "**", files: ["Cargo.toml"]}
     rubygem_type = %ProjectType{name: :rubygem, path: "**", files: ["Gemfile*,*.gemspec"]}

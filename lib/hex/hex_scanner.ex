@@ -1,4 +1,10 @@
+# Copyright (C) 2020 by the Georgia Tech Research Institute (GTRI)
+# This software may be modified and distributed under the terms of
+# the BSD 3-Clause license. See the LICENSE file for details.
+
 defmodule Hex.Scanner do
+  require HTTPoison.Retry
+
   @moduledoc """
   Scanner scans for mix dependencies to run analysis on.
   """
@@ -37,7 +43,15 @@ defmodule Hex.Scanner do
   @spec query_hex(String.t()) :: {:ok, map} | String.t()
   defp query_hex(package) do
     HTTPoison.start()
-    response = HTTPoison.get!("https://hex.pm/api/packages/#{package}")
+
+    response =
+      HTTPoison.get!("https://hex.pm/api/packages/#{package}")
+      |> HTTPoison.Retry.autoretry(
+        max_attempts: 5,
+        wait: 15000,
+        include_404s: false,
+        retry_unknown_errors: false
+      )
 
     case response.status_code do
       200 ->

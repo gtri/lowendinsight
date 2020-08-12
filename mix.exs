@@ -43,7 +43,8 @@ defmodule GithubModule.MixProject do
       {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
       {:json_xema, "~> 0.3"},
       {:temp, "~> 0.4"},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:yarn_parser, "~> 0.3.1"}
     ]
   end
 
