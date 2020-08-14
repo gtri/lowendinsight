@@ -1,6 +1,15 @@
 #!/bin/bash -l
 set -e
 
+[ -z "${INPUT_BRANCH}" ] && {
+    echo 'Missing input "branch: specified_branch".';
+    exit 1;
+};
+[ -z "${INPUT_GITHUB_TOKEN}" ] && {
+    echo 'Missing input "github_token: ${{ secrets.GITHUB_TOKEN }}".';
+    exit 1;
+};
+
 cd /opt/app
 mix local.hex --force
 OUTPUT=`MIX_ENV=gha mix lei.scan ${GITHUB_WORKSPACE})`
@@ -24,11 +33,7 @@ echo "${OUTPUT}" > $filename
 git add $filename
 git commit -m "Add changes" -a
 
-echo "Push to branch $INPUT_BRANCH";
-[ -z "${INPUT_GITHUB_TOKEN}" ] && {
-    echo 'Missing input "github_token: ${{ secrets.GITHUB_TOKEN }}".';
-    exit 1;
-};
+echo "Push to branch $INPUT_BRANCH"
 
 if ${INPUT_FORCE}; then
     _FORCE_OPTION='--force'
