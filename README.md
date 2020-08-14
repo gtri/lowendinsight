@@ -572,6 +572,7 @@ jobs:
       uses: gtri/lowendinsight@gha
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
 ```
 
 #### Inputs
