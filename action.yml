@@ -15,8 +15,7 @@ inputs:
     required: false
   branch:
     description: 'Destination branch to push changes'
-    required: false
-    default: 'master'
+    required: true
   force:
     description: 'Determines if force push is used'
     required: false
