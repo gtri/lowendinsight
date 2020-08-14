@@ -120,4 +120,16 @@ defmodule Mix.Tasks.ScanTest do
     assert report[:scan_node_json] != nil && report[:scan_node_yarn] != nil
     assert report[:scan_node_json][:metadata][:dependency_count] == deps_count
   end
+
+  test "run scan against requirements.txt" do
+    paths = %{python: ["./test/fixtures/requirementstxt"]}
+    {requirements_reports_list, deps_count} = Pypi.Scanner.scan(true, paths, "")
+
+    assert 2 == deps_count
+    assert 2 == Enum.count(requirements_reports_list)
+    [furl_report | [quokka_report | _]] = requirements_reports_list
+
+    assert furl_report[:data][:risk] != nil
+    assert quokka_report[:data][:risk] != nil
+  end
 end
