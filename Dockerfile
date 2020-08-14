@@ -2,9 +2,9 @@ ARG ALPINE_VERSION=3.10
 
 FROM elixir:1.9.4-alpine AS builder
 
-ARG MIX_ENV=dev
+ARG MIX_ENV=gha
 
-ENV MIX_ENV=dev
+ENV MIX_ENV=gha
 ENV LEI_BASE_TEMP_DIR=/tmp
 
 WORKDIR /opt/app
