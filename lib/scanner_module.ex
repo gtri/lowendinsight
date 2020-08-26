@@ -31,27 +31,39 @@ defmodule ScannerModule do
 
     mix? = Map.has_key?(project_types_identified, :mix)
     node? = Map.has_key?(project_types_identified, :node)
+    pypi? = Map.has_key?(project_types_identified, :python)
 
     {hex_reports_list, hex_deps_count} = Hex.Scanner.scan(mix?, project_types_identified)
 
     {json_reports_list, yarn_reports_list, npm_deps_count} =
       Npm.Scanner.scan(node?, project_types_identified)
 
-    reports = [hex: hex_reports_list, node_json: json_reports_list, node_yarn: yarn_reports_list]
+    {pypi_reports_list, pypi_deps_count} = Pypi.Scanner.scan(pypi?, project_types_identified)
+
+    reports = [
+      hex: hex_reports_list,
+      node_json: json_reports_list,
+      node_yarn: yarn_reports_list,
+      pypi: pypi_reports_list
+    ]
 
     result =
-      get_report(start_time, hex_deps_count + npm_deps_count, reports, project_types_identified)
+      get_report(
+        start_time,
+        hex_deps_count + npm_deps_count + pypi_deps_count,
+        reports,
+        project_types_identified
+      )
 
     File.cd!(cwd)
 
     Poison.encode!(result, pretty: true)
-    # Encoder.mixfile_json(mixfile)
   end
 
   def get_report(
         start_time,
         deps_count,
-        [hex: hex_report, node_json: json_report, node_yarn: yarn_report] = reports,
+        [hex: hex_report, node_json: json_report, node_yarn: yarn_report, pypi: pypi_report] = reports,
         project_types
       ) do
     files =
@@ -110,10 +122,10 @@ defmodule ScannerModule do
         result |> Map.put(:scan_node_yarn, result_yarn)
 
       Enum.empty?(project_types) ->
-        %{:error => "No mix or node dependency files were found"}
+        %{:error => "No dependency manifest files were found"}
 
       true ->
-        result_list = hex_report ++ json_report ++ yarn_report
+        result_list = hex_report ++ json_report ++ yarn_report ++ pypi_report
 
         result = %{
           :state => :complete,

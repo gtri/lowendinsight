@@ -44,10 +44,10 @@ defmodule Npm.Scanner do
             Enum.map(json_lib_map, fn {lib, _version} ->
               query_npm(lib)
             end)
-          
+
           {yarn_lib_map, _count} =
-          File.read!(path_to_yarn_lock)
-          |> Npm.Yarnlockfile.parse!()
+            File.read!(path_to_yarn_lock)
+            |> Npm.Yarnlockfile.parse!()
 
           yarn_result_map =
             Enum.map(yarn_lib_map, fn {lib, _version} ->

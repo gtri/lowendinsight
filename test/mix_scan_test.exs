@@ -86,7 +86,14 @@ defmodule Mix.Tasks.ScanTest do
   end
 
   test "run scan against package.json, package-lock.json and yarn.lock" do
-    paths = %{node: ["./test/fixtures/packagejson", "./test/fixtures/package-lockjson", "./test/fixtures/yarnlock"]}
+    paths = %{
+      node: [
+        "./test/fixtures/packagejson",
+        "./test/fixtures/package-lockjson",
+        "./test/fixtures/yarnlock"
+      ]
+    }
+
     {json_reports_list, yarn_reports_list, deps_count} = Npm.Scanner.scan(true, paths, "")
 
     assert 4 == deps_count
@@ -107,14 +114,24 @@ defmodule Mix.Tasks.ScanTest do
   end
 
   test "return 2 reports for package-lock.json and yarn.lock" do
-    paths = ["./test/fixtures/packagejson", "./test/fixtures/yarnlock", "./test/fixtures/package-lockjson"]
-    {json_reports_list, yarn_reports_list, deps_count} = Npm.Scanner.scan(true, %{node: paths}, "")
+    paths = [
+      "./test/fixtures/packagejson",
+      "./test/fixtures/yarnlock",
+      "./test/fixtures/package-lockjson"
+    ]
+
+    {json_reports_list, yarn_reports_list, deps_count} =
+      Npm.Scanner.scan(true, %{node: paths}, "")
 
     project_types = [:node]
 
-    report = ScannerModule.get_report(
-      DateTime.utc_now(), deps_count, [hex: [], node_json: json_reports_list,
-       node_yarn: yarn_reports_list], project_types)
+    report =
+      ScannerModule.get_report(
+        DateTime.utc_now(),
+        deps_count,
+        [hex: [], node_json: json_reports_list, node_yarn: yarn_reports_list],
+        project_types
+      )
 
     assert report[:metadata][:files] == project_types
     assert report[:scan_node_json] != nil && report[:scan_node_yarn] != nil
@@ -123,6 +140,18 @@ defmodule Mix.Tasks.ScanTest do
 
   test "run scan against requirements.txt" do
     paths = %{python: ["./test/fixtures/requirementstxt"]}
+    {requirements_reports_list, deps_count} = Pypi.Scanner.scan(true, paths, "")
+
+    assert 2 == deps_count
+    assert 2 == Enum.count(requirements_reports_list)
+    [furl_report | [quokka_report | _]] = requirements_reports_list
+
+    assert furl_report[:data][:risk] != nil
+    assert quokka_report[:data][:risk] != nil
+  end
+
+  test "run scan against setup.py" do
+    paths = %{python: ["./test/fixtures/setuppy"]}
     {requirements_reports_list, deps_count} = Pypi.Scanner.scan(true, paths, "")
 
     assert 2 == deps_count

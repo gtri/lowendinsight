@@ -9,14 +9,14 @@ defmodule Pypi.Scanner do
   scan: called when pi? is false, returning an empty list and 0
   """
   @spec scan(boolean(), map) :: {[], 0}
-  def scan(pi?, _project_types) when pi? == false, do: {[], 0}
+  def scan(pypi?, _project_types) when pypi? == false, do: {[], 0}
 
   @doc """
   scan: takes in a path to node dependencies and returns the
   dependencies mapped to their analysis and the number of dependencies
   """
   @spec scan(boolean(), %{python: []}) :: {[any], non_neg_integer}
-  def scan(_pi?, %{python: paths_to_python_files}, option \\ ".") do
+  def scan(_pypi?, %{python: paths_to_python_files}, option \\ ".") do
     path_to_requirements =
       Enum.find(paths_to_python_files, &String.ends_with?(&1, "requirements#{option}txt"))
 
@@ -60,24 +60,28 @@ defmodule Pypi.Scanner do
       200 ->
         {:ok, response} = Jason.decode(response.body)
         info = response["info"]
+
         cond do
           is_map(info["project_urls"]) && Map.has_key?(info["project_urls"], "Source Code") ->
-              url = info["project_urls"]["Source Code"]
-              {:ok, report} = AnalyzerModule.analyze(url, "mix.scan", %{types: true})
-              report
+            url = info["project_urls"]["Source Code"]
+            {:ok, report} = AnalyzerModule.analyze(url, "mix.scan", %{types: true})
+            report
+
           is_map(info["project_urls"]) && Map.has_key?(info["project_urls"], "Homepage") ->
             url = info["project_urls"]["Homepage"]
             {:ok, report} = AnalyzerModule.analyze(url, "mix.scan", %{types: true})
             report
+
           is_map(info) && Map.has_key?(info, "download_url") ->
             url = String.trim_trailing(response["info"]["download_url"], "/tags")
             # if String.contains?(url, ["github", "bitbucket"]) do
             {:ok, report} = AnalyzerModule.analyze(url, "mix.scan", %{types: true})
             report
+
           true ->
             {:ok, report} = AnalyzerModule.analyze(package, "mix.scan", %{types: true})
             report
-          end
+        end
 
       _ ->
         {:ok, report} = AnalyzerModule.analyze(package, "mix.scan", %{types: true})
