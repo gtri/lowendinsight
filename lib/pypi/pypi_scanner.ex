@@ -62,6 +62,11 @@ defmodule Pypi.Scanner do
         info = response["info"]
 
         cond do
+          is_map(info["project_urls"]) && Map.has_key?(info["project_urls"], "Code") ->
+            url = info["project_urls"]["Code"]
+            {:ok, report} = AnalyzerModule.analyze(url, "mix.scan", %{types: true})
+            report
+
           is_map(info["project_urls"]) && Map.has_key?(info["project_urls"], "Source Code") ->
             url = info["project_urls"]["Source Code"]
             {:ok, report} = AnalyzerModule.analyze(url, "mix.scan", %{types: true})

@@ -28,6 +28,7 @@ defmodule Mix.Tasks.ScanTest do
     end
   end
 
+  @tag timeout: 130_000
   describe "bitbucket based run/1" do
     test "run scan and report against a package that has a known reference to Bitbucket" do
       # Get the repo
@@ -129,7 +130,7 @@ defmodule Mix.Tasks.ScanTest do
       ScannerModule.get_report(
         DateTime.utc_now(),
         deps_count,
-        [hex: [], node_json: json_reports_list, node_yarn: yarn_reports_list],
+        [hex: [], node_json: json_reports_list, node_yarn: yarn_reports_list, pypi: []],
         project_types
       )
 
@@ -150,15 +151,15 @@ defmodule Mix.Tasks.ScanTest do
     assert quokka_report[:data][:risk] != nil
   end
 
-  test "run scan against setup.py" do
-    paths = %{python: ["./test/fixtures/setuppy"]}
-    {requirements_reports_list, deps_count} = Pypi.Scanner.scan(true, paths, "")
+  test "run scan on python repo, validate report, return report" do
+    {:ok, tmp_path} = Temp.path("lei-scan-python-repo-test")
+    {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/clikan", tmp_path)
 
-    assert 2 == deps_count
-    assert 2 == Enum.count(requirements_reports_list)
-    [furl_report | [quokka_report | _]] = requirements_reports_list
+    Scan.run([repo.path])
+    assert_received {:mix_shell, :info, [report]}
 
-    assert furl_report[:data][:risk] != nil
-    assert quokka_report[:data][:risk] != nil
+    report_data = Poison.decode!(report)
+    assert Map.has_key?(report_data["metadata"], "risk_counts") == true
   end
+
 end
