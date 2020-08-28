@@ -138,6 +138,7 @@ defmodule AnalyzerTest do
         "test_start_time_option",
         start_time
       )
+
     assert DateTime.to_iso8601(start_time) == report[:metadata][:times][:start_time]
   end
 

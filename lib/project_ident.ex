@@ -44,15 +44,44 @@ defmodule ProjectIdent do
     python_type = %ProjectType{
       name: :python,
       path: "**",
-      files: ["setup.py,*requirements.txt*"]
+      files: ["*requirements.txt*"]
     }
 
-    node_type = %ProjectType{name: :node, path: "**", files: ["package*.json","yarn.lock"]}
-    go_type = %ProjectType{name: :go_mod, path: "**", files: ["go.mod"]}
-    cargo_type = %ProjectType{name: :cargo, path: "**", files: ["Cargo.toml"]}
-    rubygem_type = %ProjectType{name: :rubygem, path: "**", files: ["Gemfile*,*.gemspec"]}
-    maven_type = %ProjectType{name: :maven, path: "**", files: ["pom.xml"]}
-    gradle_type = %ProjectType{name: :gradle, path: "**", files: ["build.gradle*"]}
+    node_type = %ProjectType{
+      name: :node,
+      path: "**",
+      files: ["package*.json", "yarn.lock"]
+    }
+
+    go_type = %ProjectType{
+      name: :go_mod,
+      path: "**",
+      files: ["go.mod"]
+    }
+
+    cargo_type = %ProjectType{
+      name: :cargo,
+      path: "**",
+      files: ["Cargo.toml"]
+    }
+
+    rubygem_type = %ProjectType{
+      name: :rubygem,
+      path: "**",
+      files: ["Gemfile*,*.gemspec"]
+    }
+
+    maven_type = %ProjectType{
+      name: :maven,
+      path: "**",
+      files: ["pom.xml"]
+    }
+
+    gradle_type = %ProjectType{
+      name: :gradle,
+      path: "**",
+      files: ["build.gradle*"]
+    }
 
     project_types = [
       mix_type,

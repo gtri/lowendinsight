@@ -24,7 +24,7 @@ defmodule TimeHelper do
     ```
 
   """
-  @spec sec_to_str(non_neg_integer) :: String.t
+  @spec sec_to_str(non_neg_integer) :: String.t()
   def sec_to_str(sec) do
     {_, [s, m, h, d, w]} =
       Enum.reduce(@divisor, {sec, []}, fn divisor, {n, acc} ->
@@ -55,7 +55,7 @@ defmodule TimeHelper do
   @doc """
   get_commit_delta/1: returns the time between now and the last commit in seconds
   """
-  @spec get_commit_delta(String.t) :: {:ok, String.t} | {:error, String.t}
+  @spec get_commit_delta(String.t()) :: {:ok, String.t()} | {:error, String.t()}
   def get_commit_delta(last_commit_date) do
     case DateTime.from_iso8601(last_commit_date) do
       {:error, error} ->

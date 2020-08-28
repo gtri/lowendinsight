@@ -28,6 +28,7 @@ defmodule Mix.Tasks.ScanTest do
     end
   end
 
+  @tag timeout: 130_000
   describe "bitbucket based run/1" do
     test "run scan and report against a package that has a known reference to Bitbucket" do
       # Get the repo
@@ -86,7 +87,14 @@ defmodule Mix.Tasks.ScanTest do
   end
 
   test "run scan against package.json, package-lock.json and yarn.lock" do
-    paths = %{node: ["./test/fixtures/packagejson", "./test/fixtures/package-lockjson", "./test/fixtures/yarnlock"]}
+    paths = %{
+      node: [
+        "./test/fixtures/packagejson",
+        "./test/fixtures/package-lockjson",
+        "./test/fixtures/yarnlock"
+      ]
+    }
+
     {json_reports_list, yarn_reports_list, deps_count} = Npm.Scanner.scan(true, paths, "")
 
     assert 4 == deps_count
@@ -107,17 +115,51 @@ defmodule Mix.Tasks.ScanTest do
   end
 
   test "return 2 reports for package-lock.json and yarn.lock" do
-    paths = ["./test/fixtures/packagejson", "./test/fixtures/yarnlock", "./test/fixtures/package-lockjson"]
-    {json_reports_list, yarn_reports_list, deps_count} = Npm.Scanner.scan(true, %{node: paths}, "")
+    paths = [
+      "./test/fixtures/packagejson",
+      "./test/fixtures/yarnlock",
+      "./test/fixtures/package-lockjson"
+    ]
+
+    {json_reports_list, yarn_reports_list, deps_count} =
+      Npm.Scanner.scan(true, %{node: paths}, "")
 
     project_types = [:node]
 
-    report = ScannerModule.get_report(
-      DateTime.utc_now(), deps_count, [hex: [], node_json: json_reports_list,
-       node_yarn: yarn_reports_list], project_types)
+    report =
+      ScannerModule.get_report(
+        DateTime.utc_now(),
+        deps_count,
+        [hex: [], node_json: json_reports_list, node_yarn: yarn_reports_list, pypi: []],
+        project_types
+      )
 
     assert report[:metadata][:files] == project_types
     assert report[:scan_node_json] != nil && report[:scan_node_yarn] != nil
     assert report[:scan_node_json][:metadata][:dependency_count] == deps_count
   end
+
+  test "run scan against requirements.txt" do
+    paths = %{python: ["./test/fixtures/requirementstxt"]}
+    {requirements_reports_list, deps_count} = Pypi.Scanner.scan(true, paths, "")
+
+    assert 2 == deps_count
+    assert 2 == Enum.count(requirements_reports_list)
+    [furl_report | [quokka_report | _]] = requirements_reports_list
+
+    assert furl_report[:data][:risk] != nil
+    assert quokka_report[:data][:risk] != nil
+  end
+
+  test "run scan on python repo, validate report, return report" do
+    {:ok, tmp_path} = Temp.path("lei-scan-python-repo-test")
+    {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/clikan", tmp_path)
+
+    Scan.run([repo.path])
+    assert_received {:mix_shell, :info, [report]}
+
+    report_data = Poison.decode!(report)
+    assert Map.has_key?(report_data["metadata"], "risk_counts") == true
+  end
+
 end

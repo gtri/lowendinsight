@@ -48,7 +48,6 @@ defmodule AnalyzerModule do
             GitModule.get_repo(uri.path)
 
           uri.scheme == "https" or uri.scheme == "http" or uri.scheme == "git+https" ->
-            
             url = Helpers.remove_git_prefix(url)
 
             if Helpers.count_forward_slashes(url) > 4 do
@@ -73,7 +72,7 @@ defmodule AnalyzerModule do
 
             GitModule.clone_repo(url, tmp_path)
 
-          true -> 
+          true ->
             # raise ArgumentError, message: "Not a public Git repo URL"
             {:ok}
         end
@@ -173,16 +172,18 @@ defmodule AnalyzerModule do
       MatchError ->
         end_time = DateTime.utc_now()
         duration = DateTime.diff(end_time, start_time)
-        {:ok, %{
+
+        {:ok,
+         %{
            header: %{
-            repo: url,
-            start_time: DateTime.to_iso8601(start_time),
-            end_time: DateTime.to_iso8601(end_time),
-            duration: duration,
-            uuid: UUID.uuid1(),
-            source_client: source,
-            library_version: library_version
-          },
+             repo: url,
+             start_time: DateTime.to_iso8601(start_time),
+             end_time: DateTime.to_iso8601(end_time),
+             duration: duration,
+             uuid: UUID.uuid1(),
+             source_client: source,
+             library_version: library_version
+           },
            data: %{
              # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?",
@@ -197,16 +198,18 @@ defmodule AnalyzerModule do
       e in ArgumentError ->
         end_time = DateTime.utc_now()
         duration = DateTime.diff(end_time, start_time)
-        {:ok, %{
-          header: %{
-            repo: url,
-            start_time: DateTime.to_iso8601(start_time),
-            end_time: DateTime.to_iso8601(end_time),
-            duration: duration,
-            uuid: UUID.uuid1(),
-            source_client: source,
-            library_version: library_version
-          },
+
+        {:ok,
+         %{
+           header: %{
+             repo: url,
+             start_time: DateTime.to_iso8601(start_time),
+             end_time: DateTime.to_iso8601(end_time),
+             duration: duration,
+             uuid: UUID.uuid1(),
+             source_client: source,
+             library_version: library_version
+           },
            data: %{
              # config: Helpers.convert_config_to_list(Application.get_all_env(:lowendinsight)),
              error: "Unable to analyze the repo (#{url}). #{e.message}",
@@ -285,7 +288,7 @@ defmodule AnalyzerModule do
   produces the repo report object to be returned immediately by asynchronous
   requestors (e.g. LowEndInsight-Get HTTP endpoint)
   """
-  @spec create_empty_report(String.t, [String.t], any) :: map
+  @spec create_empty_report(String.t(), [String.t()], any) :: map
   def create_empty_report(uuid, urls, start_time \\ DateTime.utc_now()) do
     %{
       :metadata => %{
@@ -310,7 +313,7 @@ defmodule AnalyzerModule do
   both the atom and string elements, because the JSON gets parsed into the string
   format - so caching can be supported (as reports are stored in JSON).
   """
-  @spec determine_risk_counts(RepoReport.t) :: map
+  @spec determine_risk_counts(RepoReport.t()) :: map
   def determine_risk_counts(report) do
     count_map =
       report[:report][:repos]
@@ -325,7 +328,7 @@ defmodule AnalyzerModule do
   determine_toplevel_risk/1: takes in a report and determines the highest
   criticality, and assigns it to the "risk" element for the repo report.
   """
-  @spec determine_toplevel_risk(RepoReport.t) :: map
+  @spec determine_toplevel_risk(RepoReport.t()) :: map
   def determine_toplevel_risk(report) do
     values = Map.values(report[:data][:results])
 
