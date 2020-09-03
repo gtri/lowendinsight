@@ -9,6 +9,15 @@ defmodule Mix.Tasks.Lei.BulkAnalyze do
   This is used to run a LowEndInsight scan against a repository, by cloning it locally, then looking
   into it.  Pass in the repo URL as a parameter to the task.
 
+  Skipping validation is possible:
+  ➜  lowendinsight git:(develop) ✗ mix lei.bulk_analyze test/fixtures/npm.short.csv
+  invalid file contents
+  ➜  lowendinsight git:(develop) ✗ mix lei.bulk_analyze test/fixtures/npm.short.csv no_validation
+  11:45:39.773 [error] Not a Git repo URL, is a subdirectory
+  11:45:40.102 [info]  Cloned -> 3: git+https://github.com/SuzuNohara/zzzROOTPreloader.git
+  11:45:40.134 [info]  Cloned -> 7: git+https://github.com/zenghongyang/test.git
+  11:45:40.177 [info]  Cloned -> 5: git+https://github.com/chameleonbr/zzzz-test-module.git
+
   #Usage
   ```
   cat url_list | mix lei.bulk_analyze | jq
@@ -50,17 +59,29 @@ defmodule Mix.Tasks.Lei.BulkAnalyze do
           File.read!(file)
           |> String.split("\n", trim: true)
 
-        case Helpers.validate_urls(urls) do
-          :ok ->
-            {:ok, report} =
-              AnalyzerModule.analyze(urls, "mix task", DateTime.utc_now(), %{types: false})
+        ## Hacking in a simple handler to bypass validation for the bulk analyzer for a specific
+        ## use case where we need to process invalid URLs listed in a repos pointer to the source
+        ## code.
+        if Enum.at(args, 1) == "no_validation" do
+          {:ok, report} =
+            AnalyzerModule.analyze(urls, "mix task", DateTime.utc_now(), %{types: false})
 
-            Poison.encode!(report)
-            |> Mix.shell().info()
+          Poison.encode!(report)
+          |> Mix.shell().info()
+        else
+          case Helpers.validate_urls(urls) do
+            :ok ->
+              {:ok, report} =
+                AnalyzerModule.analyze(urls, "mix task", DateTime.utc_now(), %{types: false})
 
-          {:error, _} ->
-            Mix.shell().info("\ninvalid file contents")
+              Poison.encode!(report)
+              |> Mix.shell().info()
+
+            {:error, _} ->
+              Mix.shell().info("\ninvalid file contents")
+          end
         end
+
     end
   end
 end
