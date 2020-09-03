@@ -150,9 +150,9 @@ defmodule AnalyzerTest do
         error:
           "Unable to analyze the repo (https://github.com/kitplummer/blah), is this a valid Git repo URL?",
         repo: "https://github.com/kitplummer/blah",
-        risk: "critical",
+        risk: "undetermined",
         project_types: %{"undetermined" => "undetermined"},
-        repo_size: "N/A",
+        repo_size: "undetermined",
         git: %{}
       }
     }
@@ -173,9 +173,9 @@ defmodule AnalyzerTest do
         error:
           "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory",
         repo: "https://github.com/kitplummer/xmpp4rails/blah",
-        risk: "N/A",
+        risk: "undetermined",
         project_types: %{"undetermined" => "undetermined"},
-        repo_size: "N/A",
+        repo_size: "undetermined",
         git: %{}
       }
     }

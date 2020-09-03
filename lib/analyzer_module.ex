@@ -189,9 +189,9 @@ defmodule AnalyzerModule do
              error: "Unable to analyze the repo (#{url}), is this a valid Git repo URL?",
              repo: url,
              git: %{},
-             risk: "critical",
+             risk: "undetermined",
              project_types: %{"undetermined" => "undetermined"},
-             repo_size: "N/A"
+             repo_size: "undetermined"
            }
          }}
 
@@ -215,9 +215,9 @@ defmodule AnalyzerModule do
              error: "Unable to analyze the repo (#{url}). #{e.message}",
              repo: url,
              git: %{},
-             risk: "N/A",
+             risk: "undetermined",
              project_types: %{"undetermined" => "undetermined"},
-             repo_size: "N/A"
+             repo_size: "undetermined"
            }
          }}
     after
