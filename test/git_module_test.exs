@@ -351,4 +351,10 @@ defmodule GitModuleTest do
     assert nil != size
     assert "" != size
   end
+
+  test "repo with a no name committer" do
+    log = " <feihai@DESKTOP-5974P1K.localdomain> (10):\n      增加或删除端口时，重新加载并显示当前端口状态\n      modify package.json\n      add 4docker_admin\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port trace 开启内核模块\n      !\n\nqiufeihai <308350718@qq.com> (9):\n      Initial commit\n      init\n      .\n      add 4npm 切换npm源\n      fix bug\n      x\n      add 4tar 4lrzsz\n      add 4tar 4lrzsz\n      加注释和解除注释脚本4comment 4uncomment\n\nroot <root@DESKTOP-G3C2S9M.localdomain> (5):\n      !\n      4port addtrace add source\n      !\n      add 4check_cert 4http\n      add 4check_cert 4http\n\nroot <root@DESKTOP-5974P1K.localdomain> (3):\n      add 4port\n      add 4sshport\n      update package.json\n\n"
+    contributors = GitHelper.parse_shortlog(log)
+    assert 4 == Enum.count(contributors)
+  end
 end

@@ -123,7 +123,7 @@ defmodule GitHelper do
       contributor
       |> String.split("\n")
       |> Enum.at(0)
-      |> (&Regex.scan(~r{([^<]+)<([^;]*)>.\(([^:]+)\)}, &1)).()
+      |> (&Regex.scan(~r{(\d*|[^<]+)<([^;]*)>.\(([^:]+)\)}, &1)).()
       |> Enum.at(0)
 
     {Enum.at(header, 1), Enum.at(header, 2), Enum.at(header, 3)}
