@@ -63,7 +63,8 @@ defmodule ScannerModule do
   def get_report(
         start_time,
         deps_count,
-        [hex: hex_report, node_json: json_report, node_yarn: yarn_report, pypi: pypi_report] = reports,
+        [hex: hex_report, node_json: json_report, node_yarn: yarn_report, pypi: pypi_report] =
+          reports,
         project_types
       ) do
     files =

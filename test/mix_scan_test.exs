@@ -161,5 +161,4 @@ defmodule Mix.Tasks.ScanTest do
     report_data = Poison.decode!(report)
     assert Map.has_key?(report_data["metadata"], "risk_counts") == true
   end
-
 end
