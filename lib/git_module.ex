@@ -168,8 +168,12 @@ defmodule GitModule do
   def get_recent_changes(repo) do
     with {:ok, total_lines, total_files_changed} <- get_total_lines(repo),
          {:ok, file_num, insertions, deletions} = get_last_2_delta(repo) do
-      {:ok, Float.round((insertions + deletions) / total_lines, 5),
-       Float.round(file_num / total_files_changed, 5)}
+      if total_lines == 0 do
+        {:ok, 0, 0}
+      else
+        {:ok, Float.round((insertions + deletions) / total_lines, 5),
+         Float.round(file_num / total_files_changed, 5)}
+      end
     end
   end
 
