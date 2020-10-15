@@ -95,7 +95,7 @@ defmodule GitModule do
   """
   @spec get_commit_dates(Git.Repository.t()) :: {:ok, [non_neg_integer]}
   def get_commit_dates(repo) do
-    dates = git_log_split!(repo, ["--pretty=format:%ct"])
+    dates = git_log_split(repo, ["--pretty=format:%ct"])
 
     dates_int = Enum.map(dates, fn x -> String.to_integer(x, 10) end)
     {:ok, dates_int}
@@ -317,11 +317,11 @@ defmodule GitModule do
     end)
   end
 
-  @doc """
-  This is a replacement for Git.log!() and String.split() to split out warning tags.
-  Unless we can find a command for Git.log! which can separate out "warning:" tags,
-  we need to manually parse it out here
-  """
+
+  # This is a replacement for Git.log!() and String.split() to split out warning tags.
+  # Unless we can find a command for Git.log! which can separate out "warning:" tags,
+  # we need to manually parse it out here
+
   @spec git_log_split(Git.Repository.t(), [String.t]) :: [String.t]
   defp git_log_split(repo, args \\ []) do
     Git.log!(repo, args)
