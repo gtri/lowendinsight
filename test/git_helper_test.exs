@@ -2,6 +2,12 @@ defmodule GitHelperTest do
   use ExUnit.Case
   doctest GitHelper
 
+ @moduledoc """
+ This will test various functions in git_helper. However, since most of these functions
+ are private, in order to test them you will need to make them public. I have added
+ a tag :helper to all tests so that you may include or uninclude them accordingly.
+ """
+
   setup_all do
     correct_atr = "James R Richardson <jronmi@hotmail.com> (1):\n asdfj"
     incorrect_e = "James R Richardson <asdfoi2> (1):\n asdoin sd"

@@ -59,7 +59,7 @@ defmodule GitModule do
   """
   @spec get_last_commit_date(Git.Repository.t()) :: {:ok, String.t()}
   def get_last_commit_date(repo) do
-    date = Git.log!(repo, ["-1", "--pretty=format:%cI"])
+    date = List.last(git_log_split(repo, ["-1", "--pretty=format:%cI"]))
     {:ok, date}
   end
 
@@ -95,9 +95,7 @@ defmodule GitModule do
   """
   @spec get_commit_dates(Git.Repository.t()) :: {:ok, [non_neg_integer]}
   def get_commit_dates(repo) do
-    dates =
-      Git.log!(repo, ["--pretty=format:%ct"])
-      |> String.split("\n")
+    dates = git_log_split!(repo, ["--pretty=format:%ct"])
 
     dates_int = Enum.map(dates, fn x -> String.to_integer(x, 10) end)
     {:ok, dates_int}
@@ -110,8 +108,7 @@ defmodule GitModule do
   @spec get_tag_and_commit_dates(Git.Repository.t()) :: [any]
   def get_tag_and_commit_dates(repo) do
     tag_and_date =
-      Git.log!(repo, ["--pretty=format:%d$%ct"])
-      |> String.split("\n")
+      git_log_split(repo, ["--pretty=format:%d$%ct"])
       |> Enum.map(fn element -> String.split(element, "$") end)
       |> Enum.map(fn [head | tail] ->
         if head == "" do
@@ -132,8 +129,8 @@ defmodule GitModule do
   """
   @spec get_last_n_commits(Git.Repository.t(), non_neg_integer) :: {:ok, [any]}
   def get_last_n_commits(repo, n) do
-    output = Git.log!(repo, ["--pretty=format:%h", "--no-merges", "-#{n}"])
-    {:ok, String.split(output, "\n")}
+    output = git_log_split(repo, ["--pretty=format:%h", "--no-merges", "-#{n}"])
+    {:ok, output}
   end
 
   @doc """
@@ -318,5 +315,17 @@ defmodule GitModule do
           result <> <<parsed::utf8>>
       end
     end)
+  end
+
+  @doc """
+  This is a replacement for Git.log!() and String.split() to split out warning tags.
+  Unless we can find a command for Git.log! which can separate out "warning:" tags,
+  we need to manually parse it out here
+  """
+  @spec git_log_split(Git.Repository.t(), [String.t]) :: [String.t]
+  defp git_log_split(repo, args \\ []) do
+    Git.log!(repo, args)
+    |> String.split("\n")
+    |> Enum.filter(fn x -> if not String.contains?(x, "warning:") do x end end)
   end
 end
