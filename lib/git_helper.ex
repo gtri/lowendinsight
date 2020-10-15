@@ -118,15 +118,20 @@ defmodule GitHelper do
     |> String.split(~r{\n\n})
   end
 
-  defp parse_header(contributor) do
+  def parse_header(contributor) do
     header =
       contributor
       |> String.split("\n")
       |> Enum.at(0)
       |> (&Regex.scan(~r{(\d*|[^<]+)<([^;]*)>.\(([^:]+)\)}, &1)).()
-      |> Enum.at(0)
 
-    {Enum.at(header, 1), Enum.at(header, 2), Enum.at(header, 3)}
+    cond do
+      length(header) == 0
+      -> {"SyntaxError", "SyntaxError", "SyntaxError"}
+      true
+      -> header = Enum.at(header, 0)
+         {Enum.at(header, 1), Enum.at(header, 2), Enum.at(header, 3)}
+    end
   end
 
   defp parse_commits(contributor) do

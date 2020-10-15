@@ -39,7 +39,11 @@ defmodule ProjectIdent do
   """
   def get_project_types_identified(repo) do
     ## Non-metric data about repo
-    mix_type = %ProjectType{name: :mix, path: "", files: ["mix.exs,mix.lock"]}
+    mix_type = %ProjectType{
+      name: :mix,
+      path: "",
+      files: ["mix.exs,mix.lock"]
+    }
 
     python_type = %ProjectType{
       name: :python,

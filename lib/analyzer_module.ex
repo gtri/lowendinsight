@@ -76,7 +76,6 @@ defmodule AnalyzerModule do
             # raise ArgumentError, message: "Not a public Git repo URL"
             {:ok}
         end
-
       Logger.info("Cloned -> #{count}: #{url}")
 
       # Get unique contributors count
