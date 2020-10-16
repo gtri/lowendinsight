@@ -19,7 +19,6 @@ defmodule Helpers do
   @spec get_slug(String.t()) :: {:ok, String.t()} | {:error, String.t()}
   def get_slug(url) do
     uri = URI.parse(url)
-
     case uri.path do
       nil ->
         {:error, "invalid source URL"}
