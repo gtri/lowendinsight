@@ -199,12 +199,8 @@ defmodule GitModule do
 
   @spec get_contributors(Git.Repository.t()) :: {:ok, [Contributor.t()]}
   def get_contributors(repo) do
-    # Enum.join(for <<c <- raw >>, do: (if String.valid?(<<c>>) do <<c>> else <<63>> end))
     list =
       Git.shortlog!(repo, ["-n", "-e", "HEAD", "--"])
-      |> String.codepoints()
-      |> Enum.map(fn x -> if !String.valid?(x) do Enum.join(for <<c <- raw >>, do: <<c::utf8, 0>>) else x end end)
-      |> Enum.join()
       |> GitHelper.parse_shortlog()
 
     {:ok, list}
