@@ -14,13 +14,19 @@ defmodule GitHelperTest do
     correct_atr = "John R Doe <john@example.com> (1):\n messages for commits"
     incorrect_e = "John R Doe <asdfoi@2> (1):\n messages for commits"
     e_with_semi = "John R Doe <asdfjk@l;> (1):\n messages for commits"
-    name_with_num = "John 9 Doe <john@example.com> (10): \n amessages for commits"
+    name_with_num = "098 567 45 <john@example.com> (10): \n messages for commits"
+    empty_name = "<john@example.com> (1) \n messages for commits"
+    name_angBr = "John < Doe <john@example.com> (1) \n messages for commmits"
+    email_angBr = "John R Doe <john>example.com> (1) \n messages for commits"
 
     [
       correct_atr: correct_atr,
       incorrect_e: incorrect_e,
       e_with_semi: e_with_semi,
-      name_with_num: name_with_num
+      name_with_num: name_with_num,
+      empty_name: empty_name,
+      name_angBr: name_angBr,
+      email_angBr: email_angBr
     ]
   end
 
@@ -45,6 +51,21 @@ defmodule GitHelperTest do
 
   @tag :helper
   test "number error", %{name_with_num: name_with_num} do
-    assert {"John 9 Doe ", "john@example.com", "10"} = GitHelper.parse_header(name_with_num)
+    assert {"098 567 45 ", "john@example.com", "10"} = GitHelper.parse_header(name_with_num)
+  end
+
+  @tag :helper
+  test "empty name error", %{empty_name: empty_name} do
+    assert {"", "john@example.com", "1"}  = GitHelper.parse_header(empty_name)
+  end
+
+  @tag :helper
+  test "name with opening angle bracket", %{name_angBr: name_angBr} do
+    assert {"John ", " Doe <john@example.com", "1"} = GitHelper.parse_header(name_angBr)
+  end
+
+  @tag :helper
+  test "email with closing angle bracket", %{email_angBr: email_angBr} do
+    assert {"John R Doe ", "john>example.com", "1"} = GitHelper.parse_header(email_angBr)
   end
 end
