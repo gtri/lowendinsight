@@ -202,7 +202,7 @@ defmodule GitModule do
     list =
       Git.shortlog!(repo, ["-n", "-e", "HEAD", "--"])
       |> String.codepoints()
-      |> Enum.map(fn x -> if !String.valid?(x) do Enum.join(for <<c <- raw >>, do: <<c::utf8>>) else x end end)
+      |> Enum.map(fn x -> if !String.valid?(x) do Enum.join(for <<c <- x >>, do: <<c::utf8>>) else x end end)
       |> Enum.join()
       |> GitHelper.parse_shortlog()
 
