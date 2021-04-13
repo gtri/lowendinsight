@@ -21,6 +21,9 @@ defmodule GitModuleTest do
     {:ok, gitlab_repo} =
       GitModule.clone_repo("https://gitlab.com/kitplummer/infrastructure", tmp_path)
 
+    {:ok, gitlab_subgroup_repo} =
+      GitModule.clone_repo("https://gitlab.com/lowendinsight/test/pymodule", tmp_path)
+
     {:ok, kitrepo} = GitModule.clone_repo("https://github.com/kitplummer/kit", tmp_path)
 
     {:ok, this_repo} = GitModule.get_repo(".")
@@ -31,6 +34,7 @@ defmodule GitModuleTest do
       tag_repo: tag_repo,
       bitbucket_repo: bitbucket_repo,
       gitlab_repo: gitlab_repo,
+      gitlab_subgroup_repo: gitlab_subgroup_repo,
       kitrepo: kitrepo,
       this_repo: this_repo
     ]
@@ -99,15 +103,6 @@ defmodule GitModuleTest do
     {:ok, result} = GitModule.get_clean_contributions_map(kitrepo)
     assert Enum.at(expected, 1) == Enum.at(result, 1)
   end
-
-  # test "wip" do
-  #   {:ok, repo} = GitModule.clone_repo("https://github.com/robbyrussell/oh-my-zsh")
-  #   maps = GitModule.test_kit(repo)
-  #   File.rm_rf("oh-my-zsh")
-
-  #   assert true == Enum.member?(maps, "Prachayapron")
-  #   assert [] == maps
-  # end
 
   test "get commit dates", context do
     dates = GitModule.get_commit_dates(context[:repo])
@@ -350,6 +345,11 @@ defmodule GitModuleTest do
     {:ok, size} = GitModule.get_repo_size(repo)
     assert nil != size
     assert "" != size
+  end
+
+  test "subgroup repo from gitlab", %{gitlab_subgroup_repo: gitlab_subgroup_repo} do
+    {:ok, size} = GitModule.get_repo_size(gitlab_subgroup_repo)
+    assert nil != size
   end
 
   test "repo with a no name committer" do

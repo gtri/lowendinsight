@@ -51,10 +51,10 @@ defmodule AnalyzerModule do
               uri.scheme == "git" ->
             url = Helpers.remove_git_prefix(url)
 
-            if Helpers.count_forward_slashes(url) > 4 do
-              Logger.error("Not a Git repo URL, is a subdirectory")
-              raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
-            end
+            # if Helpers.count_forward_slashes(url) > 4 do
+            #   Logger.error("Not a Git repo URL, is a subdirectory")
+            #   raise ArgumentError, message: "Not a Git repo URL, is a subdirectory"
+            # end
 
             tmp =
               Temp.mkdir(%{
