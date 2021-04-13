@@ -48,6 +48,12 @@ defmodule Mix.Tasks.AnalyzeTest do
       report_data1 = Poison.decode!(report)
       assert :ok == JsonXema.validate(schema, report_data1)
       assert true == JsonXema.valid?(schema, report_data1)
+
+      Analyze.run(["https://gitlab.com/lowendinsight/test/pymodule"])
+      assert_received {:mix_shell, :info, [report]}
+      report_data = Poison.decode!(report)
+      assert :ok == JsonXema.validate(schema, report_data)
+
     end
   end
 end

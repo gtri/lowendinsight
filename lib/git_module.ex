@@ -202,7 +202,13 @@ defmodule GitModule do
     list =
       Git.shortlog!(repo, ["-n", "-e", "HEAD", "--"])
       |> String.codepoints()
-      |> Enum.map(fn x -> if !String.valid?(x) do Enum.join(for <<c <- x >>, do: <<c::utf8>>) else x end end)
+      |> Enum.map(fn x ->
+        if !String.valid?(x) do
+          Enum.join(for <<c <- x>>, do: <<c::utf8>>)
+        else
+          x
+        end
+      end)
       |> Enum.join()
       |> GitHelper.parse_shortlog()
 
@@ -320,15 +326,18 @@ defmodule GitModule do
     end)
   end
 
-
   # This is a replacement for Git.log!() and String.split() to split out warning tags.
   # Unless we can find a command for Git.log! which can separate out "warning:" tags,
   # we need to manually parse it out here
 
-  @spec git_log_split(Git.Repository.t(), [String.t]) :: [String.t]
+  @spec git_log_split(Git.Repository.t(), [String.t()]) :: [String.t()]
   defp git_log_split(repo, args \\ []) do
     Git.log!(repo, args)
     |> String.split("\n")
-    |> Enum.filter(fn x -> if not String.contains?(x, "warning:") do x end end)
+    |> Enum.filter(fn x ->
+      if not String.contains?(x, "warning:") do
+        x
+      end
+    end)
   end
 end

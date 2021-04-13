@@ -21,6 +21,9 @@ defmodule GitModuleTest do
     {:ok, gitlab_repo} =
       GitModule.clone_repo("https://gitlab.com/kitplummer/infrastructure", tmp_path)
 
+    {:ok, gitlab_subgroup_repo} =
+      GitModule.clone_repo("https://gitlab.com/lowendinsight/test/pymodule", tmp_path)
+
     {:ok, kitrepo} = GitModule.clone_repo("https://github.com/kitplummer/kit", tmp_path)
 
     {:ok, this_repo} = GitModule.get_repo(".")
@@ -31,6 +34,7 @@ defmodule GitModuleTest do
       tag_repo: tag_repo,
       bitbucket_repo: bitbucket_repo,
       gitlab_repo: gitlab_repo,
+      gitlab_subgroup_repo: gitlab_subgroup_repo,
       kitrepo: kitrepo,
       this_repo: this_repo
     ]
@@ -99,15 +103,6 @@ defmodule GitModuleTest do
     {:ok, result} = GitModule.get_clean_contributions_map(kitrepo)
     assert Enum.at(expected, 1) == Enum.at(result, 1)
   end
-
-  # test "wip" do
-  #   {:ok, repo} = GitModule.clone_repo("https://github.com/robbyrussell/oh-my-zsh")
-  #   maps = GitModule.test_kit(repo)
-  #   File.rm_rf("oh-my-zsh")
-
-  #   assert true == Enum.member?(maps, "Prachayapron")
-  #   assert [] == maps
-  # end
 
   test "get commit dates", context do
     dates = GitModule.get_commit_dates(context[:repo])
@@ -352,8 +347,15 @@ defmodule GitModuleTest do
     assert "" != size
   end
 
+  test "subgroup repo from gitlab", %{gitlab_subgroup_repo: gitlab_subgroup_repo} do
+    {:ok, size} = GitModule.get_repo_size(gitlab_subgroup_repo)
+    assert nil != size
+  end
+
   test "repo with a no name committer" do
-    log = " <feihai@DESKTOP-5974P1K.localdomain> (10):\n      增加或删除端口时，重新加载并显示当前端口状态\n      modify package.json\n      add 4docker_admin\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port trace 开启内核模块\n      !\n\nqiufeihai <308350718@qq.com> (9):\n      Initial commit\n      init\n      .\n      add 4npm 切换npm源\n      fix bug\n      x\n      add 4tar 4lrzsz\n      add 4tar 4lrzsz\n      加注释和解除注释脚本4comment 4uncomment\n\nroot <root@DESKTOP-G3C2S9M.localdomain> (5):\n      !\n      4port addtrace add source\n      !\n      add 4check_cert 4http\n      add 4check_cert 4http\n\nroot <root@DESKTOP-5974P1K.localdomain> (3):\n      add 4port\n      add 4sshport\n      update package.json\n\n"
+    log =
+      " <feihai@DESKTOP-5974P1K.localdomain> (10):\n      增加或删除端口时，重新加载并显示当前端口状态\n      modify package.json\n      add 4docker_admin\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port 添加udp支持；添加trace iptables的 addtrace 和 rmtrace命令\n      4port trace 开启内核模块\n      !\n\nqiufeihai <308350718@qq.com> (9):\n      Initial commit\n      init\n      .\n      add 4npm 切换npm源\n      fix bug\n      x\n      add 4tar 4lrzsz\n      add 4tar 4lrzsz\n      加注释和解除注释脚本4comment 4uncomment\n\nroot <root@DESKTOP-G3C2S9M.localdomain> (5):\n      !\n      4port addtrace add source\n      !\n      add 4check_cert 4http\n      add 4check_cert 4http\n\nroot <root@DESKTOP-5974P1K.localdomain> (3):\n      add 4port\n      add 4sshport\n      update package.json\n\n"
+
     contributors = GitHelper.parse_shortlog(log)
     assert 4 == Enum.count(contributors)
   end

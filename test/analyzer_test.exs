@@ -164,19 +164,28 @@ defmodule AnalyzerTest do
     assert expected_data[:data] == repo_data[:data]
   end
 
-  test "get report fail when subdirectory" do
+  test "get report when subdirectory and valid" do
+    {:ok, report} =
+      AnalyzerModule.analyze(["https://gitlab.com/lowendinsight/test/pymodule"], "test")
+
+    repo_data = List.first(report[:report][:repos])
+
+    assert "test" == repo_data[:header][:source_client]
+    assert "https://gitlab.com/lowendinsight/test/pymodule" == repo_data[:header][:repo]
+  end
+
+  test "get report fail when subdirectory and not valid" do
     {:ok, report} =
       AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails/blah"], "test")
 
     expected_data = %{
       data: %{
-        error:
-          "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah). Not a Git repo URL, is a subdirectory",
-        repo: "https://github.com/kitplummer/xmpp4rails/blah",
-        risk: "undetermined",
+        error: "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah), is this a valid Git repo URL?",
+        git: %{},
         project_types: %{"undetermined" => "undetermined"},
+        repo: "https://github.com/kitplummer/xmpp4rails/blah",
         repo_size: "undetermined",
-        git: %{}
+        risk: "undetermined"
       }
     }
 
