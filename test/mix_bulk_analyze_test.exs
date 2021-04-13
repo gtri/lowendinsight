@@ -18,6 +18,17 @@ defmodule Mix.Tasks.BulkAnalyzeTest do
       assert 2 == report_data["metadata"]["repo_count"]
     end
 
+    @tag timeout: 180_000
+    test "run scan against NPM cleaned list" do
+      args = ["#{File.cwd!()}/test/fixtures/npm.short.csv", "no_validation" | []]
+      BulkAnalyze.run(args)
+      assert_received {:mix_shell, :info, [report]}
+
+      report_data = Poison.decode!(report)
+      assert 10 == report_data["metadata"]["repo_count"]
+      assert 7 == report_data["metadata"]["risk_counts"]["undetermined"]
+    end
+
     test "run scan against non-existent file" do
       args = ["/blah" | []]
       BulkAnalyze.run(args)

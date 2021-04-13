@@ -22,12 +22,14 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 defmodule Hex.Lockfile do
+  @behaviour Parser
+
   @moduledoc """
     Provides mix.lock dependency parser
     From: https://github.com/librariesio/mix-deps-json/blob/master/lib/lockfile.ex
   """
 
-  @spec parse!(any) :: {[any], non_neg_integer}
+  @impl Parser
   def parse!(content) do
     deps =
       content
@@ -46,35 +48,22 @@ defmodule Hex.Lockfile do
     deps
   end
 
-  defp extract_deps_full({:ok, {_, _, deps}}) do
-    deps
-  end
+  @impl Parser
+  def file_names(), do: ["mix.lock"]
 
-  defp extract_deps({:ok, {_, _, deps}}) do
-    extract_deps(deps)
-  end
+  defp extract_deps_full({:ok, {_, _, deps}}), do: deps
 
-  defp extract_deps(deps) do
-    Enum.map(deps, &extract_dep/1)
-  end
+  defp extract_deps({:ok, {_, _, deps}}), do: extract_deps(deps)
 
-  defp extract_dep({_, {_, _, [source, lib, version, _, _, _]}}) do
-    {source, lib, version}
-  end
+  defp extract_deps(deps), do: Enum.map(deps, &extract_dep/1)
 
-  defp extract_dep({_, {_, _, [source, lib, version, _]}}) do
-    {source, lib, version}
-  end
+  defp extract_dep({_, {_, _, [source, lib, version, _, _, _]}}), do: {source, lib, version}
 
-  defp extract_dep({_, {_, _, [source, lib, version]}}) do
-    {source, lib, version}
-  end
+  defp extract_dep({_, {_, _, [source, lib, version, _]}}), do: {source, lib, version}
 
-  # defp extract_dep({_, {_, _, [source, lib, version, _, _, _, _]}}) do
-  #   {source, lib, version}
-  # end
+  defp extract_dep({_, {_, _, [source, lib, version]}}), do: {source, lib, version}
 
-  defp extract_dep({_, {_, _, [source, lib, version, _, _, _, _, _]}}) do
-    {source, lib, version}
-  end
+  defp extract_dep({_, {_, _, [source, lib, version, _, _, _, _]}}), do: {source, lib, version}
+
+  defp extract_dep({_, {_, _, [source, lib, version, _, _, _, _, _]}}), do: {source, lib, version}
 end

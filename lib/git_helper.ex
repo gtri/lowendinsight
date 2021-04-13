@@ -12,7 +12,7 @@ defmodule GitHelper do
   @doc """
       parse_diff/1: returns the relevant information contained in the last array position of a diff array
   """
-  @spec parse_diff([String.t]) :: {:ok, non_neg_integer, non_neg_integer, non_neg_integer}
+  @spec parse_diff([String.t()]) :: {:ok, non_neg_integer, non_neg_integer, non_neg_integer}
   def parse_diff(list) do
     last = List.last(list)
     last_trimmed = String.trim(last)
@@ -92,7 +92,7 @@ defmodule GitHelper do
     {:ok, length, filtered_list}
   end
 
-  @spec parse_shortlog(String.t) :: [Contributor.t()]
+  @spec parse_shortlog(String.t()) :: [Contributor.t()]
   def parse_shortlog(log) do
     split_shortlog(log)
     |> Enum.map(fn contributor ->
@@ -118,15 +118,21 @@ defmodule GitHelper do
     |> String.split(~r{\n\n})
   end
 
-  defp parse_header(contributor) do
+  def parse_header(contributor) do
     header =
       contributor
       |> String.split("\n")
       |> Enum.at(0)
-      |> (&Regex.scan(~r{([^<]+)<([^;]*)>.\(([^:]+)\)}, &1)).()
-      |> Enum.at(0)
+      |> (&Regex.scan(~r{(\d*|[^<]+)<([^;]*)>.\(([^:]+)\)}, &1)).()
 
-    {Enum.at(header, 1), Enum.at(header, 2), Enum.at(header, 3)}
+    cond do
+      length(header) == 0 ->
+        {"Could not process", "Could not process", "Could not process"}
+
+      true ->
+        header = Enum.at(header, 0)
+        {Enum.at(header, 1), Enum.at(header, 2), Enum.at(header, 3)}
+    end
   end
 
   defp parse_commits(contributor) do

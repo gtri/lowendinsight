@@ -31,42 +31,128 @@ defmodule ScannerModule do
 
     mix? = Map.has_key?(project_types_identified, :mix)
     node? = Map.has_key?(project_types_identified, :node)
+    pypi? = Map.has_key?(project_types_identified, :python)
 
     {hex_reports_list, hex_deps_count} = Hex.Scanner.scan(mix?, project_types_identified)
-    {npm_reports_list, npm_deps_count} = Npm.Scanner.scan(node?, project_types_identified)
 
-    result_list = hex_reports_list ++ npm_reports_list
+    {json_reports_list, yarn_reports_list, npm_deps_count} =
+      Npm.Scanner.scan(node?, project_types_identified)
 
-    if !Enum.empty?(result_list) do
-      result = %{
-        :state => :complete,
-        :metadata => %{
-          repo_count: Enum.count(result_list),
-          dependency_count: hex_deps_count + npm_deps_count
-        },
-        :report => %{:uuid => UUID.uuid1(), :repos => result_list}
-      }
+    {pypi_reports_list, pypi_deps_count} = Pypi.Scanner.scan(pypi?, project_types_identified)
 
-      result = AnalyzerModule.determine_risk_counts(result)
+    reports = [
+      hex: hex_reports_list,
+      node_json: json_reports_list,
+      node_yarn: yarn_reports_list,
+      pypi: pypi_reports_list
+    ]
 
-      end_time = DateTime.utc_now()
-      duration = DateTime.diff(end_time, start_time)
+    result =
+      get_report(
+        start_time,
+        hex_deps_count + npm_deps_count + pypi_deps_count,
+        reports,
+        project_types_identified
+      )
 
-      times = %{
-        start_time: DateTime.to_iso8601(start_time),
-        end_time: DateTime.to_iso8601(end_time),
-        duration: duration
-      }
+    File.cd!(cwd)
 
-      metadata = Map.put_new(result[:metadata], :times, times)
-      result = result |> Map.put(:metadata, metadata)
+    Poison.encode!(result, pretty: true)
+  end
 
-      File.cd!(cwd)
+  def get_report(
+        start_time,
+        deps_count,
+        [hex: hex_report, node_json: json_report, node_yarn: yarn_report, pypi: pypi_report] =
+          reports,
+        project_types
+      ) do
+    files =
+      Enum.map(reports, fn {k, v} -> if !Enum.empty?(v), do: k end)
+      |> Enum.reject(fn k -> k == nil end)
 
-      Poison.encode!(result, pretty: true)
-      # Encoder.mixfile_json(mixfile)
-    else
-      Poison.encode!(%{:error => "No mix or npm dependency files were found"}, pretty: true)
+    cond do
+      # If both package-lock.json and yarn.lock are present, create 2 separate reports
+      Enum.member?(files, :node_json) && Enum.member?(files, :node_yarn) ->
+        # json
+        result_json_list = hex_report ++ json_report
+        result_yarn_list = hex_report ++ yarn_report
+
+        result_json = %{
+          :state => :complete,
+          :metadata => %{
+            repo_count: Enum.count(result_json_list),
+            dependency_count: deps_count
+          },
+          :report => %{
+            :uuid => UUID.uuid1(),
+            :repos => result_json_list
+          }
+        }
+
+        result_yarn = %{
+          :state => :complete,
+          :metadata => %{
+            repo_count: Enum.count(result_yarn_list),
+            dependency_count: deps_count
+          },
+          :report => %{
+            :uuid => UUID.uuid1(),
+            :repos => result_yarn_list
+          }
+        }
+
+        result_json = AnalyzerModule.determine_risk_counts(result_json)
+        result_yarn = AnalyzerModule.determine_risk_counts(result_yarn)
+
+        end_time = DateTime.utc_now()
+
+        result = %{
+          :scan_node_json => result_json,
+          :scan_node_yarn => result_yarn,
+          :metadata => %{
+            :times => %{
+              start_time: DateTime.to_iso8601(start_time),
+              end_time: DateTime.to_iso8601(end_time),
+              duration: DateTime.diff(end_time, start_time)
+            },
+            :files => project_types
+          }
+        }
+
+        result |> Map.put(:scan_node_yarn, result_yarn)
+
+      Enum.empty?(project_types) ->
+        %{:error => "No dependency manifest files were found"}
+
+      true ->
+        result_list = hex_report ++ json_report ++ yarn_report ++ pypi_report
+
+        result = %{
+          :state => :complete,
+          :metadata => %{
+            repo_count: Enum.count(result_list),
+            dependency_count: deps_count
+          },
+          :report => %{
+            :uuid => UUID.uuid1(),
+            :repos => result_list
+          },
+          :files => files
+        }
+
+        result = AnalyzerModule.determine_risk_counts(result)
+
+        end_time = DateTime.utc_now()
+
+        times = %{
+          start_time: DateTime.to_iso8601(start_time),
+          end_time: DateTime.to_iso8601(end_time),
+          duration: DateTime.diff(end_time, start_time)
+        }
+
+        metadata = Map.put_new(result[:metadata], :times, times)
+        result |> Map.put(:metadata, metadata)
     end
   end
 end

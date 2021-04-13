@@ -1,5 +1,31 @@
 name: 'lowendinsight'
-description: 'Runs lowendinsight against a GitHub repository'
+description: 'Runs lowendinsight against a GitHub repository and saves the output to the repo root directory'
+
+author: 'gtri'
+branding:
+  icon: upload-cloud
+  color: green
+inputs:
+  github_token:
+    description: 'Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}'
+    required: true
+  repository:
+    description: 'Repository name to push. Default or empty value represents current github repository (${GITHUB_REPOSITORY})'
+    default: ''
+    required: false
+  branch:
+    description: 'Destination branch to push changes'
+    required: true
+  force:
+    description: 'Determines if force push is used'
+    required: false
+  tags:
+    description: 'Determines if --tags is used'
+    required: false
+  directory:
+    description: 'Directory to change to before pushing.'
+    required: false
+    default: '.'
 
 runs:
   using: 'docker'

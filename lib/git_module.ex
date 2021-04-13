@@ -10,7 +10,7 @@ defmodule GitModule do
   @doc """
   clone_repo/2: clones the repo
   """
-  @spec clone_repo(String.t, String.t) :: {:ok, String.t} | {:error, String.t}
+  @spec clone_repo(String.t(), String.t()) :: {:ok, String.t()} | {:error, String.t()}
   def clone_repo(url, tmp_path) do
     {:ok, slug} = url |> Helpers.get_slug()
     {:ok, _, repo_name} = Helpers.split_slug(slug)
@@ -19,8 +19,7 @@ defmodule GitModule do
     tmp_repo_path = Path.join(tmp_path, repo_name)
 
     with {:ok, repo} <- Git.clone([url, tmp_repo_path]),
-         {:ok, _} <- Git.log(repo)
-    do 
+         {:ok, _} <- Git.log(repo) do
       {:ok, repo}
     else
       _error -> {:error, "Respository not found"}
@@ -30,13 +29,12 @@ defmodule GitModule do
   @doc """
   get_repo/1: gets a repo by path, returns Repository struct
   """
-  @spec get_repo(String.t) :: {:ok, Git.Repository.t()} | {:error, String.t}
+  @spec get_repo(String.t()) :: {:ok, Git.Repository.t()} | {:error, String.t()}
   def get_repo(path) do
-    with repo <- Git.new(path), 
-         {:ok, _} <- Git.status(repo)
-    do 
+    with repo <- Git.new(path),
+         {:ok, _} <- Git.status(repo) do
       {:ok, repo}
-    else 
+    else
       {:error, msg} -> {:error, msg}
     end
   end
@@ -59,13 +57,13 @@ defmodule GitModule do
   @doc """
   get_last_commit_date/1: returns the date of the last commit
   """
-  @spec get_last_commit_date(Git.Repository.t()) :: {:ok, String.t}
+  @spec get_last_commit_date(Git.Repository.t()) :: {:ok, String.t()}
   def get_last_commit_date(repo) do
-    date = Git.log!(repo, ["-1", "--pretty=format:%cI"])
+    date = List.last(git_log_split(repo, ["-1", "--pretty=format:%cI"]))
     {:ok, date}
   end
 
-  @spec delete_repo(Git.Repository.t()) :: String.t
+  @spec delete_repo(Git.Repository.t()) :: String.t()
   def delete_repo(repo) do
     File.rm_rf!(repo.path)
   end
@@ -73,7 +71,7 @@ defmodule GitModule do
   @doc """
   get_current_hash/1: returns the hash of the repo's HEAD
   """
-  @spec get_hash(Git.Repository.t()) :: {:ok, String.t}
+  @spec get_hash(Git.Repository.t()) :: {:ok, String.t()}
   def get_hash(repo) do
     hash = Git.rev_parse!(repo, "HEAD") |> String.trim()
     {:ok, hash}
@@ -82,7 +80,7 @@ defmodule GitModule do
   @doc """
   get_default_branch/1: returns the default branch of the remote repo
   """
-  @spec get_default_branch(Git.Repository.t()) :: {:ok, String.t}
+  @spec get_default_branch(Git.Repository.t()) :: {:ok, String.t()}
   def get_default_branch(repo) do
     try do
       default_branch = Git.symbolic_ref!(repo, "refs/remotes/origin/HEAD") |> String.trim()
@@ -97,9 +95,7 @@ defmodule GitModule do
   """
   @spec get_commit_dates(Git.Repository.t()) :: {:ok, [non_neg_integer]}
   def get_commit_dates(repo) do
-    dates =
-      Git.log!(repo, ["--pretty=format:%ct"])
-      |> String.split("\n")
+    dates = git_log_split(repo, ["--pretty=format:%ct"])
 
     dates_int = Enum.map(dates, fn x -> String.to_integer(x, 10) end)
     {:ok, dates_int}
@@ -112,8 +108,7 @@ defmodule GitModule do
   @spec get_tag_and_commit_dates(Git.Repository.t()) :: [any]
   def get_tag_and_commit_dates(repo) do
     tag_and_date =
-      Git.log!(repo, ["--pretty=format:%d$%ct"])
-      |> String.split("\n")
+      git_log_split(repo, ["--pretty=format:%d$%ct"])
       |> Enum.map(fn element -> String.split(element, "$") end)
       |> Enum.map(fn [head | tail] ->
         if head == "" do
@@ -134,14 +129,14 @@ defmodule GitModule do
   """
   @spec get_last_n_commits(Git.Repository.t(), non_neg_integer) :: {:ok, [any]}
   def get_last_n_commits(repo, n) do
-    output = Git.log!(repo, ["--pretty=format:%h", "--no-merges", "-#{n}"])
-    {:ok, String.split(output, "\n")}
+    output = git_log_split(repo, ["--pretty=format:%h", "--no-merges", "-#{n}"])
+    {:ok, output}
   end
 
   @doc """
   get_last_n_commits/2: returns a list of lines generated from the diff of two commits
   """
-  @spec get_diff_2_commits(Git.Repository.t(), [any]) :: {:ok, [String.t]} | []
+  @spec get_diff_2_commits(Git.Repository.t(), [any]) :: {:ok, [String.t()]} | []
   def get_diff_2_commits(repo, [commit1 | [commit2 | []]]) do
     with {:ok, diff} <- Git.diff(repo, ["--stat", commit1, commit2]) do
       {:ok, String.split(String.trim_trailing(diff, "\n"), "\n")}
@@ -169,17 +164,21 @@ defmodule GitModule do
   @spec get_recent_changes(Git.Repository.t()) :: {:ok, float}
   def get_recent_changes(repo) do
     with {:ok, total_lines, total_files_changed} <- get_total_lines(repo),
-         {:ok, file_num, insertions, deletions} = get_last_2_delta(repo)
-    do
-      {:ok, Float.round((insertions + deletions) / total_lines, 5),
-        Float.round(file_num / total_files_changed, 5)}
+         {:ok, file_num, insertions, deletions} = get_last_2_delta(repo) do
+      if total_lines == 0 do
+        {:ok, 0, 0}
+      else
+        {:ok, Float.round((insertions + deletions) / total_lines, 5),
+         Float.round(file_num / total_files_changed, 5)}
+      end
     end
   end
 
   @doc """
   get_last_2_delta/1: returns the lines changed, files changed, additions and deletions in the last commit
   """
-  @spec get_last_2_delta(Git.Repository.t()) :: {:ok, non_neg_integer, non_neg_integer, non_neg_integer}
+  @spec get_last_2_delta(Git.Repository.t()) ::
+          {:ok, non_neg_integer, non_neg_integer, non_neg_integer}
   def get_last_2_delta(repo) do
     {:ok, commits} = get_last_n_commits(repo, 2)
 
@@ -202,6 +201,15 @@ defmodule GitModule do
   def get_contributors(repo) do
     list =
       Git.shortlog!(repo, ["-n", "-e", "HEAD", "--"])
+      |> String.codepoints()
+      |> Enum.map(fn x ->
+        if !String.valid?(x) do
+          Enum.join(for <<c <- x>>, do: <<c::utf8>>)
+        else
+          x
+        end
+      end)
+      |> Enum.join()
       |> GitHelper.parse_shortlog()
 
     {:ok, list}
@@ -292,7 +300,7 @@ defmodule GitModule do
     {:ok, map10}
   end
 
-  @spec get_repo_size(Git.Repository.t()) :: {:ok, String.t}
+  @spec get_repo_size(Git.Repository.t()) :: {:ok, String.t()}
   def get_repo_size(repo) do
     space =
       elem(System.cmd("du", ["-sh", "#{repo.path}"]), 0)
@@ -303,7 +311,7 @@ defmodule GitModule do
     {:ok, space}
   end
 
-  @spec raw_binary_to_string(binary) :: String.t
+  @spec raw_binary_to_string(binary) :: String.t()
   defp raw_binary_to_string(raw) do
     String.codepoints(raw)
     |> Enum.reduce(fn w, result ->
@@ -314,6 +322,21 @@ defmodule GitModule do
         true ->
           <<parsed::8>> = w
           result <> <<parsed::utf8>>
+      end
+    end)
+  end
+
+  # This is a replacement for Git.log!() and String.split() to split out warning tags.
+  # Unless we can find a command for Git.log! which can separate out "warning:" tags,
+  # we need to manually parse it out here
+
+  @spec git_log_split(Git.Repository.t(), [String.t()]) :: [String.t()]
+  defp git_log_split(repo, args \\ []) do
+    Git.log!(repo, args)
+    |> String.split("\n")
+    |> Enum.filter(fn x ->
+      if not String.contains?(x, "warning:") do
+        x
       end
     end)
   end
