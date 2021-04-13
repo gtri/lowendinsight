@@ -47,7 +47,8 @@ defmodule AnalyzerModule do
           uri.scheme == "file" ->
             GitModule.get_repo(uri.path)
 
-          uri.scheme == "https" or uri.scheme == "http" or uri.scheme == "git+https" or uri.scheme == "git" ->
+          uri.scheme == "https" or uri.scheme == "http" or uri.scheme == "git+https" or
+              uri.scheme == "git" ->
             url = Helpers.remove_git_prefix(url)
 
             if Helpers.count_forward_slashes(url) > 4 do
@@ -76,6 +77,7 @@ defmodule AnalyzerModule do
             # raise ArgumentError, message: "Not a public Git repo URL"
             {:ok}
         end
+
       Logger.info("Cloned -> #{count}: #{url}")
 
       # Get unique contributors count

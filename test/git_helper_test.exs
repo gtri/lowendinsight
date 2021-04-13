@@ -2,13 +2,13 @@ defmodule GitHelperTest do
   use ExUnit.Case
   doctest GitHelper
 
- @moduledoc """
- This will test various functions in git_helper. However, since most of these functions
- are private, in order to test them you will need to make them public. I have added
- a tag :helper to all tests so that you may include or uninclude them accordingly.
+  @moduledoc """
+  This will test various functions in git_helper. However, since most of these functions
+  are private, in order to test them you will need to make them public. I have added
+  a tag :helper to all tests so that you may include or uninclude them accordingly.
 
- TODO: confirm that count can't be misconstrued and push the value so analysis can still be done
- """
+  TODO: confirm that count can't be misconstrued and push the value so analysis can still be done
+  """
 
   setup_all do
     correct_atr = "John R Doe <john@example.com> (1):\n messages for commits"
@@ -46,7 +46,8 @@ defmodule GitHelperTest do
 
   @tag :helper
   test "semicolon error", %{e_with_semi: e_with_semi} do
-    assert {"Could not process", "Could not process", "Could not process"} = GitHelper.parse_header(e_with_semi)
+    assert {"Could not process", "Could not process", "Could not process"} =
+             GitHelper.parse_header(e_with_semi)
   end
 
   @tag :helper
@@ -56,7 +57,7 @@ defmodule GitHelperTest do
 
   @tag :helper
   test "empty name error", %{empty_name: empty_name} do
-    assert {"", "john@example.com", "1"}  = GitHelper.parse_header(empty_name)
+    assert {"", "john@example.com", "1"} = GitHelper.parse_header(empty_name)
   end
 
   @tag :helper
