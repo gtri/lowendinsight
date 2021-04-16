@@ -67,6 +67,9 @@ defmodule AnalyzerModule do
                 {:ok, tmp_path} ->
                   tmp_path
 
+                {:error, :enospc} ->
+                  raise ArgumentError, message: "Failed to create a temp path for clone, no space"
+
                 {:error, :enoent} ->
                   raise ArgumentError, message: "Failed to create a temp path for clone"
               end
