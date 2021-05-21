@@ -53,7 +53,6 @@ defmodule Mix.Tasks.AnalyzeTest do
       assert_received {:mix_shell, :info, [report]}
       report_data = Poison.decode!(report)
       assert :ok == JsonXema.validate(schema, report_data)
-
     end
   end
 end

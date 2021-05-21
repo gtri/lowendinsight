@@ -180,7 +180,8 @@ defmodule AnalyzerTest do
 
     expected_data = %{
       data: %{
-        error: "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah), is this a valid Git repo URL?",
+        error:
+          "Unable to analyze the repo (https://github.com/kitplummer/xmpp4rails/blah), is this a valid Git repo URL?",
         git: %{},
         project_types: %{"undetermined" => "undetermined"},
         repo: "https://github.com/kitplummer/xmpp4rails/blah",
@@ -209,7 +210,6 @@ defmodule AnalyzerTest do
 
     schema_file = File.read!("schema/v1/report.schema.json")
     schema = Poison.decode!(schema_file) |> JsonXema.new()
-
     report_data = Poison.decode!(report_json)
     assert :ok == JsonXema.validate(schema, report_data)
     assert true == JsonXema.valid?(schema, report_data)
