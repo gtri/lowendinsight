@@ -345,7 +345,6 @@ defmodule GitModuleTest do
     {:ok, size} = GitModule.get_repo_size(repo)
     assert nil != size
     assert "" != size
-    assert "168K" = size
   end
 
   test "subgroup repo from gitlab", %{gitlab_subgroup_repo: gitlab_subgroup_repo} do
