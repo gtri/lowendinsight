@@ -33,18 +33,18 @@ defmodule GithubModule.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:httpoison, "~> 1.6"},
+      {:httpoison, "~> 1.8"},
       {:httpoison_retry, "~> 1.1"},
       {:git_cli, "~> 0.3"},
       {:poison, "~> 4.0"},
       {:uuid, "~> 1.1"},
-      {:ex_doc, "~> 0.21", runtime: false},
-      {:credo, "~> 0.10", except: :prod, runtime: false},
+      {:ex_doc, "~> 0.24", runtime: false},
+      {:credo, "~> 1.5", except: :prod, runtime: false},
       {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
-      {:json_xema, "~> 0.3"},
+      {:json_xema, "~> 0.6"},
       {:temp, "~> 0.4"},
-      {:excoveralls, "~> 0.10", only: :test},
-      {:yarn_parser, "~> 0.3.1"}
+      {:excoveralls, "~> 0.14", only: :test},
+      {:yarn_parser, "~> 0.3"}
     ]
   end
 

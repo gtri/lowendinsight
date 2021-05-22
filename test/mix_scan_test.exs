@@ -15,7 +15,7 @@ defmodule Mix.Tasks.ScanTest do
       assert_received {:mix_shell, :info, [report]}
 
       report_data = Poison.decode!(report)
-      assert 31 == report_data["metadata"]["repo_count"]
+      assert 32 == report_data["metadata"]["repo_count"]
       assert 12 == report_data["metadata"]["dependency_count"]
     end
   end

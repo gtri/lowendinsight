@@ -311,6 +311,20 @@ defmodule GitModule do
     {:ok, space}
   end
 
+  @spec get_repo_size2(Git.Repository.t()) :: {:ok, String.t()}
+  def get_repo_size2(repo) do
+    space =
+      elem(System.cmd("git", ["count-objects"], cd: repo.path), 0)
+      |> String.trim()
+      |> String.split(",")
+      |> Enum.at(1)
+      |> String.trim()
+      |> String.split(" ")
+      |> List.first()
+
+    {:ok, space}
+  end
+
   @spec raw_binary_to_string(binary) :: String.t()
   defp raw_binary_to_string(raw) do
     String.codepoints(raw)

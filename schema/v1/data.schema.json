@@ -7,7 +7,7 @@
   "properties": {
     "data": {
       "title": "LowEndInsight Analysis Data",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "description": "The report data",
       "type": "object",
       "properties": {
@@ -182,7 +182,7 @@
       ]
     },
     "header": {
-      "additionalProperties": false,
+      "additionalProperties": true,
       "description": "Information about the report's generation.",
       "title": "LowEndInsight Per-Repo Analsyis Metadata",
       "type": "object",

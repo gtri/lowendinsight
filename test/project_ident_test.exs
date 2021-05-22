@@ -88,33 +88,34 @@ defmodule ProjectIdentTest do
   end
 
   test "is_maven?(repo)", %{tmp_path: tmp_path, project_types: project_types} do
-    {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/snyk-maven-plugin", tmp_path)
+    {:ok, repo} =
+      GitModule.clone_repo("https://github.com/kitplummer/snyk-maven-plugin", tmp_path)
 
     assert %{
              maven: [
-              "#{tmp_path}/snyk-maven-plugin/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/monitor-with-default-phase/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/monitor-with-dependency/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-and-monitor/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-multi-module-child/child-module-1/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-multi-module-child/child-module-2/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-multi-module-child/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-multi-module-parent/child-module-1/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-multi-module-parent/child-module-2/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-multi-module-parent/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-skip-pom/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-skip-property/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-update-policy-always/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-update-policy-never/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-with-args/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-with-default-phase/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-with-dependency/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-with-ignores/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-with-invalid-cli-executable/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-with-specific-cli-version/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-without-cli-executable/pom.xml",
-              "#{tmp_path}/snyk-maven-plugin/src/it/test-without-dependency/pom.xml"
-            ]
+               "#{tmp_path}/snyk-maven-plugin/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/monitor-with-default-phase/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/monitor-with-dependency/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-and-monitor/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-multi-module-child/child-module-1/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-multi-module-child/child-module-2/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-multi-module-child/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-multi-module-parent/child-module-1/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-multi-module-parent/child-module-2/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-multi-module-parent/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-skip-pom/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-skip-property/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-update-policy-always/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-update-policy-never/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-with-args/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-with-default-phase/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-with-dependency/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-with-ignores/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-with-invalid-cli-executable/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-with-specific-cli-version/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-without-cli-executable/pom.xml",
+               "#{tmp_path}/snyk-maven-plugin/src/it/test-without-dependency/pom.xml"
+             ]
            } == ProjectIdent.categorize_repo(repo, project_types)
 
     GitModule.delete_repo(repo)
