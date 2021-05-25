@@ -6,7 +6,7 @@ defmodule GitHelper do
   @moduledoc """
   Collection of lower-level functions for analyzing outputs from git command.
   """
-
+  require Logger
   @type contrib_count :: %{String.t() => integer}
 
   @doc """
@@ -97,6 +97,7 @@ defmodule GitHelper do
     split_shortlog(log)
     |> Enum.map(fn contributor ->
       {name, email, count} = parse_header(contributor)
+
       {merges, commits} = parse_commits(contributor)
 
       {count, _} = Integer.parse(count)
@@ -127,7 +128,8 @@ defmodule GitHelper do
 
     cond do
       length(header) == 0 ->
-        {"Could not process", "Could not process", "Could not process"}
+        Logger.error("Failed to process: " <> contributor)
+        {"Could not process", "Could not process", "0"}
 
       true ->
         header = Enum.at(header, 0)

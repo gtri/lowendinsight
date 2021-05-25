@@ -75,9 +75,6 @@ defmodule TimeHelper do
     {:ok, accumulator}
   end
 
-  @doc """
-  sum_ts_diff/2
-  """
   @spec sum_ts_diff([any], non_neg_integer) :: {:ok, non_neg_integer}
   def sum_ts_diff([head_1 | tail], accumulator) do
     [head_2 | _next_tail] = tail
@@ -86,9 +83,6 @@ defmodule TimeHelper do
     sum_ts_diff(tail, timestamp_2 - timestamp_1 + accumulator)
   end
 
-  @doc """
-  sum_ts_diff/1
-  """
   @spec sum_ts_diff([any]) :: {:ok, non_neg_integer}
   def sum_ts_diff(list) do
     sum_ts_diff(list, 0)

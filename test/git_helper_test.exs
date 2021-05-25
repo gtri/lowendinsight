@@ -46,7 +46,7 @@ defmodule GitHelperTest do
 
   @tag :helper
   test "semicolon error", %{e_with_semi: e_with_semi} do
-    assert {"Could not process", "Could not process", "Could not process"} =
+    assert {"Could not process", "Could not process", "0"} =
              GitHelper.parse_header(e_with_semi)
   end
 
