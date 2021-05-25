@@ -6,6 +6,7 @@ defmodule GitModule do
   @moduledoc """
   Collections of functions for interacting with the `git` command to perform queries.
   """
+  require Logger
 
   @doc """
   clone_repo/2: clones the repo
@@ -311,6 +312,20 @@ defmodule GitModule do
     {:ok, space}
   end
 
+  @spec get_repo_size2(Git.Repository.t()) :: {:ok, String.t()}
+  def get_repo_size2(repo) do
+    space =
+      elem(System.cmd("git", ["count-objects"], cd: repo.path), 0)
+      |> String.trim()
+      |> String.split(",")
+      |> Enum.at(1)
+      |> String.trim()
+      |> String.split(" ")
+      |> List.first()
+
+    {:ok, space}
+  end
+
   @spec raw_binary_to_string(binary) :: String.t()
   defp raw_binary_to_string(raw) do
     String.codepoints(raw)
@@ -331,7 +346,7 @@ defmodule GitModule do
   # we need to manually parse it out here
 
   @spec git_log_split(Git.Repository.t(), [String.t()]) :: [String.t()]
-  defp git_log_split(repo, args \\ []) do
+  defp git_log_split(repo, args) do
     Git.log!(repo, args)
     |> String.split("\n")
     |> Enum.filter(fn x ->
