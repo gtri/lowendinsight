@@ -128,15 +128,8 @@ defmodule GitHelper do
 
     cond do
       length(header) == 0 ->
-        ## Simple split - email validation issue lies here
-        split =
-          contributor
-          |> String.split("\n")
-          |> Enum.at(0)
-          |> String.split(" ")
-
-        count = Regex.run(~r/\((.*)\)/, Enum.at(split, 2)) |> Enum.at(1)
-        {Enum.at(split, 0), Enum.at(split, 1), count}
+        Logger.error("Failed to process: " <> contributor)
+        {"Could not process", "Could not process", "0"}
 
       true ->
         header = Enum.at(header, 0)
