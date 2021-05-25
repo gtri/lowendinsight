@@ -97,12 +97,10 @@ defmodule AnalyzerModule do
       {:ok, delta_risk} = RiskLogic.commit_currency_risk(weeks)
 
       # Get risk rating for size of last commit
-
       {:ok, lines_percent, _file_percent} = GitModule.get_recent_changes(repo)
       {:ok, changes_risk} = RiskLogic.commit_change_size_risk(lines_percent)
 
       # get risk rating for number of contributors with over a certain percentage of commits
-
       {:ok, num_filtered_contributors, functional_contributors} =
         GitModule.get_functional_contributors(repo)
 

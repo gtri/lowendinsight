@@ -6,7 +6,7 @@ defmodule GitHelper do
   @moduledoc """
   Collection of lower-level functions for analyzing outputs from git command.
   """
-
+  require Logger
   @type contrib_count :: %{String.t() => integer}
 
   @doc """
@@ -97,6 +97,7 @@ defmodule GitHelper do
     split_shortlog(log)
     |> Enum.map(fn contributor ->
       {name, email, count} = parse_header(contributor)
+
       {merges, commits} = parse_commits(contributor)
 
       {count, _} = Integer.parse(count)
@@ -127,7 +128,15 @@ defmodule GitHelper do
 
     cond do
       length(header) == 0 ->
-        {"Could not process", "Could not process", "Could not process"}
+        ## Simple split - email validation issue lies here
+        split =
+          contributor
+          |> String.split("\n")
+          |> Enum.at(0)
+          |> String.split(" ")
+
+        count = Regex.run(~r/\((.*)\)/, Enum.at(split, 2)) |> Enum.at(1)
+        {Enum.at(split, 0), Enum.at(split, 1), count}
 
       true ->
         header = Enum.at(header, 0)

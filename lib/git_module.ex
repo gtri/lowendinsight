@@ -6,6 +6,7 @@ defmodule GitModule do
   @moduledoc """
   Collections of functions for interacting with the `git` command to perform queries.
   """
+  require Logger
 
   @doc """
   clone_repo/2: clones the repo
@@ -345,7 +346,7 @@ defmodule GitModule do
   # we need to manually parse it out here
 
   @spec git_log_split(Git.Repository.t(), [String.t()]) :: [String.t()]
-  defp git_log_split(repo, args \\ []) do
+  defp git_log_split(repo, args) do
     Git.log!(repo, args)
     |> String.split("\n")
     |> Enum.filter(fn x ->

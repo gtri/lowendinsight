@@ -9,9 +9,6 @@ defmodule Hex.Scanner do
   Scanner scans for mix dependencies to run analysis on.
   """
 
-  @doc """
-  scan: called when mix? is false, returning an empty list and 0.
-  """
   @spec scan(boolean(), map) :: {[], 0}
   def scan(mix?, _project_types) when mix? == false, do: {[], 0}
 
