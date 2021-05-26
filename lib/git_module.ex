@@ -304,17 +304,6 @@ defmodule GitModule do
   @spec get_repo_size(Git.Repository.t()) :: {:ok, String.t()}
   def get_repo_size(repo) do
     space =
-      elem(System.cmd("du", ["-sh", "#{repo.path}"]), 0)
-      |> String.split("\t")
-      |> List.first()
-      |> String.trim()
-
-    {:ok, space}
-  end
-
-  @spec get_repo_size2(Git.Repository.t()) :: {:ok, String.t()}
-  def get_repo_size2(repo) do
-    space =
       elem(System.cmd("git", ["count-objects"], cd: repo.path), 0)
       |> String.trim()
       |> String.split(",")
