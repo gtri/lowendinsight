@@ -86,7 +86,7 @@ defmodule Mix.Tasks.ScanTest do
     assert 3 == Enum.count(reports_list)
   end
 
-  @moduletag timeout: 100000
+  @moduletag timeout: 200000
   test "run scan against package.json, package-lock.json and yarn.lock" do
     paths = %{
       node: [
