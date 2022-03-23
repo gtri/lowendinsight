@@ -9,6 +9,14 @@ defmodule RiskLogic do
   """
 
   @doc """
+  sbom_risk/1: returns text risk level for identified sbom_risk
+  """
+  @spec sbom_risk() :: {:ok, String.t()}
+  def sbom_risk() do
+    Application.fetch_env(:lowendinsight, :sbom_risk_level)
+  end
+
+  @doc """
   contributor_risk/1: returns text enumeration for count
   """
   @spec contributor_risk(non_neg_integer) :: {:ok, String.t()}

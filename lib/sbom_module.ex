@@ -9,12 +9,11 @@ defmodule SbomModule do
 
   def has_sbom?(repo) do
     path = repo.path
-    has_spdx?(repo)
     File.exists?(path <> "/bom.xml") or has_spdx?(repo)
   end
 
   def has_spdx?(repo) do
-    boms = Path.wildcard("**/*spdx*")
+    boms = Path.wildcard(repo.path <> "/**/*spdx*")
     !Enum.empty?(boms)
   end
 

@@ -6,6 +6,10 @@ defmodule RiskLogicTest do
   use ExUnit.Case, async: true
   doctest RiskLogic
 
+  test "confirm sbom risk medium" do
+    assert RiskLogic.sbom_risk() == {:ok, "medium"}
+  end
+
   test "confirm contributor critical" do
     assert RiskLogic.contributor_risk(1) == {:ok, "critical"}
   end

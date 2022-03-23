@@ -83,17 +83,15 @@ defmodule AnalyzerModule do
 
       Logger.info("Cloned -> #{count}: #{url}")
 
-      # Get SBOM
+      # Get SBOM risk
       sbom_risk =
         case SbomModule.has_sbom?(repo) do
           false ->
-            "medium"
+            {:ok, sbom_risk_level} = RiskLogic.sbom_risk()
+            sbom_risk_level
           true ->
             "low"
         end
-
-      # Get risk for SBOM status
-      # {:ok, sbom_risk} = RiskLogic.sbom_risk(sbom)
 
       # Get unique contributors count
       {:ok, count} = GitModule.get_contributor_count(repo)
