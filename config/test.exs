@@ -6,6 +6,9 @@ use Mix.Config
 config :logger, level: :error
 
 config :lowendinsight,
+  ## SBOM file failure - when not present
+  sbom_risk_level: System.get_env("LEI_SBOM_RISK_LEVEL") || "medium",
+
   ## Contributor in terms of discrete users
   ## NOTE: this currently doesn't discern same user with different email
   critical_contributor_level:
