@@ -37,6 +37,16 @@ and a deeper understanding of the implications should be gained during
 the decision to use.  LowEndInsight provides a simple mechanism for
 investigating and applying basic governance (based on a definition of
 the tolerance level, which you can easily override) and responds with a useful report for integrating into your existing DevSecOps automation.  Or, you can easily use LowEndInsight as an ad-hoc reporting tool, running it manually as part of an [ADR](https://github.com/joelparkerhenderson/architecture_decision_record).
+
+## Key Metrics
+* **Functional Contributors** - we've found that most projects receive a majority of contributions from one or two contributors.  This highlights a misconception about a project's number of contributors and some notion of health or maturity.  We report both the total number of contributors, and our notion of "functional contributors" making it easy to identify the risk.
+
+* **Commit Currency** - we've found that many projects are active, while many are also dormant or stale.  This isn't saying anthing of the quality of the project, but actually highlights potential supply-chain issues, e.g., is the project staying current with upstream dependencies updates
+
+* **SBOM presence** - we've found that adoption of a standard software-bill-of-materials (SBOM) manifest is lagging, especially in smaller projects.  Again, the presence or lack thereof does not indicate quality or maturity, however, it does highlight the need to address provenence and risk management.
+
+* **Recent Commit Change** - we've found that project volatility could indicate project instability, but more likely highlights an active project - though it is very difficult to discern this based on amounts of change, and thus should require more due diligence applied when looking at the stability of a dependency.
+  
 ```
 ✗ mix lei.analyze https://github.com/facebook/react | jq
 {
