@@ -2,7 +2,11 @@
 
 ![build status](https://github.com/gtri/lowendinsight/workflows/default_elixir_ci/badge.svg?branch=develop) ![Hex.pm](https://img.shields.io/hexpm/v/lowendinsight) [![Coverage Status](https://coveralls.io/repos/github/gtri/lowendinsight/badge.svg?branch=develop)](https://coveralls.io/github/gtri/lowendinsight?branch=develop)
 
-CAVEAT: Version 0.6.0 includes breaking changes to the analyze function -> upgrading from 0.5.0 to 0.6.0 will require you to pass in a couple
+CAVEATS: 
+
+Version 0.7.0 includes a quick scan for the presence of a SBOM, either a `box.xml` for CycloneDX or `*.spdx`/`*spdx.rdf` for SPDX.
+
+Version 0.6.0 includes breaking changes to the analyze function -> upgrading from 0.5.0 to 0.6.0 will require you to pass in a couple
 extra arguments to the analyze function:
 
 ```
@@ -15,7 +19,7 @@ In version 0.6.0 the `DateTime.utc_now()` and new `options` field `%{types: true
 Source Software which is managed within a Git repository.  Provide the
 git URL and the library will respond with a basic Elixir Map structure report. (There is a desire to make this a struct.)
 
-If you are at all concerned about risks associated with upstream
+**If you are at all concerned about risks associated with upstream
 dependency requirements LowEndInsight can provide valuable, and
 actionable information around the likelihood of critical issues being
 resolved, if ever reported.  For example, a repo with a single
@@ -23,9 +27,9 @@ contributor isn't necessarily bad, but it should be considered with some
 level of risk.  Are you or your organization willing to assume ownership
 (fork) of the repository to resolve issues yourself?  Or if there hasn't
 been a commit against the source repository, in some significant
-amount of time, can you assume that it is inactive, or just stable?
+amount of time, can you assume that it is inactive, or just stable?**
 
-While, in terms of DevSecOps, we are moving towards automation of vulnerability scanning, this doesn't tell the whole picture.  First problem is that not all vulnerabilities are found, nor are all reported.  So perhaps some risk reduction should be applied at the dependency inclusion steps.
+While, in terms of DevSecOps, we are moving towards automation of vulnerability scanning, this doesn't tell the whole picture.  First problem is that not all vulnerabilities are found/known, nor are all reported.  So perhaps some risk reduction should be applied at the dependency inclusion steps.
 
 Again, the intent of LowEndInsight isn't to say that any upstream Open
 Source dependency is bad, just that the risks should be smartly weighed,
@@ -208,7 +212,8 @@ the tolerance level, which you can easily override) and responds with a useful r
             "contributor_risk": "low",
             "contributor_count": 1505,
             "commit_currency_weeks": 0,
-            "commit_currency_risk": "low"
+            "commit_currency_risk": "low",
+            "sbom_risk": "medium"
           },
           "repo_size": "185M",
           "repo": "https://github.com/facebook/react",
@@ -306,6 +311,351 @@ the tolerance level, which you can easily override) and responds with a useful r
     },
     "risk_counts": {
       "low": 1
+    },
+    "repo_count": 1
+  }
+}{
+  "state": "complete",
+  "report": {
+    "uuid": "caa7f920-aaa3-11ec-9c05-f47b09cc5c9a",
+    "repos": [
+      {
+        "header": {
+          "uuid": "caa7c2e8-aaa3-11ec-9481-f47b09cc5c9a",
+          "start_time": "2022-03-23T12:21:13.234974Z",
+          "source_client": "mix task",
+          "repo": "https://github.com/facebook/react",
+          "library_version": "",
+          "end_time": "2022-03-23T12:21:39.762485Z",
+          "duration": 26
+        },
+        "data": {
+          "risk": "medium",
+          "results": {
+            "top10_contributors": [
+              {
+                "name": "Paul O’Shannessy",
+                "merges": 959,
+                "email": "paul@oshannessy.com",
+                "contributions": 1778
+              },
+              {
+                "name": "Dan Abramov",
+                "merges": 86,
+                "email": "dan.abramov@gmail.com",
+                "contributions": 1572
+              },
+              {
+                "name": "Brian Vaughn",
+                "merges": 101,
+                "email": "bvaughn@fb.com",
+                "contributions": 1358
+              },
+              {
+                "name": "Sophie Alpert",
+                "merges": 392,
+                "email": "git@sophiebits.com",
+                "contributions": 1268
+              },
+              {
+                "name": "Sebastian Markbåge",
+                "merges": 143,
+                "email": "sebastian@calyptus.eu",
+                "contributions": 995
+              },
+              {
+                "name": "Andrew Clark",
+                "merges": 0,
+                "email": "git@andrewclark.io",
+                "contributions": 631
+              },
+              {
+                "name": "Jim Sproch",
+                "merges": 327,
+                "email": "jsproch@fb.com",
+                "contributions": 456
+              },
+              {
+                "name": "Dominic Gannaway",
+                "merges": 6,
+                "email": "trueadm@users.noreply.github.com",
+                "contributions": 404
+              },
+              {
+                "name": "Brian Vaughn",
+                "merges": 65,
+                "email": "brian.david.vaughn@gmail.com",
+                "contributions": 363
+              },
+              {
+                "name": "Pete Hunt",
+                "merges": 126,
+                "email": "floydophone@gmail.com",
+                "contributions": 332
+              }
+            ],
+            "sbom_risk": "medium",
+            "recent_commit_size_in_percent_of_codebase": 3e-05,
+            "large_recent_commit_risk": "low",
+            "functional_contributors_risk": "low",
+            "functional_contributors": 97,
+            "functional_contributor_names": [
+              "Andreas Savvides <asavvides@twitter.com>",
+              "Pete Hunt <floydophone@gmail.com>",
+              "Fabio M. Costa <fabiomcosta@gmail.com>",
+              "Andrew Clark <git@andrewclark.io>",
+              "Sunil Pai <threepointone@gmail.com>",
+              "Jeff Morrison <jeff@anafx.com>",
+              "Simen Bekkhus <sbekkhus91@gmail.com>",
+              "Christoph Pojer <christoph.pojer@gmail.com>",
+              "NE-SmallTown <ne_smalltown@163.com>",
+              "Ray <ray@tomo.im>",
+              "Nathan Hunzaker <nate.hunzaker@gmail.com>",
+              "Ingvar Stepanyan <me@rreverser.com>",
+              "Andreas Svensson <andreas@syranide.com>",
+              "E-Liang Tan <eliang@eliangtan.com>",
+              "Dominic Gannaway <dg@domgan.com>",
+              "Jan Kassens <jan@kassens.net>",
+              "Jared Forsyth <jared@jaredforsyth.com>",
+              "Flarnie Marchan <flarnie@users.noreply.github.com>",
+              "Dan Abramov <dan.abramov@me.com>",
+              "dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+              "Cheng Lou <chenglou92@gmail.com>",
+              "Marshall Roch <mroch@fb.com>",
+              "Toru Kobayashi <koba0004@gmail.com>",
+              "Rick Hanlon <rickhanlonii@gmail.com>",
+              "Joe Critchley <joecritch@gmail.com>",
+              "Joshua Gross <joshua.gross@gmail.com>",
+              "Sebastian Silbermann <silbermann.sebastian@gmail.com>",
+              "Luna Ruan <luna@fb.com>",
+              "Ben Newman <bn@cs.stanford.edu>",
+              "Sergey Rubanov <chi187@gmail.com>",
+              "Shim Won <marocchino@gmail.com>",
+              "Philipp Spiess <hello@philippspiess.com>",
+              "Sunil Pai <threepointone@fb.com>",
+              "Vjeux <vjeuxx@gmail.com>",
+              "Nicolas Gallagher <nicolasgallagher@gmail.com>",
+              "Ivan Zotov <ivanzotov@gmail.com>",
+              "Sasha Aickin <xander76@yahoo.com>",
+              "Jim Sproch <jsproch@fb.com>",
+              "Dominic Gannaway <trueadm@users.noreply.github.com>",
+              "Brian Vaughn <brian.david.vaughn@gmail.com>",
+              "Eli White <github@eli-white.com>",
+              "Connor McSheffrey <c@conr.me>",
+              "Scott Feeney <scott@oceanbase.org>",
+              "Stefan Dombrowski <sdo451@gmail.com>",
+              "Tay Yang Shun <tay.yang.shun@gmail.com>",
+              "Paul O’Shannessy <paul@oshannessy.com>",
+              "Brandon Dail <aweary@users.noreply.github.com>",
+              "Paul Shen <paul@mnml0.com>",
+              "Raphael Amorim <rapha850@gmail.com>",
+              "Bill Fisher <fisherwebdev@gmail.com>",
+              "Rick Beerendonk <rick@beerendonk.com>",
+              "Daniel Lo Nigro <daniel@dan.cx>",
+              "Andrew Clark <acdlite@fb.com>",
+              "Andrew Clark <github@andrewclark.io>",
+              "Hristo Kanchev <hristokkanchev@gmail.com>",
+              "Luna Ruan <lunaris.ruan@gmail.com>",
+              "Lee Byron <lee@leebyron.com>",
+              "salazarm <salazarm@users.noreply.github.com>",
+              "iamchenxin <iamchenxin@gmail.com>",
+              "Andrey Popp <8mayday@gmail.com>",
+              "Timothy Yung <yungsters@gmail.com>",
+              "Kohei TAKATA <kt.koheitakata@gmail.com>",
+              "Isaac Salier-Hellendag <isaac@fb.com>",
+              "Jason Quense <monastic.panic@gmail.com>",
+              "Joseph Savona <joesavona@fb.com>",
+              "Clement Hoang <clement.hoang24@gmail.com>",
+              "Sunil Pai <threepointone@oculus.com>",
+              "Brandon Dail <brandon.dail@formidable.com>",
+              "Baraa Hamodi <bhamodi@uwaterloo.ca>",
+              "Sebastian Markbåge <sebastian@calyptus.eu>",
+              "Jinwoo Oh <arkist@gmail.com>",
+              "Nicolas Gallagher <necolas@fb.com>",
+              "jstejada <jstejada@fb.com>",
+              "Jordan Walke <jordojw@gmail.com>",
+              "Bartosz Kaszubowski <gosimek@gmail.com>",
+              "Keyan Zhang <root@keyanzhang.com>",
+              "Moti Zilberman <motiz88@gmail.com>",
+              "Charles Marsh <charlie@khanacademy.org>",
+              "Alex Smith <iqwz@ya.ru>",
+              "Rauno Freiberg <freiberggg@gmail.com>",
+              "Tom Occhino <tomocchino@gmail.com>",
+              "Sophie Alpert <git@sophiebits.com>",
+              "Lucas Cordeiro <ecdb.lucas@gmail.com>",
+              "Ivan Babak <babak.john@gmail.com>",
+              "jddxf <740531372@qq.com>",
+              "Kunal Mehta <k.mehta@berkeley.edu>",
+              "Nikita Lebedev <bloomber111@gmail.com>",
+              "Dustan Kasten <dustan.kasten@gmail.com>",
+              "Mateusz Burzyński <mateuszburzynski@gmail.com>",
+              "Thomas Aylott <oblivious@subtlegradient.com>",
+              "Dan Abramov <dan.abramov@gmail.com>",
+              "Benjamin Woodruff <github@benjam.info>",
+              "Josh Duck <josh@fb.com>",
+              "Andrew Clark <acdlite@me.com>",
+              "Brian Vaughn <bvaughn@fb.com>",
+              "Dan Abramov <gaearon@fb.com>",
+              "yiminghe <yiminghe@gmail.com>"
+            ],
+            "contributor_risk": "low",
+            "contributor_count": 1671,
+            "commit_currency_weeks": 0,
+            "commit_currency_risk": "low"
+          },
+          "repo_size": "0",
+          "repo": "https://github.com/facebook/react",
+          "project_types": {
+            "node": [
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/art/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/art/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/attribute-behavior/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/attribute-behavior/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/blocks/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/blocks/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/concurrent/time-slicing/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/concurrent/time-slicing/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/dom/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/dom/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/eslint/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/eslint/proxy/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/eslint/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/expiration/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/expiration/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/fiber-debugger/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/fiber-debugger/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/flight/config/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/flight/loader/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/flight/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/flight/scripts/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/flight/server/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/flight/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/legacy-jsx-runtimes/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/legacy-jsx-runtimes/react-14/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/legacy-jsx-runtimes/react-14/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/legacy-jsx-runtimes/react-15/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/legacy-jsx-runtimes/react-15/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/legacy-jsx-runtimes/react-16/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/legacy-jsx-runtimes/react-16/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/legacy-jsx-runtimes/react-17/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/legacy-jsx-runtimes/react-17/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/legacy-jsx-runtimes/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/nesting/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/nesting/src/legacy/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/nesting/src/modern/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/browserify/dev/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/browserify/dev/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/browserify/prod/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/browserify/prod/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/brunch/dev/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/brunch/dev/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/brunch/prod/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/brunch/prod/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/rjs/dev/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/rjs/dev/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/rjs/prod/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/rjs/prod/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/systemjs-builder/dev/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/systemjs-builder/dev/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/systemjs-builder/prod/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/systemjs-builder/prod/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/webpack-alias/dev/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/webpack-alias/dev/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/webpack-alias/prod/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/webpack-alias/prod/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/webpack/dev/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/webpack/dev/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/webpack/prod/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/packaging/webpack/prod/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/ssr/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/ssr/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/ssr2/package-lock.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/ssr2/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/fixtures/ssr2/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/create-subscription/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/dom-event-testing-library/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/eslint-plugin-react-hooks/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/jest-mock-scheduler/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/jest-react/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-art/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-cache/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-client/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-debug-tools/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-devtools-core/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-devtools-extensions/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-devtools-inline/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-devtools-shared/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-devtools-shared/src/node_modules/react-window/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-devtools-shell/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-devtools-timeline/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-devtools/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-dom/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-fetch/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-fs/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-interactions/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-is/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-native-renderer/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-noop-renderer/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-pg/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-reconciler/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-refresh/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-server-dom-relay/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-server-dom-webpack/esm/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-server-dom-webpack/npm/esm/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-server-dom-webpack/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-server-native-relay/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-server/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-suspense-test-utils/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react-test-renderer/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/react/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/scheduler/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/shared/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/use-subscription/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/packages/use-sync-external-store/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/scripts/bench/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/scripts/bench/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/scripts/devtools/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/scripts/devtools/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/scripts/eslint-rules/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/scripts/perf-counters/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/scripts/release/package.json",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/scripts/release/yarn.lock",
+              "/tmp/lei-1648038073-504683-b6vw7a/react/yarn.lock"
+            ]
+          },
+          "git": {
+            "hash": "de516ca5a635220d0cbe82b8f04003820e3f4072",
+            "default_branch": "refs/remotes/origin/main"
+          },
+          "config": {
+            "sbom_risk_level": "medium",
+            "medium_large_commit_level": 0.2,
+            "medium_functional_contributors_level": 5,
+            "medium_currency_level": 26,
+            "medium_contributor_level": 5,
+            "high_large_commit_level": 0.3,
+            "high_functional_contributors_level": 3,
+            "high_currency_level": 52,
+            "high_contributor_level": 3,
+            "critical_large_commit_level": 0.4,
+            "critical_functional_contributors_level": 2,
+            "critical_currency_level": 104,
+            "critical_contributor_level": 2,
+            "base_temp_dir": null
+          }
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "times": {
+      "start_time": "2022-03-23T12:21:13.228056Z",
+      "end_time": "2022-03-23T12:21:39.803990Z",
+      "duration": 26
+    },
+    "risk_counts": {
+      "medium": 1
     },
     "repo_count": 1
   }
@@ -450,7 +800,8 @@ iex(1)> AnalyzerModule.analyze "https://github.com/kitplummer/xmpp4rails", "iex"
        functional_contributors_risk: "critical",
        large_recent_commit_risk: "low",
        recent_commit_size_in_percent_of_codebase: 0.00368,
-       top10_contributors: [%{"Kit Plummer" => 7}]
+       top10_contributors: [%{"Kit Plummer" => 7}],
+       sbom_risk: "low"
      },
      risk: "critical"
    },

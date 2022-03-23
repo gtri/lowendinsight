@@ -83,6 +83,16 @@ defmodule AnalyzerModule do
 
       Logger.info("Cloned -> #{count}: #{url}")
 
+      # Get SBOM risk
+      sbom_risk =
+        case SbomModule.has_sbom?(repo) do
+          false ->
+            {:ok, sbom_risk_level} = RiskLogic.sbom_risk()
+            sbom_risk_level
+          true ->
+            "low"
+        end
+
       # Get unique contributors count
       {:ok, count} = GitModule.get_contributor_count(repo)
 
@@ -163,7 +173,8 @@ defmodule AnalyzerModule do
             functional_contributors_risk: filtered_contributors_risk,
             functional_contributors: num_filtered_contributors,
             functional_contributor_names: functional_contributors,
-            top10_contributors: top10_contributors
+            top10_contributors: top10_contributors,
+            sbom_risk: sbom_risk
           }
         }
       }

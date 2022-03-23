@@ -18,7 +18,7 @@ defmodule Mix.Tasks.BulkAnalyzeTest do
       assert 2 == report_data["metadata"]["repo_count"]
     end
 
-    @tag timeout: 180_000
+    @tag timeout: 200_000
     test "run scan against NPM cleaned list" do
       args = ["#{File.cwd!()}/test/fixtures/npm.short.csv", "no_validation" | []]
       BulkAnalyze.run(args)

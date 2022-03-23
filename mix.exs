@@ -9,7 +9,7 @@ defmodule GithubModule.MixProject do
     [
       app: :lowendinsight,
       description: description(),
-      version: "0.6.6",
+      version: "0.7.0",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -44,7 +44,8 @@ defmodule GithubModule.MixProject do
       {:json_xema, "~> 0.6"},
       {:temp, "~> 0.4"},
       {:excoveralls, "~> 0.14", only: :test},
-      {:yarn_parser, "~> 0.3"}
+      {:yarn_parser, "~> 0.3"},
+      {:sweet_xml, "~> 0.7.1"}
     ]
   end
 

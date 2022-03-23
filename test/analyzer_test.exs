@@ -71,7 +71,8 @@ defmodule AnalyzerTest do
         :top10_contributors => [
           %{contributions: 6, name: "Kit Plummer", email: "kplummer@blitz.local", merges: 0},
           %{contributions: 1, email: "kplummer@blitz.(none)", merges: 0, name: "Kit Plummer"}
-        ]
+        ],
+        :sbom_risk => "medium"
       },
       :project_types => %{},
       :repo_size => "292K",
@@ -95,8 +96,8 @@ defmodule AnalyzerTest do
 
     assert 2 == report[:metadata][:repo_count]
     assert nil == report[:metadata][:risk_counts]["high"]
-    assert nil == report[:metadata][:risk_counts]["medium"]
-    assert 1 == report[:metadata][:risk_counts]["low"]
+    assert 1 == report[:metadata][:risk_counts]["medium"]
+    assert nil == report[:metadata][:risk_counts]["low"]
     assert 1 == report[:metadata][:risk_counts]["critical"]
   end
 
