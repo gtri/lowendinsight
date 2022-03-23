@@ -14,7 +14,8 @@ defmodule Results do
     :functional_contributors_risk,
     :large_recent_commit_risk,
     :recent_commit_size_in_percent_of_codebase,
-    :top10_contributors
+    :top10_contributors,
+    :sbom_risk
   ]
 end
 
