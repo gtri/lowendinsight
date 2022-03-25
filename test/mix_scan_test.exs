@@ -116,6 +116,7 @@ defmodule Mix.Tasks.ScanTest do
     assert Map.has_key?(report_data["metadata"], "risk_counts") == true
   end
 
+  @moduletag timeout: 200000
   test "return 2 reports for package-lock.json and yarn.lock" do
     paths = [
       "./test/fixtures/packagejson",
