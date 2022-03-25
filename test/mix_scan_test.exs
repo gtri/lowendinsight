@@ -62,6 +62,7 @@ defmodule Mix.Tasks.ScanTest do
     end
   end
 
+  @moduletag timeout: 200000
   test "run scan against package-lock.json" do
     paths = %{node: ["./test/fixtures/packagejson", "./test/fixtures/package-lockjson"]}
     {reports_list, [], deps_count} = Npm.Scanner.scan(true, paths, "")
