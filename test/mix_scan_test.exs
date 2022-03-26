@@ -5,7 +5,7 @@
 Mix.shell(Mix.Shell.Process)
 
 defmodule Mix.Tasks.ScanTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   alias Mix.Tasks.Lei.Scan
 
   @tag timeout: 130_000
