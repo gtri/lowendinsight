@@ -5,7 +5,7 @@
 Mix.shell(Mix.Shell.Process)
 
 defmodule Mix.Tasks.ScanTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   alias Mix.Tasks.Lei.Scan
 
   @tag timeout: 130_000
@@ -62,6 +62,7 @@ defmodule Mix.Tasks.ScanTest do
     end
   end
 
+  @moduletag timeout: 200000
   test "run scan against package-lock.json" do
     paths = %{node: ["./test/fixtures/packagejson", "./test/fixtures/package-lockjson"]}
     {reports_list, [], deps_count} = Npm.Scanner.scan(true, paths, "")
@@ -115,6 +116,7 @@ defmodule Mix.Tasks.ScanTest do
     assert Map.has_key?(report_data["metadata"], "risk_counts") == true
   end
 
+  @moduletag timeout: 200000
   test "return 2 reports for package-lock.json and yarn.lock" do
     paths = [
       "./test/fixtures/packagejson",
