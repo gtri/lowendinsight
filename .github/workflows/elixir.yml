@@ -29,6 +29,7 @@ jobs:
         mix deps.get
     - name: Run Tests
       run: |
+        git config --global --add safe.directory /__w/lowendinsight/lowendinsight
         MIX_ENV=test mix coveralls.github --trace
         MIX_ENV=test mix docs
   audit:      
@@ -53,6 +54,7 @@ jobs:
         MIX_ENV=test mix deps.audit    
     - name: LowEndInsight Scan
       run: |
+        git config --global --add safe.directory /__w/lowendinsight/lowendinsight
         mix lei.scan .
 
         

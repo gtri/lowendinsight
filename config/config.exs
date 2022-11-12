@@ -4,5 +4,5 @@
 
 import Config
 
-config :logger, :console, format: "kp: $time $metadata[$level] $levelpad$message\n"
+config :logger, :console, format: "kp: $time $metadata[$level] $message\n"
 import_config "#{Mix.env()}.exs"
