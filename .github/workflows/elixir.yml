@@ -53,7 +53,7 @@ jobs:
         MIX_ENV=test mix deps.audit    
     - name: LowEndInsight Scan
       run: |
-        git config --global --add safe.directory /_w/lowendinsight/lowendinsight
+        git config --global --add safe.directory /__w/lowendinsight/lowendinsight
         mix lei.scan .
 
         
