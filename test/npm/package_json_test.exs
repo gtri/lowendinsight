@@ -9,13 +9,10 @@ defmodule PackageJSONTest do
     {lib_map, deps_count} = Npm.Packagefile.parse!(File.read!("./test/fixtures/packagejson"))
 
     parsed_package_json = [
-      {"async", "2.1.4"},
-      {"benchmark", "2.1.3"},
-      {"chalk", "1.1.3"},
-      {"request", "2.88.0"}
+      {"simple-npm-package", "3.0.8"}
     ]
 
-    assert deps_count == 4
+    assert deps_count == 1
     assert parsed_package_json == lib_map
   end
 
@@ -23,13 +20,10 @@ defmodule PackageJSONTest do
     {lib_map, deps_count} = Npm.Packagefile.parse!(File.read!("./test/fixtures/package-lockjson"))
 
     parsed_package_lock_json = [
-      {"ajv", "6.10.2"},
-      {"assert-plus", "1.0.0"},
-      {"bcrypt-pbkdf", "1.0.2"},
       {"combined-stream", "1.0.8"}
     ]
 
-    assert deps_count == 4
+    assert deps_count == 1
     assert parsed_package_lock_json == lib_map
   end
 end

@@ -6,7 +6,7 @@ defmodule Lowendinsight.Hex.EncoderTest do
   use ExUnit.Case, async: true
 
   test "encoder works for mix.exs" do
-    {deps, count} =
+    {:ok, {deps, count}} =
       File.read!("./test/fixtures/mixfile")
       |> Hex.Mixfile.parse!()
 
@@ -21,7 +21,7 @@ defmodule Lowendinsight.Hex.EncoderTest do
   end
 
   test "encoder works for mix.lock" do
-    {deps, count} =
+    {:ok, {deps, count}} =
       File.read!("./test/fixtures/lockfile")
       |> Hex.Lockfile.parse!()
 

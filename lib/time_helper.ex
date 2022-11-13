@@ -55,7 +55,6 @@ defmodule TimeHelper do
   @doc """
   get_commit_delta/1: returns the time between now and the last commit in seconds
   """
-  @spec get_commit_delta(String.t()) :: {:ok, String.t()} | {:error, String.t()}
   def get_commit_delta(last_commit_date) do
     case DateTime.from_iso8601(last_commit_date) do
       {:error, error} ->
@@ -70,7 +69,6 @@ defmodule TimeHelper do
   @doc """
   sum_ts_diff/2
   """
-  @spec sum_ts_diff([any], non_neg_integer) :: {:ok, non_neg_integer}
   def sum_ts_diff([_head | []], accumulator) do
     {:ok, accumulator}
   end
