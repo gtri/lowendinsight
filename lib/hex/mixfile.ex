@@ -39,7 +39,7 @@ defmodule Hex.Mixfile do
       |> extract_deps()
       |> Enum.to_list()
 
-    {deps, length(deps)}
+    {:ok, {deps, length(deps)}}
   end
 
   @impl Parser

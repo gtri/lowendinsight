@@ -59,7 +59,6 @@ defmodule Hex.Encoder do
     Map.get(item, :tag) || Map.get(item, :branch) || "HEAD"
   end
 
-  @spec lockfile_json(map) :: charlist
   def lockfile_json(dependencies_full) do
     dependencies_full
     |> instruct()

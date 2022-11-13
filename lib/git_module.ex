@@ -64,7 +64,18 @@ defmodule GitModule do
     {:ok, date}
   end
 
-  @spec delete_repo(Git.Repository.t()) :: String.t()
+  @spec delete_repo(
+          atom
+          | %{
+              :path =>
+                binary
+                | maybe_improper_list(
+                    binary | maybe_improper_list(any, binary | []) | char,
+                    binary | []
+                  ),
+              optional(any) => any
+            }
+        ) :: [binary]
   def delete_repo(repo) do
     File.rm_rf!(repo.path)
   end
@@ -102,11 +113,11 @@ defmodule GitModule do
     {:ok, dates_int}
   end
 
+  @spec get_tag_and_commit_dates(Git.Repository.t()) :: {:ok, [[...]]}
   @doc """
   get_tag_and_commit_dates/1: returns a list of lists of unix timestamps
   representing commit times with each lsit belonging to a different tag
   """
-  @spec get_tag_and_commit_dates(Git.Repository.t()) :: [any]
   def get_tag_and_commit_dates(repo) do
     tag_and_date =
       git_log_split(repo, ["--pretty=format:%d$%ct"])
@@ -159,10 +170,10 @@ defmodule GitModule do
     {:ok, String.to_integer(line_num), String.to_integer(file_num)}
   end
 
+  @spec get_recent_changes(Git.Repository.t()) :: {:ok, number, number}
   @doc """
   get_recent_changes/1: returns the percentage of changed lines in the last commit by the total lines in the repo
   """
-  @spec get_recent_changes(Git.Repository.t()) :: {:ok, float}
   def get_recent_changes(repo) do
     with {:ok, total_lines, total_files_changed} <- get_total_lines(repo),
          {:ok, file_num, insertions, deletions} = get_last_2_delta(repo) do
@@ -255,7 +266,7 @@ defmodule GitModule do
     {:ok, map}
   end
 
-  @spec get_clean_contributions_map(Git.Repository.t()) :: {:ok, map}
+  @spec get_clean_contributions_map(Git.Repository.t()) :: {:ok, list}
   def get_clean_contributions_map(repo) do
     map =
       Git.shortlog!(repo, ["-n", "-e", "HEAD", "--"])
