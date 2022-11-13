@@ -1,6 +1,6 @@
-ARG ALPINE_VERSION=3.10
+ARG ALPINE_VERSION=3.16
 
-FROM elixir:1.9.4-alpine AS builder
+FROM elixir:1.14.1-alpine AS builder
 
 ARG MIX_ENV=gha
 
