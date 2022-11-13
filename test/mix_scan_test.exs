@@ -67,8 +67,8 @@ defmodule Mix.Tasks.ScanTest do
     paths = %{node: ["./test/fixtures/packagejson", "./test/fixtures/package-lockjson"]}
     {reports_list, [], deps_count} = Npm.Scanner.scan(true, paths, "")
 
-    assert 4 == deps_count
-    assert 4 == Enum.count(reports_list)
+    assert 1 == deps_count
+    assert 1 == Enum.count(reports_list)
   end
 
   test "run scan against first-degree dependencies if package-lock does not exist" do
@@ -76,14 +76,14 @@ defmodule Mix.Tasks.ScanTest do
     {reports_list, [], deps_count} = Npm.Scanner.scan(true, path, "")
 
     assert 1 == deps_count
-    assert 2 == Enum.count(reports_list)
+    assert 1 == Enum.count(reports_list)
   end
 
   test "run scan against package.json and yarn.lock" do
     paths = %{node: ["./test/fixtures/packagejson", "./test/fixtures/yarnlock"]}
     {[], reports_list, deps_count} = Npm.Scanner.scan(true, paths, "")
 
-    assert 2 == deps_count
+    assert 1 == deps_count
     assert 1 == Enum.count(reports_list)
   end
 
