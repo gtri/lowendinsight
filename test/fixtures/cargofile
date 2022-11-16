@@ -1,0 +1,26 @@
+[package]
+name = "goa"
+version = "0.0.12"
+edition = "2021"
+authors = ["kitplummer@gmail.com"]
+description = "GitOps Agent - continuously monitors a remote git repository against local/any change, and performs actions (e.g. executes a provided command) - given a periodicity that is defined as a time intervals."
+repository = "https://github.com/kitplummer/goa"
+homepage = "https://kitplummer.github.io/goa"
+readme = "README.md"
+license = "MIT"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+log = "0.4"
+env_logger = "0.9"
+anyhow = "1.0"
+assert_cmd = "2.0"
+chrono = "0.4"
+clokwerk = "0.3.5"
+git2 = "0.13"
+predicates = "2.1"
+structopt = "0.3"
+url = "2.2"
+uuid = { version = "0.8.2", features = ["serde", "v4"] }
+openssl-sys = { version = "0.9", features = ["vendored"] }
+run_script = { version = "0.9" }

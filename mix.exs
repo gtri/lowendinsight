@@ -46,6 +46,7 @@ defmodule GithubModule.MixProject do
       {:excoveralls, "~> 0.14", only: :test},
       {:yarn_parser, "~> 0.3"},
       {:sweet_xml, "~> 0.7.1"},
+      {:toml, "~> 0.7"},
       {:sbom, "~> 0.6", only: :dev, runtime: false}
     ]
   end
