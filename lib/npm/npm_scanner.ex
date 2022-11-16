@@ -29,13 +29,13 @@ defmodule Npm.Scanner do
     path_to_yarn_lock = Enum.find(paths_to_npm_files, &String.contains?(&1, "yarn#{option}lock"))
 
     if path_to_package_json do
-      {:ok, {direct_deps, deps_count}} =
+      {direct_deps, deps_count} =
         File.read!(path_to_package_json)
         |> Npm.Packagefile.parse!()
 
       cond do
         path_to_package_lock && path_to_yarn_lock ->
-          {:ok, {json_lib_map, _count}} =
+          {json_lib_map, _count} =
             File.read!(path_to_package_lock)
             |> Npm.Packagefile.parse!()
 
@@ -56,7 +56,7 @@ defmodule Npm.Scanner do
           {json_result_map, yarn_result_map, deps_count}
 
         path_to_package_lock ->
-          {:ok, {lib_map, _count}} =
+          {lib_map, _count} =
             File.read!(path_to_package_lock)
             |> Npm.Packagefile.parse!()
 
