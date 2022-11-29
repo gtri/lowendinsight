@@ -136,7 +136,8 @@ defmodule AnalyzerTest do
         ["https://github.com/satori/go.uuid"],
         "test_dot_repo"
       )
-    IO.puts report
+
+    assert "complete" = report[:state]
     assert 1 == report[:metadata][:repo_count]
   end
 
