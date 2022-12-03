@@ -130,6 +130,17 @@ defmodule AnalyzerTest do
     assert 1 == report[:metadata][:repo_count]
   end
 
+  test "analyze a repo with a dot in the url" do
+    {:ok, report} =
+      AnalyzerModule.analyze(
+        ["https://github.com/satori/go.uuid"],
+        "test_dot_repo"
+      )
+
+    assert "complete" = report[:state]
+    assert 1 == report[:metadata][:repo_count]
+  end
+
   test "input of optional start time" do
     start_time = DateTime.utc_now()
 

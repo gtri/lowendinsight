@@ -6,7 +6,7 @@ defmodule LockfileTest do
   use ExUnit.Case
 
   test "extracts dependencies from mix.lock" do
-    {lib_map, deps_count} = Hex.Lockfile.parse!(File.read!("./test/fixtures/lockfile"))
+    {:ok, {lib_map, deps_count}} = Hex.Lockfile.parse!(File.read!("./test/fixtures/lockfile"))
 
     parsed_lockfile = [
       {:hex, :cowboy, "1.0.4"},

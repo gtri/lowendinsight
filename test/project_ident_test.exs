@@ -68,9 +68,11 @@ defmodule ProjectIdentTest do
     assert %{
              cargo: [
                "#{tmp_path}/clap/Cargo.toml",
+               "#{tmp_path}/clap/clap_bench/Cargo.toml",
                "#{tmp_path}/clap/clap_complete/Cargo.toml",
                "#{tmp_path}/clap/clap_complete_fig/Cargo.toml",
                "#{tmp_path}/clap/clap_derive/Cargo.toml",
+               "#{tmp_path}/clap/clap_lex/Cargo.toml",
                "#{tmp_path}/clap/clap_mangen/Cargo.toml",
              ]
            } == ProjectIdent.categorize_repo(repo, project_types)

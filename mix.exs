@@ -9,7 +9,7 @@ defmodule GithubModule.MixProject do
     [
       app: :lowendinsight,
       description: description(),
-      version: "0.7.0",
+      version: "0.7.1",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -37,7 +37,7 @@ defmodule GithubModule.MixProject do
       {:httpoison_retry, "~> 1.1"},
       {:git_cli, "~> 0.3"},
       {:poison, "~> 4.0"},
-      {:uuid, "~> 1.1"},
+      {:elixir_uuid, "~> 1.2"},
       {:ex_doc, "~> 0.24", runtime: false},
       {:credo, "~> 1.5", except: :prod, runtime: false},
       {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
@@ -45,7 +45,8 @@ defmodule GithubModule.MixProject do
       {:temp, "~> 0.4"},
       {:excoveralls, "~> 0.14", only: :test},
       {:yarn_parser, "~> 0.3"},
-      {:sweet_xml, "~> 0.7.1"}
+      {:sweet_xml, "~> 0.7.1"},
+      {:sbom, "~> 0.6", only: :dev, runtime: false}
     ]
   end
 
@@ -59,7 +60,7 @@ defmodule GithubModule.MixProject do
 
   defp package() do
     [
-      licenses: ["BSD-3"],
+      licenses: ["BSD-3-Clause"],
       links: links()
     ]
   end

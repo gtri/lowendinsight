@@ -15,8 +15,8 @@ defmodule Mix.Tasks.ScanTest do
       assert_received {:mix_shell, :info, [report]}
 
       report_data = Poison.decode!(report)
-      assert 33 == report_data["metadata"]["repo_count"]
-      assert 13 == report_data["metadata"]["dependency_count"]
+      assert 35 == report_data["metadata"]["repo_count"]
+      assert 14 == report_data["metadata"]["dependency_count"]
     end
   end
 
@@ -67,24 +67,24 @@ defmodule Mix.Tasks.ScanTest do
     paths = %{node: ["./test/fixtures/packagejson", "./test/fixtures/package-lockjson"]}
     {reports_list, [], deps_count} = Npm.Scanner.scan(true, paths, "")
 
-    assert 4 == deps_count
-    assert 4 == Enum.count(reports_list)
+    assert 1 == deps_count
+    assert 1 == Enum.count(reports_list)
   end
 
   test "run scan against first-degree dependencies if package-lock does not exist" do
     path = %{node: ["./test/fixtures/packagejson"]}
     {reports_list, [], deps_count} = Npm.Scanner.scan(true, path, "")
 
-    assert 4 == deps_count
-    assert 4 == Enum.count(reports_list)
+    assert 1 == deps_count
+    assert 1 == Enum.count(reports_list)
   end
 
   test "run scan against package.json and yarn.lock" do
     paths = %{node: ["./test/fixtures/packagejson", "./test/fixtures/yarnlock"]}
     {[], reports_list, deps_count} = Npm.Scanner.scan(true, paths, "")
 
-    assert 4 == deps_count
-    assert 3 == Enum.count(reports_list)
+    assert 1 == deps_count
+    assert 1 == Enum.count(reports_list)
   end
 
   @moduletag timeout: 200000
@@ -99,9 +99,9 @@ defmodule Mix.Tasks.ScanTest do
 
     {json_reports_list, yarn_reports_list, deps_count} = Npm.Scanner.scan(true, paths, "")
 
-    assert 4 == deps_count
-    assert 4 == Enum.count(json_reports_list)
-    assert 3 == Enum.count(yarn_reports_list)
+    assert 1 == deps_count
+    assert 1 == Enum.count(json_reports_list)
+    assert 1 == Enum.count(yarn_reports_list)
   end
 
   @tag timeout: 140_000

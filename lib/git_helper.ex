@@ -71,7 +71,8 @@ defmodule GitHelper do
       get_contributor_counts/1: Gets the number of contributions belonging to each author and return a map of %{name => number}
   """
   def get_contributor_counts(list) do
-    get_contributor_counts(list, %{})
+    counts = get_contributor_counts(list, %{})
+    counts
   end
 
   @doc """
@@ -186,7 +187,6 @@ defmodule GitHelper do
     {:ok, accumulator}
   end
 
-  @spec get_contributor_counts([any], contrib_count) :: {:ok, [contrib_count], non_neg_integer}
   defp get_contributor_counts([head | tail], accumulator) do
     if head == "" do
       get_contributor_counts(tail, accumulator)
@@ -206,7 +206,6 @@ defmodule GitHelper do
     end
   end
 
-  @spec get_contributor_counts([], non_neg_integer) :: {:ok, non_neg_integer}
   defp get_contributor_counts([], accumulator) do
     {:ok, accumulator}
   end
@@ -216,7 +215,6 @@ defmodule GitHelper do
     10 * length(String.split(x, " ")) + String.length(x)
   end
 
-  @spec filter_contributors([any]) :: [any]
   defp filter_contributors([]) do
     []
   end

@@ -4,7 +4,7 @@
 
 CAVEATS: 
 
-Version 0.7.0 includes a quick scan for the presence of a SBOM, either a `box.xml` for CycloneDX or `*.spdx`/`*spdx.rdf` for SPDX.
+Version 0.7.0 includes a quick scan for the presence of a SBOM, either a `bom.xml` for CycloneDX or `*.spdx`/`*spdx.rdf` for SPDX.
 
 Version 0.6.0 includes breaking changes to the analyze function -> upgrading from 0.5.0 to 0.6.0 will require you to pass in a couple
 extra arguments to the analyze function:
