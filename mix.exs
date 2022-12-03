@@ -37,7 +37,7 @@ defmodule GithubModule.MixProject do
       {:httpoison_retry, "~> 1.1"},
       {:git_cli, "~> 0.3"},
       {:poison, "~> 4.0"},
-      {:uuid, "~> 1.1"},
+      {:elixir_uuid, "~> 1.2"},
       {:ex_doc, "~> 0.24", runtime: false},
       {:credo, "~> 1.5", except: :prod, runtime: false},
       {:mix_audit, "~> 0.1", only: [:dev, :test], runtime: false},
