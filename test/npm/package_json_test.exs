@@ -6,7 +6,7 @@ defmodule PackageJSONTest do
   use ExUnit.Case
 
   test "extracts dependencies from package.json" do
-    {lib_map, deps_count} = Npm.Packagefile.parse!(File.read!("./test/fixtures/packagejson"))
+    {:ok, {lib_map, deps_count}} = Npm.Packagefile.parse!(File.read!("./test/fixtures/packagejson"))
 
     parsed_package_json = [
       {"simple-npm-package", "3.0.8"}
@@ -17,7 +17,7 @@ defmodule PackageJSONTest do
   end
 
   test "extracts dependencies from package-lock.json" do
-    {lib_map, deps_count} = Npm.Packagefile.parse!(File.read!("./test/fixtures/package-lockjson"))
+    {:ok, {lib_map, deps_count}} = Npm.Packagefile.parse!(File.read!("./test/fixtures/package-lockjson"))
 
     parsed_package_lock_json = [
       {"combined-stream", "1.0.8"}

@@ -12,7 +12,6 @@ defmodule Npm.Scanner do
   @doc """
   scan: called when node? is false, returning an empty list and 0
   """
-  @spec scan(boolean(), map) :: {[], [], 0}
   def scan(node?, _project_types) when node? == false, do: {[], [], 0}
 
   @doc """
@@ -98,7 +97,6 @@ defmodule Npm.Scanner do
   on that package's repository using analyser_module.  If the package url cannot
   be reached, an error is returned.
   """
-  @spec query_npm(String.t()) :: {:ok, map} | String.t()
   def query_npm(package) do
     encoded_id = URI.encode(package)
 
