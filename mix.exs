@@ -26,7 +26,7 @@ defmodule GithubModule.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger, :crypto]
     ]
   end
 
@@ -36,7 +36,7 @@ defmodule GithubModule.MixProject do
       {:httpoison, "~> 1.8"},
       {:httpoison_retry, "~> 1.1"},
       {:git_cli, "~> 0.3"},
-      {:poison, "~> 4.0"},
+      {:poison, "~> 5.0"},
       {:elixir_uuid, "~> 1.2"},
       {:ex_doc, "~> 0.24", runtime: false},
       {:credo, "~> 1.5", except: :prod, runtime: false},
