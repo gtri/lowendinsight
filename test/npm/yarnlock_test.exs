@@ -6,7 +6,7 @@ defmodule YarnlockTest do
   use ExUnit.Case
 
   test "extracts dependencies from yarn.lock" do
-    {lib_map, deps_count} = Npm.Yarnlockfile.parse!(File.read!("./test/fixtures/yarnlock"))
+    {:ok, {lib_map, deps_count}} = Npm.Yarnlockfile.parse!(File.read!("./test/fixtures/yarnlock"))
 
     parsed_yarn = [{"assert-plus", "1.0.0"}]
 

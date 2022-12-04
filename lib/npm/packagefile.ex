@@ -6,7 +6,7 @@ defmodule Npm.Packagefile do
   @behaviour Parser
 
   @moduledoc """
-    Provides package.json and package-lock.json dependency parser		
+    Provides package.json and package-lock.json dependency parser
   """
 
   @impl Parser
@@ -22,7 +22,7 @@ defmodule Npm.Packagefile do
           else: {dependency, List.last(String.split(info, ~r{[\^|~]}, parts: 2))}
       end)
 
-    {deps, length(deps)}
+    {:ok, {deps, length(deps)}}
   end
 
   @impl Parser
