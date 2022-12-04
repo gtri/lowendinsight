@@ -24,6 +24,7 @@ jobs:
         mix deps.get
     - name: Run Tests
       run: |
+        git config --global --add safe.directory /__w/lowendinsight/lowendinsight
         MIX_ENV=test mix coveralls
         MIX_ENV=test mix docs
     - name: Publish to Hex
@@ -31,5 +32,6 @@ jobs:
         HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
       if: github.event.pull_request.merged == true
       run: |
+        git config --global --add safe.directory /__w/lowendinsight/lowendinsight
         mix hex.publish --yes
 
