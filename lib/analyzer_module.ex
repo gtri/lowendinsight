@@ -182,8 +182,7 @@ defmodule AnalyzerModule do
       Temp.cleanup()
       {:ok, determine_toplevel_risk(report)}
     rescue
-      m in MatchError ->
-        IO.inspect m
+      MatchError ->
         end_time = DateTime.utc_now()
         duration = DateTime.diff(end_time, start_time)
 

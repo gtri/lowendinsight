@@ -18,7 +18,7 @@ defmodule Npm.Yarnlockfile do
       |> remove_version_labels()
       |> Enum.to_list()
 
-    {deps, length(deps)}
+    {:ok, {deps, length(deps)}}
   end
 
   @impl Parser

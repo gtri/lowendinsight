@@ -23,7 +23,7 @@ defmodule GitModule do
          {:ok, _} <- Git.log(repo) do
       {:ok, repo}
     else
-      _error -> {:error, "Respository not found"}
+      _error -> {:error, "Repository not found"}
     end
   end
 
