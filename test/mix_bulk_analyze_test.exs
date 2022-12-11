@@ -9,6 +9,7 @@ defmodule Mix.Tasks.BulkAnalyzeTest do
   alias Mix.Tasks.Lei.BulkAnalyze
 
   describe "run/1" do
+    @tag :long
     test "run scan, validate report, return report" do
       args = ["#{File.cwd!()}/test/scan_list_test" | []]
       BulkAnalyze.run(args)
@@ -19,6 +20,7 @@ defmodule Mix.Tasks.BulkAnalyzeTest do
     end
 
     @tag timeout: 200_000
+    @tag :long
     test "run scan against NPM cleaned list" do
       args = ["#{File.cwd!()}/test/fixtures/npm.short.csv", "no_validation" | []]
       BulkAnalyze.run(args)
@@ -29,6 +31,7 @@ defmodule Mix.Tasks.BulkAnalyzeTest do
       assert 7 == report_data["metadata"]["risk_counts"]["undetermined"]
     end
 
+    @tag :long
     test "run scan against non-existent file" do
       args = ["/blah" | []]
       BulkAnalyze.run(args)
@@ -36,6 +39,7 @@ defmodule Mix.Tasks.BulkAnalyzeTest do
       assert report == "\ninvalid file provided"
     end
 
+    @tag :long
     test "run scan against invalid file" do
       args = ["./mix.exs" | []]
       BulkAnalyze.run(args)
