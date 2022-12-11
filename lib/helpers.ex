@@ -104,11 +104,11 @@ defmodule Helpers do
 
       iex> ["https://zipbooks..com", "http://www.test.com"]
       ...> |> Helpers.validate_urls()
-      {:error, "invalid URI"}
+      {:error, %{:message => "invalid URI", :urls => ["https://zipbooks..com"]}}
 
       iex> ["https//github.com/kitplummer/xmpp4rails","https://www.zipbooks.com", "http://www.test.com"]
       ...> |> Helpers.validate_urls()
-      {:error, "invalid URI"}
+      {:error, %{:message => "invalid URI", :urls => ["https//github.com/kitplummer/xmpp4rails"]}}
 
       iex> "https://zipbooks.com"
       ...> |> Helpers.validate_urls()
@@ -119,11 +119,19 @@ defmodule Helpers do
     try do
       if !is_list(urls), do: throw(:break)
 
-      Enum.each(urls, fn url ->
-        if :ok == validate_url(url), do: :ok, else: throw(:break)
+      bad_urls = Enum.filter(urls, fn url ->
+
+        if validate_url(url) != :ok do
+            url
+
+        end
       end)
+
+      if Enum.count(bad_urls) == 0, do: :ok, else: throw(bad_urls)
+
     catch
       :break -> {:error, "invalid URI"}
+      bad_urls -> {:error, %{:message => "invalid URI", :urls => bad_urls}}
     end
   end
 

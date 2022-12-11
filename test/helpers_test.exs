@@ -17,6 +17,15 @@ defmodule Lowendinsight.HelpersTest do
     assert {:error, "invalid URI path"} == Helpers.validate_url("file:///blah")
   end
 
+  test "validate urls" do
+    urls = ["https://github.com/kitplummer/gbtestee", "https://github.com/kitplummer/goa"]
+    assert :ok == Helpers.validate_urls(urls)
+    urls = ["://github.com/kitplummer/cliban"] ++ urls
+    assert {:error, %{:message => "invalid URI", :urls => ["://github.com/kitplummer/cliban"]}} == Helpers.validate_urls(urls)
+    urls = ["https//github.com/kitplummer/clikan"] ++ urls
+    assert {:error, %{:message => "invalid URI", :urls => ["https//github.com/kitplummer/clikan","://github.com/kitplummer/cliban"]}} == Helpers.validate_urls(urls)
+  end
+
   test "validate scheme" do
     assert {:error, "invalid URI scheme"} == Helpers.validate_url("blah://blah")
   end

@@ -9,6 +9,7 @@ defmodule Mix.Tasks.ScanTest do
   alias Mix.Tasks.Lei.Scan
 
   @tag timeout: 130_000
+  @tag :long
   describe "run/1" do
     test "run scan, validate report, return report" do
       Scan.run([])
@@ -20,6 +21,7 @@ defmodule Mix.Tasks.ScanTest do
     end
   end
 
+  @tag :long
   describe "run/1 with invalid path" do
     test "should fail with valid message" do
       Scan.run(["blah/"])
@@ -29,6 +31,7 @@ defmodule Mix.Tasks.ScanTest do
   end
 
   @tag timeout: 130_000
+  @tag :long
   describe "bitbucket based run/1" do
     test "run scan and report against a package that has a known reference to Bitbucket" do
       # Get the repo
@@ -47,6 +50,7 @@ defmodule Mix.Tasks.ScanTest do
   end
 
   describe "multi hub repo scan/1" do
+    @tag :long
     test "run scan and report against a package that has a known reference to Bitbucket" do
       {:ok, tmp_path} = Temp.path("lei-analyzer-test")
 
@@ -63,6 +67,7 @@ defmodule Mix.Tasks.ScanTest do
   end
 
   @moduletag timeout: 200000
+  @tag :long
   test "run scan against package-lock.json" do
     paths = %{node: ["./test/fixtures/packagejson", "./test/fixtures/package-lockjson"]}
     {reports_list, [], deps_count} = Npm.Scanner.scan(true, paths, "")
@@ -71,6 +76,7 @@ defmodule Mix.Tasks.ScanTest do
     assert 1 == Enum.count(reports_list)
   end
 
+  @tag :long
   test "run scan against first-degree dependencies if package-lock does not exist" do
     path = %{node: ["./test/fixtures/packagejson"]}
     {reports_list, [], deps_count} = Npm.Scanner.scan(true, path, "")
@@ -79,6 +85,7 @@ defmodule Mix.Tasks.ScanTest do
     assert 1 == Enum.count(reports_list)
   end
 
+  @tag :long
   test "run scan against package.json and yarn.lock" do
     paths = %{node: ["./test/fixtures/packagejson", "./test/fixtures/yarnlock"]}
     {[], reports_list, deps_count} = Npm.Scanner.scan(true, paths, "")
@@ -88,6 +95,7 @@ defmodule Mix.Tasks.ScanTest do
   end
 
   @moduletag timeout: 200000
+  @tag :long
   test "run scan against package.json, package-lock.json and yarn.lock" do
     paths = %{
       node: [
@@ -105,6 +113,7 @@ defmodule Mix.Tasks.ScanTest do
   end
 
   @tag timeout: 140_000
+  @tag :long
   test "run scan on JS repo, validate report, return report" do
     {:ok, tmp_path} = Temp.path("lei-scan-js-repo-test")
     {:ok, repo} = GitModule.clone_repo("https://github.com/juliangarnier/anime", tmp_path)
@@ -117,6 +126,7 @@ defmodule Mix.Tasks.ScanTest do
   end
 
   @moduletag timeout: 200000
+  @tag :long
   test "return 2 reports for package-lock.json and yarn.lock" do
     paths = [
       "./test/fixtures/packagejson",
@@ -142,6 +152,7 @@ defmodule Mix.Tasks.ScanTest do
     assert report[:scan_node_json][:metadata][:dependency_count] == deps_count
   end
 
+  @tag :long
   test "run scan against requirements.txt" do
     paths = %{python: ["./test/fixtures/requirementstxt"]}
     {requirements_reports_list, deps_count} = Pypi.Scanner.scan(true, paths, "")
@@ -154,6 +165,7 @@ defmodule Mix.Tasks.ScanTest do
     assert quokka_report[:data][:risk] != nil
   end
 
+  @tag :long
   test "run scan on python repo, validate report, return report" do
     {:ok, tmp_path} = Temp.path("lei-scan-python-repo-test")
     {:ok, repo} = GitModule.clone_repo("https://github.com/kitplummer/clikan", tmp_path)
