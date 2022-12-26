@@ -7,15 +7,12 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     env:
       MIX_ENV: test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     container:
       image: elixir:1.12.0-alpine
-
     steps:
     - uses: actions/checkout@v1
     - name: Install Dependencies
@@ -29,9 +26,12 @@ jobs:
         git config --global --add safe.directory /__w/lowendinsight/lowendinsight
         MIX_ENV=test mix coveralls.github --trace
         MIX_ENV=test mix docs
+    - name: LowEndInsight Scan
+      run: |
+        git config --global --add safe.directory /__w/lowendinsight/lowendinsight
+        mix lei.scan .
   audit:      
     runs-on: ubuntu-latest
-
     env:
       MIX_ENV: test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,10 +49,6 @@ jobs:
     - name: Run Audit
       run: |
         MIX_ENV=test mix deps.audit    
-    - name: LowEndInsight Scan
-      run: |
-        git config --global --add safe.directory /__w/lowendinsight/lowendinsight
-        mix lei.scan .
 
         
 
