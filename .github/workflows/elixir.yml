@@ -2,11 +2,8 @@ name: default_elixir_ci
 
 on:
   push:
-    branches:
-      - develop
   pull_request:
-    branches:
-      - develop
+    types: [opened]
 
 jobs:
   build:
