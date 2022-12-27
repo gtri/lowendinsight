@@ -84,8 +84,8 @@ defmodule AnalyzerModule do
       Logger.info("Cloned -> #{count}: #{url}")
 
       # Get Files analysis
-      files_analysis = Lowendinsight.Files.analyze_files(repo.path)
-
+      # files_analysis = Lowendinsight.Files.analyze_files(repo.path)
+      files_analysis = %{}
       # Get SBOM risk
       sbom_risk =
         case SbomModule.has_sbom?(repo) do
