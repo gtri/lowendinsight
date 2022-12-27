@@ -28,15 +28,16 @@ defmodule Lowendinsight.Files do
             )
         ) :: %{binary_files: list, binary_files_count: non_neg_integer}
   def find_binary_files(path) do
-    binary_files =
-      File.cd!(path, fn ->
-        System.cmd("grep", ["-rIL", "."])
-      end)
-      |> elem(0)
-      |> String.split("\n")
-      |> Enum.reject(& String.contains?(&1, ".git/")|| &1 == "")
+    # binary_files =
+    #   File.cd!(path, fn ->
+    #     System.cmd("grep", ["-rIL", "."])
+    #   end)
+    #   |> elem(0)
+    #   |> String.split("\n")
+    #   |> Enum.reject(& String.contains?(&1, ".git/")|| &1 == "")
 
-    %{binary_files: binary_files, binary_files_count: Enum.count(binary_files)}
+    # %{binary_files: binary_files, binary_files_count: Enum.count(binary_files)}
+    %{}
   end
 
   @spec get_total_file_count(binary) :: %{total_file_count: non_neg_integer}
