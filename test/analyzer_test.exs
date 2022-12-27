@@ -3,7 +3,7 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule AnalyzerTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   doctest AnalyzerModule
 
   setup_all do
@@ -87,6 +87,7 @@ defmodule AnalyzerTest do
   end
 
   @tag timeout: 180_000
+  @tag :long
   test "get multi report mixed risks" do
     {:ok, report} =
       AnalyzerModule.analyze(
@@ -209,6 +210,7 @@ defmodule AnalyzerTest do
     assert expected_data[:data] == repo_data[:data]
   end
 
+  @tag :long
   test "get single repo report validated by report schema" do
     {:ok, report} =
       AnalyzerModule.analyze(
@@ -227,6 +229,7 @@ defmodule AnalyzerTest do
     assert true == JsonXema.valid?(schema, report_data)
   end
 
+  @tag :long
   test "get multi repo report validated by report schema" do
     {:ok, report} =
       AnalyzerModule.analyze(
