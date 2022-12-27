@@ -14,6 +14,7 @@ defmodule FilesTest do
   #   [weeks: weeks]
   # end
 
+  @tag :long
   test "analyze files in path repo" do
     {:ok, report} =
       AnalyzerModule.analyze(["https://github.com/kitplummer/xmpp4rails"], "files_path_test", DateTime.utc_now(), %{types: false})
@@ -29,6 +30,7 @@ defmodule FilesTest do
              has_contributing: false} == repo_data[:data][:files]
   end
 
+  @tag :long
   test "analyze files in elixir repo" do
     {:ok, report} =
       AnalyzerModule.analyze(["https://github.com/gtri/lowendinsight"], "files_path_test", DateTime.utc_now(), %{types: false})
