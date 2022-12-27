@@ -3,7 +3,7 @@
 # the BSD 3-Clause license. See the LICENSE file for details.
 
 defmodule FilesTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async:  false
   doctest Lowendinsight.Files
   # setup_all do
   #   {:ok, tmp_path} = Temp.path("lei-analyzer-test")
