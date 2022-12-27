@@ -21,7 +21,7 @@ jobs:
         otp-version: 24.3.4
     - name: Install Dependencies
       run: |
-        apk add git
+        sudo apt install libtinfo5 git
         mix local.rebar --force
         mix local.hex --force
         mix deps.get
