@@ -36,7 +36,7 @@ defmodule FilesTest do
     assert "complete" == report[:state]
     repo_data = List.first(report[:report][:repos])
     assert "files_path_test" == repo_data[:header][:source_client]
-    assert %{binary_files: ["lei_bus_128.png"],
+    assert %{binary_files: ["lei_bus_128.png", ".index"],
              binary_files_count: 2,
              total_file_count: 176,
              has_readme: true,

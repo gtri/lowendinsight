@@ -24,7 +24,7 @@ jobs:
     - name: Run Tests
       run: |
         git config --global --add safe.directory /__w/lowendinsight/lowendinsight
-        MIX_ENV=test mix coveralls.github --trace
+        MIX_ENV=test mix coveralls.github --trace --exclude long
         MIX_ENV=test mix docs
     - name: LowEndInsight Scan
       run: |
