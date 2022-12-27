@@ -11,10 +11,14 @@ jobs:
     env:
       MIX_ENV: test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    container:
-      image: elixir:1.14.2-alpine
+    
     steps:
     - uses: actions/checkout@v1
+    - name: Setup Elixir
+      uses: actions/setup-elixir@v1
+      with:
+        elixir-version: 1.14.1
+        otp-version: 24.3.4
     - name: Install Dependencies
       run: |
         apk add git
