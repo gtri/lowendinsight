@@ -83,6 +83,9 @@ defmodule AnalyzerModule do
 
       Logger.info("Cloned -> #{count}: #{url}")
 
+      # Get Files analysis
+      files_analysis = Lowendinsight.Files.analyze_files(repo.path)
+
       # Get SBOM risk
       sbom_risk =
         case SbomModule.has_sbom?(repo) do
@@ -157,6 +160,7 @@ defmodule AnalyzerModule do
         data: %{
           config: Helpers.convert_config_to_list(config),
           repo: url,
+          files: files_analysis,
           git: %{
             hash: git_hash,
             default_branch: default_branch

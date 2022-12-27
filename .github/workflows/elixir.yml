@@ -2,44 +2,47 @@ name: default_elixir_ci
 
 on:
   push:
-    branches:
-      - develop
   pull_request:
-    branches:
-      - develop
+    types: [opened]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     env:
       MIX_ENV: test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    container:
-      image: elixir:1.12.0-alpine
-
+    
     steps:
     - uses: actions/checkout@v1
+    - name: Setup OS deps
+      run: |
+        sudo apt install libtinfo5 git libssl1.1 libssl-dev
+    - name: Setup Elixir
+      uses: actions/setup-elixir@v1
+      with:
+        experimental-otp: true
+        elixir-version: 1.14.1
+        otp-version: 25.2
     - name: Install Dependencies
       run: |
-        apk add git
         mix local.rebar --force
         mix local.hex --force
         mix deps.get
     - name: Run Tests
       run: |
         git config --global --add safe.directory /__w/lowendinsight/lowendinsight
-        MIX_ENV=test mix coveralls.github --trace
+        MIX_ENV=test mix coveralls.github --trace --exclude long
         MIX_ENV=test mix docs
+    - name: LowEndInsight Scan
+      run: |
+        mix lei.scan .
   audit:      
     runs-on: ubuntu-latest
-
     env:
       MIX_ENV: test
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     container:
-      image: elixir:1.12.0-alpine
+      image: elixir:1.14.2-alpine
 
     steps:
     - uses: actions/checkout@v1
@@ -52,10 +55,6 @@ jobs:
     - name: Run Audit
       run: |
         MIX_ENV=test mix deps.audit    
-    - name: LowEndInsight Scan
-      run: |
-        git config --global --add safe.directory /__w/lowendinsight/lowendinsight
-        mix lei.scan .
 
         
 
