@@ -87,6 +87,7 @@ defmodule AnalyzerTest do
   end
 
   @tag timeout: 180_000
+  @tag :long
   test "get multi report mixed risks" do
     {:ok, report} =
       AnalyzerModule.analyze(
