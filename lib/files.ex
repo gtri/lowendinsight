@@ -36,6 +36,7 @@ defmodule Lowendinsight.Files do
         files
         |> String.split("\n")
         |> Enum.reject(& String.contains?(&1, ".git/")|| &1 == "")
+        |> Enum.sort()
       else
         :error -> []
       end
