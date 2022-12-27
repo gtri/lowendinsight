@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Setup OS deps
       run: |
-        sudo apt install libtinfo5 git libssl1.1
+        sudo apt install libtinfo5 git libssl1.1 libssl-dev
     - name: Setup Elixir
       uses: actions/setup-elixir@v1
       with:
