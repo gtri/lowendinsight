@@ -42,15 +42,6 @@ defmodule Lowendinsight.Files do
       end
     File.cd!(cwd)
 
-    # binary_files =
-    #   File.cd!(path, fn ->
-    #     System.cmd("grep", ["-rIL", "."])
-    #   end)
-    #   |> elem(0)
-    #   |> String.split("\n")
-    #   |> Enum.reject(& String.contains?(&1, ".git/")|| &1 == "")
-
-    # %{binary_files: binary_files, binary_files_count: Enum.count(binary_files)}
     %{binary_files: binary_files, binary_files_count: Enum.count(binary_files)}
   end
 
