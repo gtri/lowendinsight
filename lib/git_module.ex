@@ -233,7 +233,7 @@ defmodule GitModule do
     # Helper function
     get_counts = fn contrib -> contrib.count end
     get_signoff = fn contrib -> contrib.name <> " <" <> contrib.email <> ">" end
-    # Calcualte for each
+    # Calcualte for eache
     counts_kwlist = for a <- contributors, do: {get_signoff.(a), get_counts.(a)}
     counts = Enum.into(counts_kwlist, %{})
     # Calculate for all
@@ -260,7 +260,10 @@ defmodule GitModule do
     map =
       Enum.map(
         contrib,
-        fn x -> %{:name => x.name, :contributions => x.count} end
+        fn x -> %{:name => x.name,
+                  :contributions => x.count,
+                  :last_contribution_date => get_last_contribution_date_by_contributor(repo, x.name)
+                  } end
       )
 
     {:ok, map}
@@ -283,7 +286,8 @@ defmodule GitModule do
           name: raw_binary_to_string(name),
           contributions: contributor.count,
           merges: contributor.merges,
-          email: contributor.email
+          email: contributor.email,
+          last_contribution_date: contributor.last_contribution_date
         }
       end)
 
@@ -305,11 +309,24 @@ defmodule GitModule do
         Map.put(x, :contributions, x.count)
       end)
       |> Stream.map(fn x ->
+        Map.put(x, :last_contribution_date, get_last_contribution_date_by_contributor(repo, x.name))
+      end)
+      |> Stream.map(fn x ->
         Map.drop(x, [:commits, :count, :__struct__])
       end)
       |> Enum.to_list()
 
     {:ok, map10}
+  end
+
+  @doc """
+  get_last_contribution_date_by_contributor/1: returns the date of the last author or commit whichever
+  is more recent.
+  """
+  def get_last_contribution_date_by_contributor(repo, contributor) do
+    ## Using author here, as even if there is a different committer, the author is the contributor
+    author_date = List.last(git_log_split(repo, ["--author=#{contributor}", "-1", "--pretty=format:%cI"]))
+    author_date
   end
 
   @spec get_repo_size(Git.Repository.t()) :: {:ok, String.t()}
