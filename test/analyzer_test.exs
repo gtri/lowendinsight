@@ -69,8 +69,8 @@ defmodule AnalyzerTest do
         :large_recent_commit_risk => "low",
         :recent_commit_size_in_percent_of_codebase => 0.00368,
         :top10_contributors => [
-          %{contributions: 6, name: "Kit Plummer", email: "kplummer@blitz.local", merges: 0},
-          %{contributions: 1, email: "kplummer@blitz.(none)", merges: 0, name: "Kit Plummer"}
+          %{contributions: 6, name: "Kit Plummer", email: "kplummer@blitz.local", merges: 0, last_contribution_date: "2009-01-06T20:23:20-07:00"},
+          %{contributions: 1, email: "kplummer@blitz.(none)", merges: 0, name: "Kit Plummer", last_contribution_date: "2009-01-06T20:23:20-07:00"}
         ],
         :sbom_risk => "medium"
       },

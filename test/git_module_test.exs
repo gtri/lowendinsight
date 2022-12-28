@@ -68,7 +68,7 @@ defmodule GitModuleTest do
     {:ok, maps} = GitModule.get_contributions_map(kitrepo)
 
     expected_array = [
-      %{contributions: 358, name: "Ben Morris"},
+      %{contributions: 358, name: "Ben Morris", last_contribution_date: "2018-12-27T10:24:58-08:00"},
       %{contributions: 64, name: "Kit Plummer"},
       %{contributions: 6, name: "Tyler Bezera"},
       %{contributions: 4, name: "Jakub Stasiak"},
@@ -85,7 +85,7 @@ defmodule GitModuleTest do
   test "get cleaned contribution map", %{kitrepo: kitrepo} do
     expected = [
       %{contributions: 358, name: "Ben Morris", email: "ben@bendmorris.com", merges: 2},
-      %{contributions: 64, name: "Kit Plummer", email: "kitplummer@gmail.com", merges: 4},
+      %{contributions: 64, name: "Kit Plummer", email: "kitplummer@gmail.com", merges: 4, last_contribution_date: ""},
       %{contributions: 6, name: "Tyler Bezera", email: "TylerJessilynn@gmail.com", merges: 0},
       %{contributions: 4, name: "Jakub Stasiak", email: "jakub@stasiak.at", merges: 0},
       %{contributions: 2, name: "pixeljoelson", email: "pixeljoelson@gmail.com", merges: 0},
@@ -122,6 +122,11 @@ defmodule GitModuleTest do
   test "get last commit date", context do
     date = GitModule.get_last_commit_date(context[:repo])
     assert {:ok, "2009-01-06T20:23:20-07:00"} == date
+  end
+
+  test "get last contribution by contributor date", context do
+    date = GitModule.get_last_contribution_date_by_contributor(context[:repo], "Kit Plummer")
+    assert "2009-01-06T20:23:20-07:00" == date
   end
 
   test "convert to delta", context do
