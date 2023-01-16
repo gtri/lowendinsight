@@ -110,8 +110,10 @@ defmodule GitModule do
       case Git.rev_list(repo, ["--count", branch]) do
         {:ok, count_string} ->
           count_string |> String.trim_trailing() |> String.to_integer()
-        {:error, _e} -> get_total_commit_count(repo, "HEAD")
-        end
+        {:error, _e} ->
+          {:ok, count} = get_total_commit_count(repo, "HEAD")
+          count
+      end
     {:ok, count}
   end
 

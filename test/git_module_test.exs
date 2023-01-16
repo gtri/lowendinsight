@@ -58,6 +58,10 @@ defmodule GitModuleTest do
     assert {:ok, 7} = GitModule.get_total_commit_count(repo, default_branch)
   end
 
+  test "get commit count for default branch for path", %{this_repo: repo} do
+    assert {:ok, _count} = GitModule.get_total_commit_count(repo, "boogety")
+  end
+
   test "get contributor list 1", %{repo: repo} do
     count = GitModule.get_contributor_count(repo)
     assert {:ok, 1} == count
