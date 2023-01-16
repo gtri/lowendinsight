@@ -106,15 +106,12 @@ defmodule GitModule do
   get_total_commit_count/2: returns the count of commits for a provided branch
   """
   def get_total_commit_count(repo, branch) do
-    count =
-      case Git.rev_list(repo, ["--count", branch]) do
-        {:ok, count_string} ->
-          count_string |> String.trim_trailing() |> String.to_integer()
-        {:error, _e} ->
-          {:ok, count} = get_total_commit_count(repo, "HEAD")
-          count
-      end
-    {:ok, count}
+    try do
+      count = Git.rev_list!(repo, ["--count", branch]) |> String.trim_trailing() |> String.to_integer()
+      {:ok, count}
+    rescue
+      _e in Git.Error -> {:ok, "undeterminable, branch issue"}
+    end
   end
 
   @doc """
