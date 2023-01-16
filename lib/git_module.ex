@@ -98,7 +98,7 @@ defmodule GitModule do
       default_branch = Git.symbolic_ref!(repo, "refs/remotes/origin/HEAD") |> String.trim()
       {:ok, default_branch}
     rescue
-      _e in Git.Error -> {:ok, "undeterminable, not at HEAD"}
+      _e in Git.Error -> {:error, "undeterminable, not at HEAD"}
     end
   end
 
@@ -106,7 +106,12 @@ defmodule GitModule do
   get_total_commit_count/2: returns the count of commits for a provided branch
   """
   def get_total_commit_count(repo, branch) do
-    count = Git.rev_list!(repo, ["--count", branch]) |> String.trim_trailing() |> String.to_integer()
+    count =
+      case Git.rev_list(repo, ["--count", branch]) do
+        {:ok, count_string} ->
+          count_string |> String.trim_trailing() |> String.to_integer()
+        {:error, _e} -> get_total_commit_count(repo, "HEAD")
+        end
     {:ok, count}
   end
 
