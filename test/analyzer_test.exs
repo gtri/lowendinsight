@@ -84,6 +84,7 @@ defmodule AnalyzerTest do
     assert "test" == repo_data[:header][:source_client]
     assert "https://github.com/kitplummer/xmpp4rails" == repo_data[:header][:repo]
     assert expected_data[:results] == repo_data[:data][:results]
+    assert 7 == repo_data[:data][:git][:total_commits_on_default_branch]
   end
 
   @tag timeout: 180_000
