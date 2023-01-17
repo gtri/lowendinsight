@@ -135,6 +135,7 @@ defmodule AnalyzerModule do
       {:ok, git_hash} = GitModule.get_hash(repo)
       {:ok, default_branch} = GitModule.get_default_branch(repo)
       {:ok, last_commit} = GitModule.get_last_commit_date(repo)
+      {:ok, total_commits} = GitModule.get_total_commit_count(repo)
 
       if uri.scheme == "https" or uri.scheme == "http" do
         GitModule.delete_repo(repo)
@@ -165,7 +166,8 @@ defmodule AnalyzerModule do
           git: %{
             hash: git_hash,
             default_branch: default_branch,
-            last_commit_date: last_commit
+            last_commit_date: last_commit,
+            total_commits_on_default_branch: total_commits
           },
           project_types: project_types_identified,
           repo_size: repo_size,
