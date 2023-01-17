@@ -98,7 +98,7 @@ defmodule GitModule do
       default_branch = Git.symbolic_ref!(repo, "refs/remotes/origin/HEAD") |> String.trim()
       {:ok, default_branch}
     rescue
-      _e in Git.Error -> {:error, "undeterminable, not at HEAD"}
+      _e in Git.Error -> {:ok, "undeterminable, not at HEAD"}
     end
   end
 
