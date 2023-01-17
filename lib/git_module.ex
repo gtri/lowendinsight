@@ -103,6 +103,18 @@ defmodule GitModule do
   end
 
   @doc """
+  get_total_commit_count/2: returns the count of commits for a provided branch
+  """
+  def get_total_commit_count(repo) do
+    try do
+      count = Git.rev_list!(repo, ["--count", "refs/remotes/origin/HEAD"]) |> String.trim_trailing() |> String.to_integer()
+      {:ok, count}
+    rescue
+      _e in Git.Error -> {:ok, "undeterminable, branch issue"}
+    end
+  end
+
+  @doc """
   get_commit_dates/1: returns a list of unix timestamps representing commit times
   """
   @spec get_commit_dates(Git.Repository.t()) :: {:ok, [non_neg_integer]}
